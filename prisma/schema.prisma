@@ -88,6 +88,7 @@ model Deck {
   languageId  String   @map("language_id")
   name        String
   description String?
+  difficulty  Difficulty?
   isActive    Boolean  @default(true) @map("is_active")
   cardsCount  Int      @default(0) @map("cards_count")
   createdAt   DateTime @default(now()) @map("created_at")
@@ -100,6 +101,12 @@ model Deck {
   studySessions StudySession[]
 
   @@map("decks")
+}
+
+enum Difficulty {
+  BEGINNER
+  INTERMEDIATE
+  ADVANCED
 }
 
 model Card {

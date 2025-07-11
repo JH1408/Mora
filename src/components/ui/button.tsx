@@ -11,7 +11,7 @@ const buttonVariants = cva(
       variant: {
         // Primary - Main call-to-action (Deep Plum)
         default:
-          'bg-primary text-white shadow-sm hover:bg-primary-800 focus-visible:ring-primary-300 active:bg-primary-600 disabled:bg-primary-200',
+          'bg-primary text-white shadow-sm hover:bg-primary-800 focus-visible:ring-primary-300 active:bg-primary-600 disabled:bg-primary-300',
 
         // Secondary - Alternative actions (Minty Aqua)
         secondary:

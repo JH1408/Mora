@@ -7,74 +7,65 @@ import {
   CollapsibleTrigger,
 } from '@/components/ui/collapsible';
 import { ChevronDown, ChevronRight, Play, Edit3 } from 'lucide-react';
-import { useState } from 'react';
-import { mockDecks } from '../mockData';
+import { useMemo, useState } from 'react';
+import { DeckWithCardCount } from '@/types/deck';
+import { getLanguageStats } from '@/utils/deckUtils';
+import { formatDifficulty } from '@/utils/deckUtils';
+import { Difficulty } from '@prisma/client';
+import LanguageFlag from '@/components/language-flag';
 
 const getDifficultyColor = (difficulty: string) => {
   switch (difficulty) {
-    case 'Beginner':
+    case Difficulty.BEGINNER:
       return 'bg-success-light text-success-dark';
-    case 'Intermediate':
+    case Difficulty.INTERMEDIATE:
       return 'bg-warning-light text-warning-dark';
-    case 'Advanced':
+    case Difficulty.ADVANCED:
       return 'bg-error-light text-error-dark';
     default:
       return 'bg-neutral-3 text-neutral-8';
   }
 };
 
-const Decks = () => {
+const Decks = ({ decks }: { decks: DeckWithCardCount[] }) => {
   const [expandedLanguages, setExpandedLanguages] = useState<
     Record<string, boolean>
-  >({
-    Spanish: true,
-    French: true,
-    German: true,
-  });
+  >({});
 
-  // Group decks by language
-  const decksByLanguage = mockDecks.reduce((acc, deck) => {
-    if (!acc[deck.language]) {
-      acc[deck.language] = [];
-    }
-    acc[deck.language].push(deck);
-    return acc;
-  }, {} as Record<string, typeof mockDecks>);
+  const languageStats = useMemo(() => getLanguageStats(decks), [decks]);
 
-  const toggleLanguageExpansion = (language: string) => {
+  const toggleLanguageExpansion = (languageCode: string) => {
     setExpandedLanguages((prev) => ({
       ...prev,
-      [language]: !prev[language],
+      [languageCode]: !prev[languageCode],
     }));
   };
+
   return (
     <div className='space-y-6'>
-      {Object.entries(decksByLanguage).map(([language, decks]) => (
+      {languageStats.map((languageStat) => (
         <div
-          key={language}
+          key={languageStat.code}
           className='bg-background-white rounded-lg shadow-soft border border-neutral-3'
         >
           <Collapsible
-            open={expandedLanguages[language]}
-            onOpenChange={() => toggleLanguageExpansion(language)}
+            open={expandedLanguages[languageStat.code]}
+            onOpenChange={() => toggleLanguageExpansion(languageStat.code)}
           >
             <CollapsibleTrigger className='w-full p-6 flex items-center justify-between hover:bg-neutral-1 transition-colors'>
               <div className='flex items-center space-x-3'>
-                <div className='text-2xl'>
-                  {language === 'Spanish' && '🇪🇸'}
-                  {language === 'French' && '🇫🇷'}
-                  {language === 'German' && '🇩🇪'}
-                </div>
+                <LanguageFlag languageCode={languageStat.code} size={24} />
                 <div>
                   <h2 className='text-xl font-semibold font-heading text-text-primary'>
-                    {language}
+                    {languageStat.name}
                   </h2>
                   <p className='text-sm text-text-muted'>
-                    {decks.length} deck{decks.length !== 1 ? 's' : ''}
+                    {languageStat.deckCount} deck
+                    {languageStat.deckCount !== 1 ? 's' : ''}
                   </p>
                 </div>
               </div>
-              {expandedLanguages[language] ? (
+              {expandedLanguages[languageStat.code] ? (
                 <ChevronDown className='h-5 w-5 text-neutral-6 cursor-pointer' />
               ) : (
                 <ChevronRight className='h-5 w-5 text-neutral-6 cursor-pointer' />
@@ -84,7 +75,7 @@ const Decks = () => {
             <CollapsibleContent>
               <div className='px-6 pb-6'>
                 <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4'>
-                  {decks.map((deck) => (
+                  {languageStat.decks.map((deck) => (
                     <Card
                       key={deck.id}
                       className='hover:shadow-primary py-6 transition-shadow duration-200 border-neutral-3'
@@ -94,13 +85,15 @@ const Decks = () => {
                           <CardTitle className='text-lg font-medium text-text-primary line-clamp-2'>
                             {deck.name}
                           </CardTitle>
-                          <Badge
-                            className={`text-xs ${getDifficultyColor(
-                              deck.difficulty
-                            )}`}
-                          >
-                            {deck.difficulty}
-                          </Badge>
+                          {deck.difficulty && (
+                            <Badge
+                              className={`text-xs ${getDifficultyColor(
+                                deck.difficulty
+                              )}`}
+                            >
+                              {formatDifficulty(deck.difficulty)}
+                            </Badge>
+                          )}
                         </div>
                       </CardHeader>
 
@@ -108,13 +101,13 @@ const Decks = () => {
                         <div className='space-y-3'>
                           {/* Stats */}
                           <div className='flex justify-between text-sm text-text-secondary'>
-                            <span>{deck.cardCount} cards</span>
-                            <span>{deck.studiedToday} studied today</span>
+                            <span>{deck.cardsCount} cards</span>
+                            {/* <span>{deck.studiedToday} studied today</span> */}
                           </div>
 
-                          <p className='text-xs text-text-muted'>
+                          {/* <p className='text-xs text-text-muted'>
                             Last studied: {deck.lastStudied}
-                          </p>
+                          </p> */}
 
                           {/* Action Buttons */}
                           <div className='flex space-x-2 pt-2'>

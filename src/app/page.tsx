@@ -6,6 +6,7 @@ import Link from 'next/link';
 import { ClientOnly } from '@/components/client-only';
 import paths from '@/utils/paths';
 import Image from 'next/image';
+import Spinner from '@/components/ui/spinner';
 
 function HomeContent() {
   const { data: session, status } = useSession();
@@ -22,7 +23,7 @@ function HomeContent() {
         />
         <div className='flex gap-4 justify-center'>
           {status === 'loading' ? (
-            <div className='w-8 h-8 border-2 border-primary border-t-transparent rounded-full animate-spin'></div>
+            <Spinner />
           ) : session ? (
             <div className='flex items-center gap-4'>
               <span className='text-sm text-muted-foreground'>

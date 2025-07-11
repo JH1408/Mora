@@ -18,19 +18,32 @@ import {
   DialogDescription,
 } from '@/components/ui/dialog';
 import { toast } from 'sonner';
+import { Language } from '@/lib/api';
+import { useCreateDeck } from '@/utils/hooks/useApi';
+import { Difficulty, DIFFICULTY_OPTIONS } from '@/types/deck';
+import Spinner from '@/components/ui/spinner';
+import LanguageFlag from '@/components/language-flag';
 
 interface CreateDeckModalProps {
   isOpen: boolean;
   onClose: () => void;
+  languages: Language[];
 }
 
 const CreateDeckModal: React.FC<CreateDeckModalProps> = ({
   isOpen,
   onClose,
+  languages,
 }) => {
   const [deckName, setDeckName] = useState('');
   const [language, setLanguage] = useState('');
   const [difficulty, setDifficulty] = useState('');
+  const {
+    mutate: createDeck,
+    isPending: isCreatingDeck,
+    isError: isCreateDeckError,
+  } = useCreateDeck();
+  console.log({ isCreateDeckError, isCreatingDeck });
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -40,16 +53,21 @@ const CreateDeckModal: React.FC<CreateDeckModalProps> = ({
       return;
     }
 
-    // Here you would typically save the deck to your backend/state management
-    console.log('Creating deck:', { deckName, language, difficulty });
-
-    toast.success(`"${deckName}" has been created successfully.`);
-
-    // Reset form and close modal
-    setDeckName('');
-    setLanguage('');
-    setDifficulty('');
-    onClose();
+    createDeck(
+      {
+        name: deckName,
+        languageId: language,
+        difficulty: difficulty as Difficulty,
+      },
+      {
+        onSuccess: () => {
+          setDeckName('');
+          setLanguage('');
+          setDifficulty('');
+          onClose();
+        },
+      }
+    );
   };
 
   const handleClose = () => {
@@ -100,18 +118,22 @@ const CreateDeckModal: React.FC<CreateDeckModalProps> = ({
               Language
             </Label>
             <Select value={language} onValueChange={setLanguage}>
-              <SelectTrigger className='mt-1 border-neutral-4 focus:border-primary-500 focus:ring-primary-500'>
+              <SelectTrigger className='w-full mt-1 border-neutral-4 focus:border-primary-500 focus:ring-primary-500'>
                 <SelectValue placeholder='Select a language' />
               </SelectTrigger>
               <SelectContent className='bg-background-white border-neutral-3 shadow-primary'>
-                <SelectItem value='spanish'>🇪🇸 Spanish</SelectItem>
-                <SelectItem value='french'>🇫🇷 French</SelectItem>
-                <SelectItem value='german'>🇩🇪 German</SelectItem>
-                <SelectItem value='italian'>🇮🇹 Italian</SelectItem>
-                <SelectItem value='portuguese'>🇵🇹 Portuguese</SelectItem>
-                <SelectItem value='japanese'>🇯🇵 Japanese</SelectItem>
-                <SelectItem value='korean'>🇰🇷 Korean</SelectItem>
-                <SelectItem value='mandarin'>🇨🇳 Mandarin</SelectItem>
+                {languages.map((language) => (
+                  <SelectItem
+                    key={language.id}
+                    value={language.id}
+                    className='w-full'
+                  >
+                    <div className='flex items-center space-x-2 w-full py-1'>
+                      <LanguageFlag languageCode={language.code} size={20} />
+                      <span className='px-2'>{language.name}</span>
+                    </div>
+                  </SelectItem>
+                ))}
               </SelectContent>
             </Select>
           </div>
@@ -124,13 +146,19 @@ const CreateDeckModal: React.FC<CreateDeckModalProps> = ({
               Difficulty Level
             </Label>
             <Select value={difficulty} onValueChange={setDifficulty}>
-              <SelectTrigger className='mt-1 border-neutral-4 focus:border-primary-500 focus:ring-primary-500'>
+              <SelectTrigger className='mt-1 w-full border-neutral-4 focus:border-primary-500 focus:ring-primary-500'>
                 <SelectValue placeholder='Select difficulty' />
               </SelectTrigger>
               <SelectContent className='bg-background-white border-neutral-3 shadow-primary'>
-                <SelectItem value='beginner'>Beginner</SelectItem>
-                <SelectItem value='intermediate'>Intermediate</SelectItem>
-                <SelectItem value='advanced'>Advanced</SelectItem>
+                {DIFFICULTY_OPTIONS.map((option) => (
+                  <SelectItem
+                    key={option.value}
+                    value={option.value}
+                    className='w-full'
+                  >
+                    <span className='px-2 py-1 block'>{option.label}</span>
+                  </SelectItem>
+                ))}
               </SelectContent>
             </Select>
           </div>
@@ -144,8 +172,12 @@ const CreateDeckModal: React.FC<CreateDeckModalProps> = ({
             >
               Cancel
             </Button>
-            <Button type='submit' className='flex-1'>
-              Create Deck
+            <Button type='submit' className='flex-1' disabled={isCreatingDeck}>
+              {isCreatingDeck ? (
+                <Spinner className='w-4 h-4 border-white' />
+              ) : (
+                'Create Deck'
+              )}
             </Button>
           </div>
         </form>
