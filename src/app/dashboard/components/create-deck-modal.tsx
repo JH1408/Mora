@@ -1,6 +1,16 @@
-import React, { useState } from 'react';
 import { BookOpen } from 'lucide-react';
+import React, { useState } from 'react';
+import { toast } from 'sonner';
+
+import LanguageFlag from '@/components/language-flag';
 import { Button } from '@/components/ui/button';
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+} from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import {
@@ -10,19 +20,10 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogDescription,
-} from '@/components/ui/dialog';
-import { toast } from 'sonner';
-import { Language } from '@/lib/api';
-import { useCreateDeck } from '@/utils/hooks/useApi';
-import { Difficulty, DIFFICULTY_OPTIONS } from '@/types/deck';
 import Spinner from '@/components/ui/spinner';
-import LanguageFlag from '@/components/language-flag';
+import { Language } from '@/lib/api';
+import { Difficulty, DIFFICULTY_OPTIONS } from '@/types/deck';
+import { useCreateDeck } from '@/utils/hooks/useApi';
 
 interface CreateDeckModalProps {
   isOpen: boolean;

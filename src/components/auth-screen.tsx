@@ -1,6 +1,11 @@
 'use client';
 
+import Image from 'next/image';
+import Link from 'next/link';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { signIn, useSession } from 'next-auth/react';
+import { useEffect, useState } from 'react';
+
 import { Button } from '@/components/ui/button';
 import {
   Card,
@@ -9,11 +14,7 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card';
-import { useEffect, useState } from 'react';
-import { useRouter, useSearchParams } from 'next/navigation';
 import paths from '@/utils/paths';
-import Image from 'next/image';
-import Link from 'next/link';
 
 const signUpText = {
   title: 'Welcome to Mora',

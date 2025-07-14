@@ -1,4 +1,11 @@
-import { CreateDeckRequest, Deck, DeckWithCardCount } from '@/types/deck';
+import { Card } from '@prisma/client';
+
+import {
+  CreateCardRequest,
+  CreateDeckRequest,
+  Deck,
+  DeckWithCardCount,
+} from '@/types/deck';
 
 export interface Language {
   id: string;
@@ -66,6 +73,26 @@ export const deckApi = {
 
   delete: (id: string): Promise<void> =>
     apiFetch<void>(`/decks/${id}`, {
+      method: 'DELETE',
+    }),
+};
+
+// Card API functions
+export const cardApi = {
+  create: (data: CreateCardRequest): Promise<Card> =>
+    apiFetch<Card>('/cards', {
+      method: 'POST',
+      body: JSON.stringify(data),
+    }),
+
+  update: (id: string, data: Partial<CreateCardRequest>): Promise<Card> =>
+    apiFetch<Card>(`/cards/${id}`, {
+      method: 'PUT',
+      body: JSON.stringify(data),
+    }),
+
+  delete: (id: string): Promise<void> =>
+    apiFetch<void>(`/cards/${id}`, {
       method: 'DELETE',
     }),
 };

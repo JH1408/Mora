@@ -1,5 +1,6 @@
-import { getCountryCode } from '@/utils/languages';
 import Image from 'next/image';
+
+import { getCountryCode } from '@/utils/languages';
 
 const LanguageFlag = ({
   languageCode,

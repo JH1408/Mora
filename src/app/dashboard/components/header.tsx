@@ -1,9 +1,10 @@
-import { Button } from '@/components/ui/button';
 import { User, LogOut } from 'lucide-react';
-import { toast } from 'sonner';
-import { signOut } from 'next-auth/react';
-import paths from '@/utils/paths';
 import Image from 'next/image';
+import { signOut } from 'next-auth/react';
+import { toast } from 'sonner';
+
+import { Button } from '@/components/ui/button';
+import paths from '@/utils/paths';
 
 const Header = ({ userName }: { userName: string | null }) => {
   const handleSignout = async () => {

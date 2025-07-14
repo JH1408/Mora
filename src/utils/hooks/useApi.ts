@@ -1,7 +1,9 @@
+import { Card } from '@prisma/client';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { languageApi, deckApi } from '@/lib/api';
-import { CreateDeckRequest, Deck } from '@/types/deck';
 import { toast } from 'sonner';
+
+import { languageApi, deckApi, cardApi } from '@/lib/api';
+import { CreateDeckRequest, CreateCardRequest, Deck } from '@/types/deck';
 
 // Query keys for React Query
 export const queryKeys = {
@@ -94,6 +96,64 @@ export const useDeleteDeck = () => {
       queryClient.removeQueries({ queryKey: queryKeys.deck(deletedId) });
       // Invalidate decks list
       queryClient.invalidateQueries({ queryKey: queryKeys.decks });
+    },
+  });
+};
+
+export const useCreateCard = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: (data: CreateCardRequest) => cardApi.create(data),
+    onSuccess: (data: Card) => {
+      // Invalidate and refetch deck
+      queryClient.invalidateQueries({ queryKey: queryKeys.deck(data.deckId) });
+      // Also invalidate decks list to update card count
+      queryClient.invalidateQueries({ queryKey: queryKeys.decks });
+      toast.success('Card has been created successfully.');
+    },
+    onError: (error) => {
+      console.error('Create card error:', error);
+      toast.error('Failed to create card. Please try again.');
+    },
+  });
+};
+
+export const useDeleteCard = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: (id: string) => cardApi.delete(id),
+    onSuccess: (_, deletedId) => {
+      queryClient.invalidateQueries({ queryKey: queryKeys.deck(deletedId) });
+      queryClient.invalidateQueries({ queryKey: queryKeys.decks });
+      toast.success('Card has been deleted successfully.');
+    },
+    onError: (error) => {
+      console.error('Delete card error:', error);
+      toast.error('Failed to delete card. Please try again.');
+    },
+  });
+};
+
+export const useUpdateCard = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: ({
+      id,
+      data,
+    }: {
+      id: string;
+      data: Partial<CreateCardRequest>;
+    }) => cardApi.update(id, data),
+    onSuccess: (updatedCard) => {
+      // Invalidate the specific deck to refresh the cards
+      queryClient.invalidateQueries({
+        queryKey: queryKeys.deck(updatedCard.deckId),
+      });
+      toast.success('Card has been updated successfully.');
+    },
+    onError: (error) => {
+      console.error('Update card error:', error);
+      toast.error('Failed to update card. Please try again.');
     },
   });
 };

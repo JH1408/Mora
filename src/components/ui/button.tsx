@@ -1,6 +1,6 @@
-import * as React from 'react';
 import { Slot } from '@radix-ui/react-slot';
 import { cva, type VariantProps } from 'class-variance-authority';
+import * as React from 'react';
 
 import { cn } from '@/lib/utils';
 
@@ -23,7 +23,7 @@ const buttonVariants = cva(
 
         // Destructive - Danger actions
         destructive:
-          'bg-red-600 text-white shadow-sm hover:bg-red-700 focus-visible:ring-red-300 active:bg-red-800 disabled:bg-red-200',
+          'bg-error text-white shadow-sm hover:bg-error-dark focus-visible:ring-error-300 active:bg-error-dark disabled:bg-error-200',
 
         // Outline Primary - Subtle primary action
         outline:
@@ -48,6 +48,10 @@ const buttonVariants = cva(
         // Ghost Accent - Minimal accent interaction
         'ghost-accent':
           'bg-transparent text-accent-600 hover:bg-accent-50 hover:text-accent focus-visible:ring-accent-300 active:bg-accent-100 disabled:text-neutral-400',
+
+        // Ghost Destructive - Minimal destructive interaction
+        'ghost-destructive':
+          'bg-transparent text-error-600 hover:bg-error-light hover:text-error focus-visible:ring-error-300 active:bg-error-100 disabled:text-neutral-400',
 
         // Link - Text links
         link: 'bg-transparent text-primary underline-offset-4 hover:underline focus-visible:ring-primary-300 disabled:text-primary-300',

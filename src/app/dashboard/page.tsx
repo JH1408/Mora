@@ -1,17 +1,20 @@
 'use client';
 
-import { useSession } from 'next-auth/react';
-import { Button } from '@/components/ui/button';
-import { useRouter } from 'next/navigation';
-import { useEffect, useMemo, useState } from 'react';
 import { Plus } from 'lucide-react';
+import { useRouter } from 'next/navigation';
+import { useSession } from 'next-auth/react';
+import { useEffect, useMemo, useState } from 'react';
+
 import CreateDeckModal from '@/app/dashboard/components/create-deck-modal';
-import Header from './components/header';
+import ErrorMessage from '@/components/error-message';
+import { Button } from '@/components/ui/button';
+import { countUniqueLanguages } from '@/utils/deckUtils';
+import { useDecks, useLanguages } from '@/utils/hooks/useApi';
+
 import Decks from './components/decks';
+import Header from './components/header';
 import NoDecks from './components/no-decks';
 import Stats from './components/stats';
-import { useDecks, useLanguages } from '@/utils/hooks/useApi';
-import { countUniqueLanguages } from '@/utils/deckUtils';
 
 export default function DashboardPage() {
   const { data: session, status: sessionStatus } = useSession();
@@ -51,7 +54,7 @@ export default function DashboardPage() {
   }
 
   return (
-    <div className='h-screen bg-gradient-to-br from-primary-50 via-background-white to-accent-50 flex flex-col'>
+    <div className='h-screen bg-gradient-to-br from-primary-100 to-accent-100 flex flex-col'>
       <Header userName={session.user?.name || null} />
       <main className='flex-1 overflow-y-auto'>
         <div className='max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8'>
@@ -64,7 +67,9 @@ export default function DashboardPage() {
           {!decks.length && !isLoadingDecks && (
             <NoDecks setIsCreateModalOpen={setIsCreateModalOpen} />
           )}
-          {decksError && <div>Error loading decks: {decksError.message}</div>}
+          {decksError && (
+            <ErrorMessage message="Oops, we couldn't load your decks." />
+          )}
         </div>
       </main>
 

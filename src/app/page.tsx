@@ -1,12 +1,13 @@
 'use client';
 
-import { Button } from '@/components/ui/button';
-import { useSession } from 'next-auth/react';
-import Link from 'next/link';
-import { ClientOnly } from '@/components/client-only';
-import paths from '@/utils/paths';
 import Image from 'next/image';
+import Link from 'next/link';
+import { useSession } from 'next-auth/react';
+
+import { ClientOnly } from '@/components/client-only';
+import { Button } from '@/components/ui/button';
 import Spinner from '@/components/ui/spinner';
+import paths from '@/utils/paths';
 
 function HomeContent() {
   const { data: session, status } = useSession();

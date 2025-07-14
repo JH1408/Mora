@@ -1,5 +1,6 @@
-import { Button } from '@/components/ui/button';
 import { BookOpen, Plus } from 'lucide-react';
+
+import { Button } from '@/components/ui/button';
 
 const NoDecks = ({
   setIsCreateModalOpen,

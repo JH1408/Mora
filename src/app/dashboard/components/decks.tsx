@@ -1,18 +1,20 @@
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Difficulty } from '@prisma/client';
+import { ChevronDown, ChevronRight, Play, Plus } from 'lucide-react';
+import Link from 'next/link';
+import { useMemo, useState, useEffect } from 'react';
+
+import LanguageFlag from '@/components/language-flag';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import {
   Collapsible,
   CollapsibleContent,
   CollapsibleTrigger,
 } from '@/components/ui/collapsible';
-import { ChevronDown, ChevronRight, Play, Edit3 } from 'lucide-react';
-import { useMemo, useState } from 'react';
 import { DeckWithCardCount } from '@/types/deck';
 import { getLanguageStats } from '@/utils/deckUtils';
 import { formatDifficulty } from '@/utils/deckUtils';
-import { Difficulty } from '@prisma/client';
-import LanguageFlag from '@/components/language-flag';
 
 const getDifficultyColor = (difficulty: string) => {
   switch (difficulty) {
@@ -28,11 +30,20 @@ const getDifficultyColor = (difficulty: string) => {
 };
 
 const Decks = ({ decks }: { decks: DeckWithCardCount[] }) => {
+  const languageStats = useMemo(() => getLanguageStats(decks), [decks]);
+
   const [expandedLanguages, setExpandedLanguages] = useState<
     Record<string, boolean>
   >({});
 
-  const languageStats = useMemo(() => getLanguageStats(decks), [decks]);
+  useEffect(() => {
+    // Expand the first two languages by default
+    const initialExpanded: Record<string, boolean> = {};
+    languageStats.slice(0, 2).forEach((languageStat) => {
+      initialExpanded[languageStat.code] = true;
+    });
+    setExpandedLanguages(initialExpanded);
+  }, [languageStats]);
 
   const toggleLanguageExpansion = (languageCode: string) => {
     setExpandedLanguages((prev) => ({
@@ -52,7 +63,7 @@ const Decks = ({ decks }: { decks: DeckWithCardCount[] }) => {
             open={expandedLanguages[languageStat.code]}
             onOpenChange={() => toggleLanguageExpansion(languageStat.code)}
           >
-            <CollapsibleTrigger className='w-full p-6 flex items-center justify-between hover:bg-neutral-1 transition-colors'>
+            <CollapsibleTrigger className='w-full p-6 flex items-center justify-between hover:bg-neutral-1 transition-colors cursor-pointer'>
               <div className='flex items-center space-x-3'>
                 <LanguageFlag languageCode={languageStat.code} size={24} />
                 <div>
@@ -118,10 +129,16 @@ const Decks = ({ decks }: { decks: DeckWithCardCount[] }) => {
                               <Play className='h-4 w-4 mr-1' />
                               Study
                             </Button>
-                            <Button size='sm' variant='soft' className='flex-1'>
-                              <Edit3 className='h-4 w-4 mr-1' />
-                              Edit
-                            </Button>
+                            <Link href={`/decks/${deck.id}/add-cards`}>
+                              <Button
+                                size='sm'
+                                variant='soft'
+                                className='flex-1'
+                              >
+                                <Plus className='h-4 w-4 mr-1' />
+                                Add Cards
+                              </Button>
+                            </Link>
                           </div>
                         </div>
                       </CardContent>

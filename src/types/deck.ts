@@ -1,3 +1,5 @@
+import { Card } from '@prisma/client';
+
 export type Difficulty = 'BEGINNER' | 'INTERMEDIATE' | 'ADVANCED';
 
 export const DIFFICULTY_OPTIONS = [
@@ -11,6 +13,16 @@ export interface CreateDeckRequest {
   description?: string;
   difficulty?: Difficulty;
   languageId: string;
+}
+
+export interface CreateCardRequest {
+  deckId: string;
+  frontText: string;
+  backText: string;
+  phoneticSpelling?: string;
+  usageContext?: string;
+  tags?: string[];
+  handwritingData?: string;
 }
 
 export interface Deck {
@@ -37,6 +49,7 @@ export interface Deck {
     name?: string;
     email?: string;
   };
+  cards: Card[];
 }
 
 export interface DeckWithCardCount extends Omit<Deck, 'user'> {

@@ -1,0 +1,159 @@
+import { NextRequest, NextResponse } from 'next/server';
+import { getServerSession } from 'next-auth';
+import { z } from 'zod';
+
+import { authOptions } from '@/lib/auth';
+import { prisma } from '@/lib/prisma';
+
+// Validation schema for updating a card
+const updateCardSchema = z.object({
+  frontText: z
+    .string()
+    .min(1, 'Front text is required')
+    .max(1000, 'Front text must be less than 1000 characters')
+    .optional(),
+  backText: z
+    .string()
+    .min(1, 'Back text is required')
+    .max(1000, 'Back text must be less than 1000 characters')
+    .optional(),
+  phoneticSpelling: z.string().optional(),
+  usageContext: z.string().optional(),
+  tags: z.array(z.string()).optional(),
+  handwritingData: z.string().optional(),
+});
+
+// Delete a card
+export async function DELETE(
+  request: NextRequest,
+  { params }: { params: { cardId: string } }
+) {
+  try {
+    const session = await getServerSession(authOptions);
+    if (!session?.user?.id) {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    }
+
+    const { cardId } = params;
+    if (!cardId) {
+      return NextResponse.json(
+        { error: 'Card ID is required' },
+        { status: 400 }
+      );
+    }
+
+    // Check if the card exists and belongs to the user
+    const card = await prisma.card.findFirst({
+      where: {
+        id: cardId,
+        deck: {
+          userId: session.user.id,
+        },
+      },
+      include: {
+        deck: true,
+      },
+    });
+
+    if (!card) {
+      return NextResponse.json({ error: 'Card not found' }, { status: 404 });
+    }
+
+    // Delete the card
+    await prisma.card.delete({
+      where: { id: cardId },
+    });
+
+    // Update the deck's card count
+    await prisma.deck.update({
+      where: { id: card.deckId },
+      data: { cardsCount: { decrement: 1 } },
+    });
+
+    return NextResponse.json({ message: 'Card deleted successfully' });
+  } catch (error) {
+    console.error('Error deleting card:', error);
+    return NextResponse.json(
+      { error: 'Internal server error' },
+      { status: 500 }
+    );
+  }
+}
+
+// Update a card
+export async function PUT(
+  request: NextRequest,
+  { params }: { params: { cardId: string } }
+) {
+  try {
+    const session = await getServerSession(authOptions);
+    if (!session?.user?.id) {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    }
+
+    const { cardId } = params;
+    if (!cardId) {
+      return NextResponse.json(
+        { error: 'Card ID is required' },
+        { status: 400 }
+      );
+    }
+
+    // Parse and validate the request body
+    const body = await request.json();
+    const validatedData = updateCardSchema.parse(body);
+
+    // Check if the card exists and belongs to the user
+    const existingCard = await prisma.card.findFirst({
+      where: {
+        id: cardId,
+        deck: {
+          userId: session.user.id,
+        },
+      },
+    });
+
+    if (!existingCard) {
+      return NextResponse.json({ error: 'Card not found' }, { status: 404 });
+    }
+
+    // Update the card
+    const updatedCard = await prisma.card.update({
+      where: { id: cardId },
+      data: {
+        ...(validatedData.frontText !== undefined && {
+          frontText: validatedData.frontText,
+        }),
+        ...(validatedData.backText !== undefined && {
+          backText: validatedData.backText,
+        }),
+        ...(validatedData.phoneticSpelling !== undefined && {
+          phoneticSpelling: validatedData.phoneticSpelling,
+        }),
+        ...(validatedData.usageContext !== undefined && {
+          usageContext: validatedData.usageContext,
+        }),
+        ...(validatedData.tags !== undefined && { tags: validatedData.tags }),
+        ...(validatedData.handwritingData !== undefined && {
+          handwritingData: validatedData.handwritingData,
+        }),
+      },
+    });
+
+    return NextResponse.json(updatedCard);
+  } catch (error) {
+    console.error('Error updating card:', error);
+
+    if (error instanceof z.ZodError) {
+      return NextResponse.json(
+        { error: 'Validation error', details: error.errors },
+        { status: 400 }
+      );
+    }
+
+    return NextResponse.json(
+      { error: 'Internal server error' },
+      { status: 500 }
+    );
+  }
+}
