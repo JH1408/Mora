@@ -4,29 +4,12 @@ import { z } from 'zod';
 
 import { authOptions } from '@/lib/auth';
 import { prisma } from '@/lib/prisma';
-
-// Validation schema for updating a card
-const updateCardSchema = z.object({
-  frontText: z
-    .string()
-    .min(1, 'Front text is required')
-    .max(1000, 'Front text must be less than 1000 characters')
-    .optional(),
-  backText: z
-    .string()
-    .min(1, 'Back text is required')
-    .max(1000, 'Back text must be less than 1000 characters')
-    .optional(),
-  phoneticSpelling: z.string().optional(),
-  usageContext: z.string().optional(),
-  tags: z.array(z.string()).optional(),
-  handwritingData: z.string().optional(),
-});
+import { updateCardSchema } from '@/lib/schemas';
 
 // Delete a card
 export async function DELETE(
   request: NextRequest,
-  { params }: { params: { cardId: string } }
+  { params }: { params: Promise<{ cardId: string }> }
 ) {
   try {
     const session = await getServerSession(authOptions);
@@ -34,7 +17,7 @@ export async function DELETE(
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    const { cardId } = params;
+    const { cardId } = await params;
     if (!cardId) {
       return NextResponse.json(
         { error: 'Card ID is required' },
@@ -83,7 +66,7 @@ export async function DELETE(
 // Update a card
 export async function PUT(
   request: NextRequest,
-  { params }: { params: { cardId: string } }
+  { params }: { params: Promise<{ cardId: string }> }
 ) {
   try {
     const session = await getServerSession(authOptions);
@@ -91,7 +74,7 @@ export async function PUT(
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    const { cardId } = params;
+    const { cardId } = await params;
     if (!cardId) {
       return NextResponse.json(
         { error: 'Card ID is required' },

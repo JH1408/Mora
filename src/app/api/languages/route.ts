@@ -1,6 +1,16 @@
 import { NextResponse } from 'next/server';
 
 import { prisma } from '@/lib/prisma';
+import {
+  languageSchema,
+  languagesSchema,
+  type Language,
+  type Languages,
+} from '@/lib/schemas';
+
+// Re-export for backward compatibility
+export { languageSchema, languagesSchema };
+export type { Language, Languages };
 
 export async function GET() {
   try {

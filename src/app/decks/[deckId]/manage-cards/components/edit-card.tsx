@@ -11,11 +11,13 @@ const EditCardForm = ({
   onSave,
   onCancel,
   isUpdatingCard,
+  fontClass,
 }: {
   card: Card;
   onSave: (updatedCard: Partial<Card>) => void;
   onCancel: () => void;
   isUpdatingCard: boolean;
+  fontClass: string;
 }) => {
   const [frontText, setFrontText] = useState(card.frontText);
   const [backText, setBackText] = useState(card.backText);
@@ -28,7 +30,8 @@ const EditCardForm = ({
           <Textarea
             value={frontText}
             onChange={(e) => setFrontText(e.target.value)}
-            className='min-h-[80px] resize-none border-neutral-4 focus:border-primary-500'
+            dir='auto'
+            className={`min-h-[80px] resize-none border-neutral-4 focus:border-primary-500 ${fontClass}`}
           />
         </div>
         <div className='space-y-2'>
@@ -36,7 +39,8 @@ const EditCardForm = ({
           <Textarea
             value={backText}
             onChange={(e) => setBackText(e.target.value)}
-            className='min-h-[80px] resize-none border-neutral-4 focus:border-primary-500'
+            dir='auto'
+            className={`min-h-[80px] resize-none border-neutral-4 focus:border-primary-500 ${fontClass}`}
           />
         </div>
       </div>

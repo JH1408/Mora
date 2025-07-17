@@ -1,15 +1,13 @@
-import { Deck, DeckWithCardCount, Difficulty } from '@/types/deck';
+import { Deck, Difficulty } from '@/lib/schemas';
 
 interface LanguageStats {
   code: string;
   name: string;
   deckCount: number;
-  decks: (Deck | DeckWithCardCount)[];
+  decks: Deck[];
 }
 
-export const getLanguageStats = (
-  decks: Deck[] | DeckWithCardCount[]
-): LanguageStats[] => {
+export const getLanguageStats = (decks: Deck[]): LanguageStats[] => {
   const languageMap = new Map<string, LanguageStats>();
 
   decks.forEach((deck) => {
@@ -34,9 +32,7 @@ export const getLanguageStats = (
   );
 };
 
-export const countUniqueLanguages = (
-  decks: Deck[] | DeckWithCardCount[]
-): number => {
+export const countUniqueLanguages = (decks: Deck[]): number => {
   const uniqueLanguages = new Set(decks.map((deck) => deck.language.code));
   return uniqueLanguages.size;
 };

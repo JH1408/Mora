@@ -6,10 +6,19 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { useCreateCard } from '@/utils/hooks/useApi';
+import { getLanguageClasses } from '@/utils/languages';
 
-const CreateNewCard = ({ deckId }: { deckId: string }) => {
+const CreateNewCard = ({
+  deckId,
+  deckScript,
+}: {
+  deckId: string;
+  deckScript?: string | null;
+}) => {
   const { mutate: createCard, isPending: isCreatingCard } = useCreateCard();
   const [isMissingFields, setIsMissingFields] = useState(false);
+
+  const { fontClass } = getLanguageClasses(deckScript);
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -36,6 +45,7 @@ const CreateNewCard = ({ deckId }: { deckId: string }) => {
       <h2 className='text-2xl font-bold font-heading text-text-primary py-6'>
         Create New Card
       </h2>
+
       <Card className='hover:shadow-primary py-6 transition-shadow duration-200 border-neutral-3'>
         <CardHeader>
           <CardTitle className='flex items-center'>
@@ -52,8 +62,9 @@ const CreateNewCard = ({ deckId }: { deckId: string }) => {
                 </Label>
                 <Textarea
                   placeholder='Enter the question or prompt...'
-                  className='min-h-[100px] resize-none border-neutral-4 focus:border-primary-500'
+                  className={`min-h-[100px] resize-none border-neutral-4 focus:border-primary-500 ${fontClass}`}
                   name='frontText'
+                  dir='auto'
                 />
               </div>
 
@@ -63,8 +74,9 @@ const CreateNewCard = ({ deckId }: { deckId: string }) => {
                 </Label>
                 <Textarea
                   placeholder='Enter the answer or explanation...'
-                  className='min-h-[100px] resize-none border-neutral-4 focus:border-primary-500'
+                  className={`min-h-[100px] resize-none border-neutral-4 focus:border-primary-500 ${fontClass}`}
                   name='backText'
+                  dir='auto'
                 />
               </div>
             </div>

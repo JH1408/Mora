@@ -1,9 +1,17 @@
-import { Card } from '@prisma/client';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { toast } from 'sonner';
 
-import { languageApi, deckApi, cardApi } from '@/lib/api';
-import { CreateDeckRequest, CreateCardRequest, Deck } from '@/types/deck';
+import { languageApi, deckApi, cardApi, studyApi } from '@/lib/api';
+import type {
+  Card,
+  Deck,
+  CreateDeckRequest,
+  UpdateDeckRequest,
+  CreateCardRequest,
+  UpdateCardRequest,
+  SubmitStudyResultRequest,
+  CompleteStudySessionRequest,
+} from '@/types/deck';
 
 // Query keys for React Query
 export const queryKeys = {
@@ -58,7 +66,6 @@ export const useCreateDeck = () => {
       toast.success(`"${data.name}" has been created successfully.`);
     },
     onError: (error) => {
-      console.log({ error });
       console.error('Create deck error:', error);
       console.error('Error details:', (error as { details?: unknown }).details);
       toast.error('Failed to create deck. Please try again.');
@@ -70,13 +77,8 @@ export const useUpdateDeck = () => {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: ({
-      id,
-      data,
-    }: {
-      id: string;
-      data: Partial<CreateDeckRequest>;
-    }) => deckApi.update(id, data),
+    mutationFn: ({ id, data }: { id: string; data: UpdateDeckRequest }) =>
+      deckApi.update(id, data),
     onSuccess: (updatedDeck) => {
       // Update the specific deck in cache
       queryClient.setQueryData(queryKeys.deck(updatedDeck.id), updatedDeck);
@@ -137,13 +139,8 @@ export const useDeleteCard = () => {
 export const useUpdateCard = () => {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: ({
-      id,
-      data,
-    }: {
-      id: string;
-      data: Partial<CreateCardRequest>;
-    }) => cardApi.update(id, data),
+    mutationFn: ({ id, data }: { id: string; data: UpdateCardRequest }) =>
+      cardApi.update(id, data),
     onSuccess: (updatedCard) => {
       // Invalidate the specific deck to refresh the cards
       queryClient.invalidateQueries({
@@ -155,5 +152,56 @@ export const useUpdateCard = () => {
       console.error('Update card error:', error);
       toast.error('Failed to update card. Please try again.');
     },
+  });
+};
+
+export const useSubmitStudyResult = (deckId: string) => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: (data: SubmitStudyResultRequest) =>
+      studyApi.submitStudyResult(deckId, data),
+    onSuccess: () => {
+      // @Josy TODO: do we really want this?
+      // Invalidate deck stats and study cards
+      queryClient.invalidateQueries({ queryKey: queryKeys.deck(deckId) });
+    },
+    onError: (error) => {
+      console.error('Submit study result error:', error);
+      toast.error('Failed to save progress. Please try again.');
+    },
+  });
+};
+
+export const useCompleteStudySession = (deckId: string) => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: (data: CompleteStudySessionRequest) =>
+      studyApi.completeStudySession(deckId, data),
+    onSuccess: () => {
+      // Invalidate deck stats and study session
+      queryClient.invalidateQueries({ queryKey: queryKeys.deck(deckId) });
+    },
+    onError: (error) => {
+      console.error('Complete study session error:', error);
+      toast.error('Failed to complete study session. Please try again.');
+    },
+  });
+};
+
+export const useDeckStats = (deckId: string) => {
+  return useQuery({
+    queryKey: ['deckStats', deckId],
+    queryFn: () => deckApi.getStats(deckId),
+    enabled: !!deckId,
+    staleTime: 30 * 1000, // 30 seconds
+  });
+};
+
+// @Josy TODO: think about stale time and gcTime - we don't want to refetch while the user is studying?
+export const useStudyCards = (deckId: string) => {
+  return useQuery({
+    queryKey: ['studyCards', deckId],
+    queryFn: () => studyApi.getStudyCards(deckId),
+    enabled: !!deckId,
   });
 };

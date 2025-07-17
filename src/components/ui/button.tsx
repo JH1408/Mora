@@ -66,6 +66,14 @@ const buttonVariants = cva(
         // Soft Accent
         'soft-accent':
           'bg-accent-100 text-accent-800 hover:bg-accent-200 focus-visible:ring-accent-300 active:bg-accent-300 disabled:bg-accent-50 disabled:text-accent-400',
+
+        // Soft Success
+        'soft-success':
+          'bg-success-light text-success hover:shadow-soft focus-visible:shadow-soft  disabled:bg-neutral-5 disabled:text-primary',
+
+        // Soft Destructive
+        'soft-destructive':
+          'bg-error-light text-error hover:shadow-soft focus-visible:shadow-soft  disabled:bg-neutral-5 disabled:text-primary',
       },
       size: {
         xs: 'h-7 px-2.5 text-xs rounded gap-1.5 has-[>svg]:px-2',

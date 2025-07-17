@@ -21,8 +21,7 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import Spinner from '@/components/ui/spinner';
-import { Language } from '@/lib/api';
-import { Difficulty, DIFFICULTY_OPTIONS } from '@/types/deck';
+import { Difficulty, DIFFICULTY_OPTIONS, Language } from '@/types/deck';
 import { useCreateDeck } from '@/utils/hooks/useApi';
 
 interface CreateDeckModalProps {
@@ -39,12 +38,7 @@ const CreateDeckModal: React.FC<CreateDeckModalProps> = ({
   const [deckName, setDeckName] = useState('');
   const [language, setLanguage] = useState('');
   const [difficulty, setDifficulty] = useState('');
-  const {
-    mutate: createDeck,
-    isPending: isCreatingDeck,
-    isError: isCreateDeckError,
-  } = useCreateDeck();
-  console.log({ isCreateDeckError, isCreatingDeck });
+  const { mutate: createDeck, isPending: isCreatingDeck } = useCreateDeck();
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();

@@ -1,59 +1,72 @@
-import { Card } from '@prisma/client';
+// Re-export all types from the centralized schemas
+export type {
+  // Request Types
+  SignUpRequest,
+  SignInRequest,
+  CreateDeckRequest,
+  UpdateDeckRequest,
+  CreateCardRequest,
+  UpdateCardRequest,
+  StudyParamsRequest,
+  SubmitStudyResultRequest,
+  CompleteStudySessionRequest,
 
-export type Difficulty = 'BEGINNER' | 'INTERMEDIATE' | 'ADVANCED';
+  // Response Types
+  SessionUser,
+  Language,
+  Languages,
+  Deck,
+  Decks,
+  Card,
+  CardProgress,
+  StudySession,
+  StudyCard,
+  StudyDeck,
+  StudySessionData,
+  SubmitStudyResult,
+  CompleteStudySession,
+  DeckStats,
+  ApiError,
 
+  // Utility Types
+  StudyMode,
+  Difficulty,
+} from '@/lib/schemas';
+
+// Re-export schemas for runtime validation if needed
+export {
+  // Request Schemas
+  signUpSchema,
+  signInSchema,
+  createDeckSchema,
+  updateDeckSchema,
+  createCardSchema,
+  updateCardSchema,
+  studyParamsSchema,
+  submitStudySchema,
+  completeSessionSchema,
+
+  // Response Schemas
+  sessionUserSchema,
+  languageSchema,
+  languagesSchema,
+  deckSchema,
+  decksSchema,
+  cardSchema,
+  cardProgressSchema,
+  studySessionSchema,
+  studyCardSchema,
+  studyDeckSchema,
+  studySessionDataSchema,
+  submitStudyResultSchema,
+  completeStudySessionSchema,
+  deckStatsSchema,
+  apiErrorSchema,
+} from '@/lib/schemas';
+
+// Legacy constants for backward compatibility
 export const DIFFICULTY_OPTIONS = [
   { value: 'BEGINNER' as const, label: 'Beginner' },
   { value: 'INTERMEDIATE' as const, label: 'Intermediate' },
   { value: 'ADVANCED' as const, label: 'Advanced' },
 ] as const;
-
-export interface CreateDeckRequest {
-  name: string;
-  description?: string;
-  difficulty?: Difficulty;
-  languageId: string;
-}
-
-export interface CreateCardRequest {
-  deckId: string;
-  frontText: string;
-  backText: string;
-  phoneticSpelling?: string;
-  usageContext?: string;
-  tags?: string[];
-  handwritingData?: string;
-}
-
-export interface Deck {
-  id: string;
-  name: string;
-  description?: string;
-  difficulty?: Difficulty;
-  languageId: string;
-  userId: string;
-  isActive: boolean;
-  cardsCount: number;
-  createdAt: string;
-  updatedAt: string;
-  language: {
-    id: string;
-    code: string;
-    name: string;
-    script?: string;
-    rtl: boolean;
-    ttsSupported: boolean;
-  };
-  user: {
-    id: string;
-    name?: string;
-    email?: string;
-  };
-  cards: Card[];
-}
-
-export interface DeckWithCardCount extends Omit<Deck, 'user'> {
-  _count: {
-    cards: number;
-  };
-}

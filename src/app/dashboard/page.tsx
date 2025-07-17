@@ -8,6 +8,7 @@ import { useEffect, useMemo, useState } from 'react';
 import CreateDeckModal from '@/app/dashboard/components/create-deck-modal';
 import ErrorMessage from '@/components/error-message';
 import { Button } from '@/components/ui/button';
+import Spinner from '@/components/ui/spinner';
 import { countUniqueLanguages } from '@/utils/deckUtils';
 import { useDecks, useLanguages } from '@/utils/hooks/useApi';
 
@@ -18,7 +19,6 @@ import Stats from './components/stats';
 
 export default function DashboardPage() {
   const { data: session, status: sessionStatus } = useSession();
-  console.log({ session, sessionStatus });
   const router = useRouter();
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
 
@@ -27,10 +27,7 @@ export default function DashboardPage() {
     isLoading: isLoadingDecks,
     error: decksError,
   } = useDecks();
-  console.log({ decks, isLoadingDecks, decksError });
-  const { data: languages = [], isLoading: isLoadingLanguages } =
-    useLanguages();
-  console.log({ languages, isLoadingLanguages });
+  const { data: languages = [] } = useLanguages();
 
   useEffect(() => {
     if (sessionStatus === 'unauthenticated') {
@@ -63,6 +60,7 @@ export default function DashboardPage() {
             languagesCount={languagesCount}
             deckCount={deckCount}
           />
+          {isLoadingDecks && <Spinner className='absolute top-1/2 left-1/2 ' />}
           <Decks decks={decks} />
           {!decks.length && !isLoadingDecks && (
             <NoDecks setIsCreateModalOpen={setIsCreateModalOpen} />

@@ -1,20 +1,21 @@
-import { Card } from '@prisma/client';
-
-import {
-  CreateCardRequest,
-  CreateDeckRequest,
+import type {
+  Card,
   Deck,
-  DeckWithCardCount,
+  Decks,
+  Language,
+  Languages,
+  DeckStats,
+  StudySessionData,
+  SubmitStudyResult,
+  CompleteStudySession,
+  CreateDeckRequest,
+  UpdateDeckRequest,
+  CreateCardRequest,
+  UpdateCardRequest,
+  SubmitStudyResultRequest,
+  CompleteStudySessionRequest,
+  StudyMode,
 } from '@/types/deck';
-
-export interface Language {
-  id: string;
-  code: string;
-  name: string;
-  script?: string;
-  rtl: boolean;
-  ttsSupported: boolean;
-}
 
 const API_BASE = '/api';
 
@@ -46,7 +47,7 @@ async function apiFetch<T>(
 
 // Language API functions
 export const languageApi = {
-  getAll: (): Promise<Language[]> => apiFetch<Language[]>('/languages'),
+  getAll: (): Promise<Languages> => apiFetch<Languages>('/languages'),
 
   getById: (id: string): Promise<Language> =>
     apiFetch<Language>(`/languages/${id}`),
@@ -54,8 +55,7 @@ export const languageApi = {
 
 // Deck API functions
 export const deckApi = {
-  getAll: (): Promise<DeckWithCardCount[]> =>
-    apiFetch<DeckWithCardCount[]>('/decks'),
+  getAll: (): Promise<Decks> => apiFetch<Decks>('/decks'),
 
   getById: (id: string): Promise<Deck> => apiFetch<Deck>(`/decks/${id}`),
 
@@ -65,7 +65,7 @@ export const deckApi = {
       body: JSON.stringify(data),
     }),
 
-  update: (id: string, data: Partial<CreateDeckRequest>): Promise<Deck> =>
+  update: (id: string, data: UpdateDeckRequest): Promise<Deck> =>
     apiFetch<Deck>(`/decks/${id}`, {
       method: 'PUT',
       body: JSON.stringify(data),
@@ -75,6 +75,9 @@ export const deckApi = {
     apiFetch<void>(`/decks/${id}`, {
       method: 'DELETE',
     }),
+
+  getStats: (id: string): Promise<DeckStats> =>
+    apiFetch<DeckStats>(`/decks/${id}/stats`),
 };
 
 // Card API functions
@@ -85,7 +88,7 @@ export const cardApi = {
       body: JSON.stringify(data),
     }),
 
-  update: (id: string, data: Partial<CreateCardRequest>): Promise<Card> =>
+  update: (id: string, data: UpdateCardRequest): Promise<Card> =>
     apiFetch<Card>(`/cards/${id}`, {
       method: 'PUT',
       body: JSON.stringify(data),
@@ -94,5 +97,45 @@ export const cardApi = {
   delete: (id: string): Promise<void> =>
     apiFetch<void>(`/cards/${id}`, {
       method: 'DELETE',
+    }),
+};
+
+// Study API functions
+export const studyApi = {
+  getStudyCards: (
+    deckId: string,
+    params?: {
+      limit?: number;
+      studyMode?: StudyMode;
+    }
+  ): Promise<StudySessionData> => {
+    const searchParams = new URLSearchParams();
+    if (params?.limit) searchParams.append('limit', params.limit.toString());
+    if (params?.studyMode) searchParams.append('studyMode', params.studyMode);
+
+    const queryString = searchParams.toString();
+    const endpoint = `/decks/${deckId}/study${
+      queryString ? `?${queryString}` : ''
+    }`;
+
+    return apiFetch<StudySessionData>(endpoint);
+  },
+
+  submitStudyResult: (
+    deckId: string,
+    data: SubmitStudyResultRequest
+  ): Promise<SubmitStudyResult> =>
+    apiFetch<SubmitStudyResult>(`/decks/${deckId}/study/submit`, {
+      method: 'POST',
+      body: JSON.stringify(data),
+    }),
+
+  completeStudySession: (
+    deckId: string,
+    data: CompleteStudySessionRequest
+  ): Promise<CompleteStudySession> =>
+    apiFetch(`/decks/${deckId}/study/complete`, {
+      method: 'POST',
+      body: JSON.stringify(data),
     }),
 };

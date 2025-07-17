@@ -1,5 +1,5 @@
 import { Difficulty } from '@prisma/client';
-import { ChevronDown, ChevronRight, Play, Plus } from 'lucide-react';
+import { ChevronDown, ChevronRight, Play, SquarePen } from 'lucide-react';
 import Link from 'next/link';
 import { useMemo, useState, useEffect } from 'react';
 
@@ -12,7 +12,7 @@ import {
   CollapsibleContent,
   CollapsibleTrigger,
 } from '@/components/ui/collapsible';
-import { DeckWithCardCount } from '@/types/deck';
+import type { Deck } from '@/types/deck';
 import { getLanguageStats } from '@/utils/deckUtils';
 import { formatDifficulty } from '@/utils/deckUtils';
 
@@ -29,7 +29,7 @@ const getDifficultyColor = (difficulty: string) => {
   }
 };
 
-const Decks = ({ decks }: { decks: DeckWithCardCount[] }) => {
+const Decks = ({ decks }: { decks: Deck[] }) => {
   const languageStats = useMemo(() => getLanguageStats(decks), [decks]);
 
   const [expandedLanguages, setExpandedLanguages] = useState<
@@ -63,7 +63,7 @@ const Decks = ({ decks }: { decks: DeckWithCardCount[] }) => {
             open={expandedLanguages[languageStat.code]}
             onOpenChange={() => toggleLanguageExpansion(languageStat.code)}
           >
-            <CollapsibleTrigger className='w-full p-6 flex items-center justify-between hover:bg-neutral-1 transition-colors cursor-pointer'>
+            <CollapsibleTrigger className='w-full p-6 flex items-center justify-between rounded-2xl hover:bg-neutral-1 transition-colors cursor-pointer'>
               <div className='flex items-center space-x-3'>
                 <LanguageFlag languageCode={languageStat.code} size={24} />
                 <div>
@@ -122,21 +122,25 @@ const Decks = ({ decks }: { decks: DeckWithCardCount[] }) => {
 
                           {/* Action Buttons */}
                           <div className='flex space-x-2 pt-2'>
-                            <Button
-                              size='sm'
-                              className='flex-1 bg-primary-600 hover:bg-primary-700 text-white'
+                            <Link
+                              href={`/decks/${deck.id}/study`}
+                              className='flex-1'
                             >
-                              <Play className='h-4 w-4 mr-1' />
-                              Study
-                            </Button>
-                            <Link href={`/decks/${deck.id}/add-cards`}>
                               <Button
                                 size='sm'
-                                variant='soft'
-                                className='flex-1'
+                                className='bg-primary-600 hover:bg-primary-700 text-white w-full'
                               >
-                                <Plus className='h-4 w-4 mr-1' />
-                                Add Cards
+                                <Play className='h-4 w-4 mr-1' />
+                                Study
+                              </Button>
+                            </Link>
+                            <Link
+                              href={`/decks/${deck.id}/manage-cards`}
+                              className='flex-1'
+                            >
+                              <Button size='sm' variant='soft'>
+                                <SquarePen className='h-4 w-4 mr-1' />
+                                Manage Cards
                               </Button>
                             </Link>
                           </div>

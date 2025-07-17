@@ -4,17 +4,17 @@ import { z } from 'zod';
 
 import { authOptions } from '@/lib/auth';
 import { prisma } from '@/lib/prisma';
+import {
+  deckSchema,
+  decksSchema,
+  createDeckSchema,
+  type Deck,
+  type Decks,
+} from '@/lib/schemas';
 
-// Validation schema for creating a deck
-const createDeckSchema = z.object({
-  name: z
-    .string()
-    .min(1, 'Name is required')
-    .max(100, 'Name must be less than 100 characters'),
-  description: z.string().optional(),
-  difficulty: z.enum(['BEGINNER', 'INTERMEDIATE', 'ADVANCED']).optional(),
-  languageId: z.string().min(1, 'Language ID is required'),
-});
+// Re-export for backward compatibility
+export { deckSchema, decksSchema };
+export type { Deck, Decks };
 
 export async function POST(request: NextRequest) {
   try {

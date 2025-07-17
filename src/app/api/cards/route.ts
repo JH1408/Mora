@@ -4,23 +4,11 @@ import { z } from 'zod';
 
 import { authOptions } from '@/lib/auth';
 import { prisma } from '@/lib/prisma';
+import { cardSchema, createCardSchema, type Card } from '@/lib/schemas';
 
-// Validation schema for creating a card
-const createCardSchema = z.object({
-  deckId: z.string().min(1, 'Deck ID is required'),
-  frontText: z
-    .string()
-    .min(1, 'Front text is required')
-    .max(1000, 'Front text must be less than 1000 characters'),
-  backText: z
-    .string()
-    .min(1, 'Back text is required')
-    .max(1000, 'Back text must be less than 1000 characters'),
-  phoneticSpelling: z.string().optional(),
-  usageContext: z.string().optional(),
-  tags: z.array(z.string()).optional(),
-  handwritingData: z.string().optional(),
-});
+// Re-export for backward compatibility
+export { cardSchema };
+export type { Card };
 
 export async function POST(request: NextRequest) {
   try {

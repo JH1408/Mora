@@ -1,4 +1,12 @@
 @import 'tailwindcss';
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+Thai:wght@100;200;300;400;500;600;700;800;900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Sarabun:wght@100;200;300;400;500;600;700;800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Kanit:wght@100;200;300;400;500;600;700;800;900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@100;200;300;400;500;600;700;800;900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@100;200;300;400;500;600;700;800;900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@100;200;300;400;500;600;700;800;900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+Arabic:wght@100;200;300;400;500;600;700;800;900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+Devanagari:wght@100;200;300;400;500;600;700;800;900&display=swap');
 
 @theme {
   --color-primary-50: #f5f2f7;
@@ -97,10 +105,63 @@
 
   body {
     @apply bg-background-white text-text-primary;
+    @apply select-none;
   }
 }
 
 @layer components {
+  /* Script-specific font support */
+  .font-thai {
+    font-family: 'Noto Sans Thai', 'Sarabun', 'Kanit', 'Prompt', 'Noto Sans',
+      'Tahoma', 'Arial Unicode MS', sans-serif;
+    font-feature-settings: 'liga' 1, 'kern' 1;
+    font-display: swap;
+  }
+
+  .font-chinese {
+    font-family: 'Noto Sans SC', 'Noto Sans TC', 'Source Han Sans SC',
+      sans-serif;
+    font-feature-settings: 'liga' 1, 'kern' 1;
+  }
+
+  .font-japanese {
+    font-family: 'Noto Sans JP', 'Noto Sans CJK JP', 'Source Han Sans JP',
+      sans-serif;
+    font-feature-settings: 'liga' 1, 'kern' 1;
+  }
+
+  .font-korean {
+    font-family: 'Noto Sans KR', 'Noto Sans CJK KR', 'Source Han Sans KR',
+      sans-serif;
+    font-feature-settings: 'liga' 1, 'kern' 1;
+  }
+
+  .font-arabic {
+    font-family: 'Noto Sans Arabic', 'Noto Naskh Arabic', sans-serif;
+    font-feature-settings: 'liga' 1, 'kern' 1;
+  }
+
+  .font-devanagari {
+    font-family: 'Noto Sans Devanagari', 'Noto Sans Devanagari UI', sans-serif;
+    font-feature-settings: 'liga' 1, 'kern' 1;
+  }
+
+  .font-latin {
+    font-family: 'Inter', 'Noto Sans', system-ui, sans-serif;
+    font-feature-settings: 'liga' 1, 'kern' 1;
+  }
+
+  /* RTL support */
+  .rtl {
+    direction: rtl;
+    text-align: right;
+  }
+
+  .ltr {
+    direction: ltr;
+    text-align: left;
+  }
+
   /* Ensure toast appears above modals */
   [data-sonner-toaster] {
     z-index: 99999 !important;
