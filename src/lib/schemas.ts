@@ -327,3 +327,9 @@ export type ApiError = z.infer<typeof apiErrorSchema>;
 // Utility Types
 export type StudyMode = 'recognition' | 'recall';
 export type Difficulty = 'BEGINNER' | 'INTERMEDIATE' | 'ADVANCED';
+
+export const sessionSchema = z.object({
+  user: sessionUserSchema.optional(),
+  expires: z.string().optional(),
+});
+export type Session = z.infer<typeof sessionSchema>;

@@ -4,7 +4,7 @@ import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import type { StudyMode } from '@/types/studySession';
 import { STUDY_MODES } from '@/types/studySession';
-import paths from '@/utils/paths';
+import paths from '@/utils/clientPaths';
 
 // @Josy TODO add some kind of tooltip to explain what recognition and recall are
 
@@ -40,14 +40,14 @@ const Header = ({
               <h1 className='text-xl font-bold font-heading text-text-primary'>
                 Study Session: {deckName}
               </h1>
-              {totalCards && currentCardIndex && (
+              {!!totalCards && !!currentCardIndex && (
                 <p className='text-sm text-text-muted'>
                   Card {currentCardIndex} of {totalCards}
                 </p>
               )}
             </div>
           </div>
-          {totalCards && currentCardIndex && (
+          {!!totalCards && !!currentCardIndex && (
             <div className='flex items-center space-x-4'>
               <Button variant='soft' size='sm' onClick={toggleStudyMode}>
                 {studyMode === STUDY_MODES.RECOGNITION ? (
@@ -59,10 +59,6 @@ const Header = ({
                   ? 'Recognition'
                   : 'Recall'}
               </Button>
-
-              {/* <div className='text-sm text-text-secondary'>
-                        {sessionStats.correct}/{sessionStats.studied} correct
-                    </div> */}
             </div>
           )}
         </div>

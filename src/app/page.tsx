@@ -7,7 +7,7 @@ import { useSession } from 'next-auth/react';
 import { ClientOnly } from '@/components/client-only';
 import { Button } from '@/components/ui/button';
 import Spinner from '@/components/ui/spinner';
-import paths from '@/utils/paths';
+import paths from '@/utils/clientPaths';
 
 function HomeContent() {
   const { data: session, status } = useSession();
@@ -18,9 +18,11 @@ function HomeContent() {
         <Image
           src='/images/mora_logo.png'
           alt='Mora Logo'
-          width={100}
-          height={100}
+          width={0}
+          height={0}
+          sizes='100vw'
           className='h-10 w-auto'
+          priority
         />
         <div className='flex gap-4 justify-center'>
           {status === 'loading' ? (

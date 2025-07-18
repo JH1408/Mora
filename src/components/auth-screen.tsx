@@ -14,7 +14,7 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card';
-import paths from '@/utils/paths';
+import paths from '@/utils/clientPaths';
 
 const signUpText = {
   title: 'Welcome to Mora',
@@ -114,6 +114,7 @@ const AuthScreen = ({ isSignUp = false }: { isSignUp?: boolean }) => {
             width={100}
             height={100}
             className='h-10 w-auto'
+            priority
           />
         </Link>
       </div>

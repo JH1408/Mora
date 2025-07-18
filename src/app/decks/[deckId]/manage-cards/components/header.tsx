@@ -2,7 +2,7 @@ import { ArrowLeft } from 'lucide-react';
 import Link from 'next/link';
 
 import { Button } from '@/components/ui/button';
-import paths from '@/utils/paths';
+import paths from '@/utils/clientPaths';
 
 const Header = ({ deckName }: { deckName?: string }) => {
   return (

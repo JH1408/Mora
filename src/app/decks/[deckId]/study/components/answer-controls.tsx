@@ -3,13 +3,13 @@ import { CheckCircle, XCircle } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
 const AnswerControls = ({
-  isFlipped,
+  hasBeenFlipped,
   handleStudyResult,
 }: {
-  isFlipped: boolean;
+  hasBeenFlipped: boolean;
   handleStudyResult: (isCorrect: boolean) => void;
 }) => {
-  if (!isFlipped) return null;
+  if (!hasBeenFlipped) return null;
 
   return (
     <div className='space-y-4'>

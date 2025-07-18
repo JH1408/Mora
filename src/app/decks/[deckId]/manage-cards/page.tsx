@@ -6,6 +6,7 @@ import { useState } from 'react';
 
 import ErrorMessage from '@/components/error-message';
 import { Card, CardContent as _CardContent } from '@/components/ui/card';
+import Spinner from '@/components/ui/spinner';
 import { useDeck, useDeleteCard, useUpdateCard } from '@/utils/hooks/useApi';
 import { getLanguageClasses } from '@/utils/languages';
 
@@ -18,7 +19,11 @@ const ManageCardsPage = () => {
   const { deckId } = useParams();
   const [editingCardId, setEditingCardId] = useState<string | null>(null);
 
-  const { data: deck, isError: isDeckError } = useDeck(deckId as string);
+  const {
+    data: deck,
+    isError: isDeckError,
+    isLoading: isLoadingDeck,
+  } = useDeck(deckId as string);
   const { mutate: deleteCard, isPending: isDeletingCard } = useDeleteCard();
   const { mutate: updateCard, isPending: isUpdatingCard } = useUpdateCard();
 
@@ -55,6 +60,8 @@ const ManageCardsPage = () => {
             <ErrorMessage message="Oops, we couldn't load this deck." />
           </section>
         )}
+
+        {isLoadingDeck && <Spinner className='absolute top-1/2 left-1/2 ' />}
 
         {!!deck?.cardsCount && deck.cardsCount > 0 && (
           <section>

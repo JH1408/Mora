@@ -4,17 +4,7 @@ import { z } from 'zod';
 
 import { authOptions } from '@/lib/auth';
 import { prisma } from '@/lib/prisma';
-import {
-  deckSchema,
-  decksSchema,
-  createDeckSchema,
-  type Deck,
-  type Decks,
-} from '@/lib/schemas';
-
-// Re-export for backward compatibility
-export { deckSchema, decksSchema };
-export type { Deck, Decks };
+import { createDeckSchema } from '@/lib/schemas';
 
 export async function POST(request: NextRequest) {
   try {

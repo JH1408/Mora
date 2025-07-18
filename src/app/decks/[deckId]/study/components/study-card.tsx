@@ -1,4 +1,6 @@
+import { useDrag } from '@use-gesture/react';
 import { Volume2 } from 'lucide-react';
+import { useState } from 'react';
 
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -17,6 +19,13 @@ const getCurrentText = (
   return isFlipped ? currentCard.frontText : currentCard.backText;
 };
 
+const getCardTitle = (isFlipped: boolean, studyMode: StudyMode) => {
+  if (studyMode === STUDY_MODES.RECOGNITION) {
+    return isFlipped ? 'Back' : 'Front';
+  }
+  return isFlipped ? 'Front' : 'Back';
+};
+
 const StudyCard = ({
   isFlipped,
   setIsFlipped,
@@ -24,6 +33,9 @@ const StudyCard = ({
   currentCard,
   speakText,
   fontClass,
+  onSwipeLeft,
+  onSwipeRight,
+  hasBeenFlipped,
 }: {
   isFlipped: boolean;
   setIsFlipped: (isFlipped: boolean) => void;
@@ -31,14 +43,87 @@ const StudyCard = ({
   currentCard: StudyCard;
   speakText: (text: string) => void;
   fontClass: string;
+  onSwipeLeft?: () => void;
+  onSwipeRight?: () => void;
+  hasBeenFlipped: boolean;
 }) => {
+  const handleSpeakButtonClick = () => {
+    const textToSpeak = getCurrentText(isFlipped, studyMode, currentCard);
+    speakText(textToSpeak);
+  };
+
+  const [dragOffset, setDragOffset] = useState(0);
+  const [wasDragged, setWasDragged] = useState(false);
+  const [isDragging, setIsDragging] = useState(false);
+
+  const bind = useDrag(
+    ({
+      movement: [mx],
+      direction: [xDir],
+      velocity: [vx],
+      cancel,
+      canceled,
+      active,
+    }) => {
+      // Update drag offset for visual feedback
+      setDragOffset(mx);
+      setIsDragging(active);
+
+      // Check if this was a swipe
+      if (canceled) {
+        setDragOffset(0);
+        setWasDragged(false);
+        setIsDragging(false);
+        return;
+      }
+
+      // Trigger swipe if movement is significant
+      if (Math.abs(mx) > 300 && Math.abs(vx) > 0.5) {
+        if (xDir > 0 && onSwipeRight) {
+          onSwipeRight();
+        } else if (xDir < 0 && onSwipeLeft) {
+          onSwipeLeft();
+        }
+        cancel();
+      }
+
+      // Mark as dragged if there was significant movement
+      if (Math.abs(mx) > 10) {
+        setWasDragged(true);
+      }
+    },
+    {
+      axis: 'x',
+      filterTaps: true,
+      bounds: { left: -400, right: 400 },
+      rubberband: true,
+      enabled: hasBeenFlipped,
+    }
+  );
+
+  const handleClick = () => {
+    // Only flip if there was no drag
+    if (!wasDragged) {
+      setIsFlipped(!isFlipped);
+    }
+    setWasDragged(false);
+  };
+
   return (
     <div className='relative'>
       <Card
+        {...bind()}
         className={`min-h-[400px] border-neutral-3 py-6 cursor-pointer transition-all duration-300 ${
           isFlipped ? 'transform rotate-y-180' : ''
         }`}
-        onClick={() => setIsFlipped(!isFlipped)}
+        style={{
+          transform: `translateX(${dragOffset}px) ${
+            isFlipped ? 'rotateY(180deg)' : ''
+          }`,
+          transition: isDragging ? 'none' : 'all 0.3s ease',
+          touchAction: 'none', // Prevent default touch behaviors
+        }}
+        onClick={handleClick}
       >
         <CardHeader className='text-center'>
           <CardTitle
@@ -46,13 +131,7 @@ const StudyCard = ({
               isFlipped ? 'transform rotate-y-180' : ''
             }`}
           >
-            {studyMode === STUDY_MODES.RECOGNITION
-              ? isFlipped
-                ? 'Back'
-                : 'Front'
-              : isFlipped
-              ? 'Front'
-              : 'Back'}
+            {getCardTitle(isFlipped, studyMode)}
           </CardTitle>
         </CardHeader>
 
@@ -72,15 +151,7 @@ const StudyCard = ({
               <Button
                 variant='soft-secondary'
                 size='sm'
-                onClick={(e) => {
-                  e.stopPropagation();
-                  const textToSpeak = getCurrentText(
-                    isFlipped,
-                    studyMode,
-                    currentCard
-                  );
-                  speakText(textToSpeak);
-                }}
+                onClick={handleSpeakButtonClick}
               >
                 <Volume2 className='h-4 w-4 mr-2' />
                 Listen

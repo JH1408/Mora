@@ -68,12 +68,13 @@ export function getDueCards(
   cards: Array<{ id: string; cardProgress?: CardProgressData | null }>
 ) {
   const now = new Date();
+  const fourHoursFromNow = new Date(now.getTime() + 4 * 60 * 60 * 1000);
   return cards.filter((card) => {
     if (!card.cardProgress) {
       // New card, always due
       return true;
     }
-    return card.cardProgress.nextReviewDate <= now;
+    return card.cardProgress.nextReviewDate <= fourHoursFromNow;
   });
 }
 

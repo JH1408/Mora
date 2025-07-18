@@ -4,7 +4,7 @@ import { signOut } from 'next-auth/react';
 import { toast } from 'sonner';
 
 import { Button } from '@/components/ui/button';
-import paths from '@/utils/paths';
+import paths from '@/utils/clientPaths';
 
 const Header = ({ userName }: { userName: string | null }) => {
   const handleSignout = async () => {
@@ -26,9 +26,11 @@ const Header = ({ userName }: { userName: string | null }) => {
               <Image
                 src='/images/mora_logo.png'
                 alt='Mora Logo'
-                width={100}
-                height={100}
+                width={0}
+                height={0}
+                sizes='100vw'
                 className='h-10 w-auto'
+                priority
               />
             </div>
           </div>

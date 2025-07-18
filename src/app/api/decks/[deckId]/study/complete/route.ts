@@ -4,15 +4,7 @@ import { z } from 'zod';
 
 import { authOptions } from '@/lib/auth';
 import { prisma } from '@/lib/prisma';
-import {
-  completeStudySessionSchema,
-  completeSessionSchema,
-  type CompleteStudySession,
-} from '@/lib/schemas';
-
-// Re-export for backward compatibility
-export { completeStudySessionSchema };
-export type { CompleteStudySession };
+import { completeSessionSchema } from '@/lib/schemas';
 
 export async function POST(
   request: NextRequest,

@@ -16,15 +16,14 @@ import type {
   CompleteStudySessionRequest,
   StudyMode,
 } from '@/types/deck';
-
-const API_BASE = '/api';
+import apiPaths from '@/utils/apiPaths';
 
 // Generic fetch wrapper with error handling
 async function apiFetch<T>(
   endpoint: string,
   options?: RequestInit
 ): Promise<T> {
-  const response = await fetch(`${API_BASE}${endpoint}`, {
+  const response = await fetch(endpoint, {
     headers: {
       'Content-Type': 'application/json',
       ...options?.headers,
@@ -47,55 +46,57 @@ async function apiFetch<T>(
 
 // Language API functions
 export const languageApi = {
-  getAll: (): Promise<Languages> => apiFetch<Languages>('/languages'),
+  getAll: (): Promise<Languages> =>
+    apiFetch<Languages>(apiPaths.languages.base),
 
   getById: (id: string): Promise<Language> =>
-    apiFetch<Language>(`/languages/${id}`),
+    apiFetch<Language>(`${apiPaths.languages.base}/${id}`),
 };
 
 // Deck API functions
 export const deckApi = {
-  getAll: (): Promise<Decks> => apiFetch<Decks>('/decks'),
+  getAll: (): Promise<Decks> => apiFetch<Decks>(apiPaths.decks.base),
 
-  getById: (id: string): Promise<Deck> => apiFetch<Deck>(`/decks/${id}`),
+  getById: (id: string): Promise<Deck> =>
+    apiFetch<Deck>(apiPaths.decks.byId(id)),
 
   create: (data: CreateDeckRequest): Promise<Deck> =>
-    apiFetch<Deck>('/decks', {
+    apiFetch<Deck>(apiPaths.decks.base, {
       method: 'POST',
       body: JSON.stringify(data),
     }),
 
   update: (id: string, data: UpdateDeckRequest): Promise<Deck> =>
-    apiFetch<Deck>(`/decks/${id}`, {
+    apiFetch<Deck>(apiPaths.decks.byId(id), {
       method: 'PUT',
       body: JSON.stringify(data),
     }),
 
   delete: (id: string): Promise<void> =>
-    apiFetch<void>(`/decks/${id}`, {
+    apiFetch<void>(apiPaths.decks.byId(id), {
       method: 'DELETE',
     }),
 
   getStats: (id: string): Promise<DeckStats> =>
-    apiFetch<DeckStats>(`/decks/${id}/stats`),
+    apiFetch<DeckStats>(apiPaths.decks.stats(id)),
 };
 
 // Card API functions
 export const cardApi = {
   create: (data: CreateCardRequest): Promise<Card> =>
-    apiFetch<Card>('/cards', {
+    apiFetch<Card>(apiPaths.cards.base, {
       method: 'POST',
       body: JSON.stringify(data),
     }),
 
   update: (id: string, data: UpdateCardRequest): Promise<Card> =>
-    apiFetch<Card>(`/cards/${id}`, {
+    apiFetch<Card>(apiPaths.cards.byId(id), {
       method: 'PUT',
       body: JSON.stringify(data),
     }),
 
   delete: (id: string): Promise<void> =>
-    apiFetch<void>(`/cards/${id}`, {
+    apiFetch<void>(apiPaths.cards.byId(id), {
       method: 'DELETE',
     }),
 };
@@ -114,7 +115,7 @@ export const studyApi = {
     if (params?.studyMode) searchParams.append('studyMode', params.studyMode);
 
     const queryString = searchParams.toString();
-    const endpoint = `/decks/${deckId}/study${
+    const endpoint = `${apiPaths.decks.study.base(deckId)}${
       queryString ? `?${queryString}` : ''
     }`;
 
@@ -125,7 +126,7 @@ export const studyApi = {
     deckId: string,
     data: SubmitStudyResultRequest
   ): Promise<SubmitStudyResult> =>
-    apiFetch<SubmitStudyResult>(`/decks/${deckId}/study/submit`, {
+    apiFetch<SubmitStudyResult>(apiPaths.decks.study.submit(deckId), {
       method: 'POST',
       body: JSON.stringify(data),
     }),
@@ -134,7 +135,7 @@ export const studyApi = {
     deckId: string,
     data: CompleteStudySessionRequest
   ): Promise<CompleteStudySession> =>
-    apiFetch(`/decks/${deckId}/study/complete`, {
+    apiFetch(apiPaths.decks.study.complete(deckId), {
       method: 'POST',
       body: JSON.stringify(data),
     }),

@@ -4,18 +4,8 @@ import { z } from 'zod';
 
 import { authOptions } from '@/lib/auth';
 import { prisma } from '@/lib/prisma';
-import {
-  cardProgressSchema,
-  studySessionSchema,
-  submitStudyResultSchema,
-  submitStudySchema,
-  type SubmitStudyResult,
-} from '@/lib/schemas';
+import { submitStudySchema } from '@/lib/schemas';
 import { calculateNextReview } from '@/utils/spacedRepetition';
-
-// Re-export for backward compatibility
-export { cardProgressSchema, studySessionSchema, submitStudyResultSchema };
-export type { SubmitStudyResult };
 
 export async function POST(
   request: NextRequest,

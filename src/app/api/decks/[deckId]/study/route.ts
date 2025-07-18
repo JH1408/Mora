@@ -4,25 +4,8 @@ import { z } from 'zod';
 
 import { authOptions } from '@/lib/auth';
 import { prisma } from '@/lib/prisma';
-import {
-  studyCardSchema,
-  studySessionSchema,
-  studyDeckSchema,
-  studySessionDataSchema,
-  studyParamsSchema,
-  type StudyCard,
-  type StudySessionData,
-} from '@/lib/schemas';
+import { studyParamsSchema } from '@/lib/schemas';
 import { getDueCards, sortCardsByPriority } from '@/utils/spacedRepetition';
-
-// Re-export for backward compatibility
-export {
-  studyCardSchema,
-  studySessionSchema,
-  studyDeckSchema,
-  studySessionDataSchema,
-};
-export type { StudyCard, StudySessionData };
 
 export async function GET(
   request: NextRequest,

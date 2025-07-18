@@ -3,12 +3,7 @@ import { getServerSession } from 'next-auth';
 
 import { authOptions } from '@/lib/auth';
 import { prisma } from '@/lib/prisma';
-import { deckStatsSchema, type DeckStats } from '@/lib/schemas';
 import { getDueCards } from '@/utils/spacedRepetition';
-
-// Re-export for backward compatibility
-export { deckStatsSchema };
-export type { DeckStats };
 
 export async function GET(
   request: NextRequest,

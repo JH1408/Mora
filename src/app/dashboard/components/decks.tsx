@@ -16,6 +16,8 @@ import type { Deck } from '@/types/deck';
 import { getLanguageStats } from '@/utils/deckUtils';
 import { formatDifficulty } from '@/utils/deckUtils';
 
+import DeckStats from './deck-stats';
+
 const getDifficultyColor = (difficulty: string) => {
   switch (difficulty) {
     case Difficulty.BEGINNER:
@@ -60,7 +62,7 @@ const Decks = ({ decks }: { decks: Deck[] }) => {
           className='bg-background-white rounded-lg shadow-soft border border-neutral-3'
         >
           <Collapsible
-            open={expandedLanguages[languageStat.code]}
+            open={!!expandedLanguages[languageStat.code]}
             onOpenChange={() => toggleLanguageExpansion(languageStat.code)}
           >
             <CollapsibleTrigger className='w-full p-6 flex items-center justify-between rounded-2xl hover:bg-neutral-1 transition-colors cursor-pointer'>
@@ -91,7 +93,7 @@ const Decks = ({ decks }: { decks: Deck[] }) => {
                       key={deck.id}
                       className='hover:shadow-primary py-6 transition-shadow duration-200 border-neutral-3'
                     >
-                      <CardHeader className='pb-3'>
+                      <CardHeader className='pb-2'>
                         <div className='flex items-start justify-between'>
                           <CardTitle className='text-lg font-medium text-text-primary line-clamp-2'>
                             {deck.name}
@@ -109,18 +111,9 @@ const Decks = ({ decks }: { decks: Deck[] }) => {
                       </CardHeader>
 
                       <CardContent className='pt-0'>
-                        <div className='space-y-3'>
-                          {/* Stats */}
-                          <div className='flex justify-between text-sm text-text-secondary'>
-                            <span>{deck.cardsCount} cards</span>
-                            {/* <span>{deck.studiedToday} studied today</span> */}
-                          </div>
+                        <div className='space-y-2'>
+                          <DeckStats deckId={deck.id} />
 
-                          {/* <p className='text-xs text-text-muted'>
-                            Last studied: {deck.lastStudied}
-                          </p> */}
-
-                          {/* Action Buttons */}
                           <div className='flex space-x-2 pt-2'>
                             <Link
                               href={`/decks/${deck.id}/study`}

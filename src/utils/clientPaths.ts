@@ -1,4 +1,4 @@
-const paths = {
+const clientPaths = {
   home: '/',
   login: '/login',
   signup: '/signup',
@@ -6,4 +6,4 @@ const paths = {
   createDeck: '/create-deck',
 };
 
-export default paths;
+export default clientPaths;

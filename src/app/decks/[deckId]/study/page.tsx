@@ -1,30 +1,29 @@
 'use client';
 
-import Link from 'next/link';
 import { useParams, useRouter } from 'next/navigation';
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { toast } from 'sonner';
 
-import { Button } from '@/components/ui/button';
 import { Progress } from '@/components/ui/progress';
 import Spinner from '@/components/ui/spinner';
 import type { StudyCard as StudyCardType } from '@/types/deck';
 import type { StudyMode } from '@/types/studySession';
 import { STUDY_MODES } from '@/types/studySession';
+import paths from '@/utils/clientPaths';
 import {
   useCompleteStudySession,
   useDeck,
   useSubmitStudyResult,
   useStudyCards,
 } from '@/utils/hooks/useApi';
-import useOnUnmount from '@/utils/hooks/useOnUnmount';
 import { getLanguageClasses } from '@/utils/languages';
-import paths from '@/utils/paths';
 
 import AnswerControls from './components/answer-controls';
 import Header from './components/header';
+import PracticeSessionDialog from './components/practice-session-dialog';
 import StudyCard from './components/study-card';
 
+// @Josy: progress display is wrong when in free practice mode
 const Study = () => {
   const router = useRouter();
   const { deckId } = useParams<{ deckId: string }>();
@@ -33,32 +32,33 @@ const Study = () => {
     isLoading: isLoadingStudySession,
     isError: isErrorStudySession,
   } = useStudyCards(deckId as string);
-  const { data: deck, isLoading: isLoadingDeck } = useDeck(deckId as string);
+  const {
+    data: deck,
+    isLoading: isLoadingDeck,
+    isError: isErrorLoadingDeck,
+  } = useDeck(deckId as string);
   const { mutate: completeStudySession } = useCompleteStudySession(
     deckId as string
   );
+  const { mutate: submitStudyResult } = useSubmitStudyResult(deckId as string);
 
   const [cardQueue, setCardQueue] = useState<StudyCardType[] | null>(null);
   const [isFlipped, setIsFlipped] = useState(false);
+  const [hasBeenFlipped, setHasBeenFlipped] = useState(false);
   const [studyMode, setStudyMode] = useState<StudyMode>(
     STUDY_MODES.RECOGNITION
   );
-  const [sessionStats, setSessionStats] = useState({
-    studied: 0,
-    correct: 0,
-    total: studySession?.cards.length,
-  });
 
-  const isPracticeSession = studySession && studySession.totalDue === 0;
+  const isPracticeSession = useMemo(
+    () => studySession && studySession.totalDue === 0,
+    [studySession]
+  );
+  const currentCard = cardQueue?.[0];
 
   const initializeStudySession = (cards: StudyCardType[]) => {
     setCardQueue([...cards]);
-    setSessionStats({
-      studied: 0,
-      correct: 0,
-      total: cards.length,
-    });
     setIsFlipped(false);
+    setHasBeenFlipped(false);
   };
 
   useEffect(() => {
@@ -78,15 +78,9 @@ const Study = () => {
       studySessionId: studySession.studySession.id,
       sessionDuration,
     });
-    toast.success(
-      `Session complete! You studied ${sessionStats.studied} cards.`
-    );
+    const studiedCards = getTotalCards() - (cardQueue?.length || 0);
+    toast.success(`Session complete! You studied ${studiedCards} cards.`);
   };
-
-  useOnUnmount(endStudySession, []);
-
-  // Get the current card index and card
-  const currentCard = cardQueue?.[0];
 
   const speakText = (text: string) => {
     if ('speechSynthesis' in window && studySession) {
@@ -99,13 +93,10 @@ const Study = () => {
     }
   };
 
-  const { mutate: submitStudyResult } = useSubmitStudyResult(deckId as string);
-
   const handleStudyResult = (isCorrect: boolean) => {
     if (!currentCard || !studySession || cardQueue?.length === 0 || !cardQueue)
       return;
     const cardToProcess = cardQueue[0];
-
     // Optimistically update queue
     setCardQueue((prevQueue) => {
       if (!prevQueue || prevQueue.length === 0) return prevQueue;
@@ -119,7 +110,7 @@ const Study = () => {
       }
     });
     setIsFlipped(false);
-
+    setHasBeenFlipped(false);
     // Only submit study result if this is NOT a practice session
     if (!isPracticeSession) {
       submitStudyResult(
@@ -138,7 +129,15 @@ const Study = () => {
       );
     }
     if (cardQueue?.length === 1) {
+      endStudySession();
       router.push(paths.dashboard);
+    }
+  };
+
+  const handleSetIsFlipped = (flipped: boolean) => {
+    setIsFlipped(flipped);
+    if (flipped) {
+      setHasBeenFlipped(true);
     }
   };
 
@@ -149,6 +148,7 @@ const Study = () => {
         : STUDY_MODES.RECOGNITION
     );
     setIsFlipped(false);
+    setHasBeenFlipped(false);
   };
 
   const startPracticeSession = () => {
@@ -168,6 +168,25 @@ const Study = () => {
     return cards.findIndex((card) => card.id === cardQueue[0]?.id) + 1;
   };
 
+  const getTotalCards = useCallback(() => {
+    if (isPracticeSession) return deck?.cards?.length || 0;
+    return studySession?.cards.length || 0;
+  }, [isPracticeSession, deck, studySession]);
+
+  const shouldShowPracticeSessionDialog =
+    isPracticeSession && deck?.cards && !cardQueue;
+  const shouldShowStudyCard =
+    studySession && currentCard && cardQueue.length > 0;
+
+  useEffect(() => {
+    const handleBeforeUnload = (e: BeforeUnloadEvent) => {
+      e.preventDefault();
+      endStudySession();
+    };
+    window.addEventListener('beforeunload', handleBeforeUnload);
+    return () => window.removeEventListener('beforeunload', handleBeforeUnload);
+  }, []);
+
   return (
     <div className='min-h-screen bg-gradient-to-br from-primary-100 to-accent-100'>
       <Header
@@ -175,19 +194,13 @@ const Study = () => {
         studyMode={studyMode}
         toggleStudyMode={toggleStudyMode}
         currentCardIndex={cardQueue ? getCurrentCardIndex() : null}
-        totalCards={
-          cardQueue && isPracticeSession
-            ? deck?.cards?.length
-            : cardQueue
-            ? studySession?.cards.length
-            : null
-        }
+        totalCards={getTotalCards()}
         endStudySession={endStudySession}
       />
-      {isLoadingStudySession && (
+      {(isLoadingStudySession || (isLoadingDeck && isPracticeSession)) && (
         <Spinner className='absolute top-1/2 left-1/2 ' />
       )}
-      {isErrorStudySession && (
+      {(isErrorStudySession || (isErrorLoadingDeck && isPracticeSession)) && (
         <div className='absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2'>
           <p className='text-error text-center'>
             Oops, we couldn&apos;t load your study session. <br />
@@ -195,30 +208,10 @@ const Study = () => {
           </p>
         </div>
       )}
-      {isPracticeSession && deck?.cards && !cardQueue && (
-        <div className='max-w-2xl mx-auto px-4 sm:px-6 lg:px-8 py-4'>
-          <div className='bg-gradient-to-br from-accent-100 to-accent-50 shadow-soft rounded-lg p-4 m-4'>
-            <div className='mx-auto text-center mt-2'>
-              <h3 className='text-lg font-medium text-accent-900'>
-                Practice Session
-              </h3>
-              <p className='mt-2 text-sm text-accent-800 text-center'>
-                All cards are up to date! Do you want to start a free practice
-                session without affecting your progress?
-              </p>
-            </div>
-            <div className='flex justify-center gap-2 mt-6 mb-4'>
-              <Button variant='soft-secondary' onClick={startPracticeSession}>
-                Start Practice Session
-              </Button>
-              <Link href={paths.dashboard}>
-                <Button variant='ghost'>No, thanks.</Button>
-              </Link>
-            </div>
-          </div>
-        </div>
+      {shouldShowPracticeSessionDialog && (
+        <PracticeSessionDialog startPracticeSession={startPracticeSession} />
       )}
-      {studySession && currentCard && cardQueue.length > 0 && (
+      {shouldShowStudyCard && (
         <>
           <div className='max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-4'>
             <Progress value={calculateProgressPercentage()} className='h-2' />
@@ -228,7 +221,7 @@ const Study = () => {
             <div className='space-y-6'>
               <StudyCard
                 isFlipped={isFlipped}
-                setIsFlipped={setIsFlipped}
+                setIsFlipped={handleSetIsFlipped}
                 studyMode={studyMode}
                 currentCard={currentCard}
                 speakText={speakText}
@@ -236,9 +229,12 @@ const Study = () => {
                   getLanguageClasses(studySession?.deck.language.script)
                     .fontClass
                 }
+                hasBeenFlipped={hasBeenFlipped}
+                onSwipeLeft={() => handleStudyResult(false)}
+                onSwipeRight={() => handleStudyResult(true)}
               />
               <AnswerControls
-                isFlipped={isFlipped}
+                hasBeenFlipped={hasBeenFlipped}
                 handleStudyResult={handleStudyResult}
               />
             </div>
