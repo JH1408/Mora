@@ -167,7 +167,9 @@ export const useSubmitStudyResult = (deckId: string) => {
     },
     onError: (error) => {
       console.error('Submit study result error:', error);
-      toast.error('Failed to save progress. Please try again.');
+      toast.error(
+        'We could not save your progress. We have added the card to the end of the queue.'
+      );
     },
   });
 };

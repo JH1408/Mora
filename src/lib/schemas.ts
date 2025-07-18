@@ -118,7 +118,10 @@ export const deckSchema = z.object({
   id: z.string(),
   name: z.string(),
   description: z.string().nullable().optional(),
-  difficulty: z.string().nullable().optional(),
+  difficulty: z
+    .enum(['BEGINNER', 'INTERMEDIATE', 'ADVANCED'])
+    .nullable()
+    .optional(),
   languageId: z.string(),
   userId: z.string(),
   isActive: z.boolean(),

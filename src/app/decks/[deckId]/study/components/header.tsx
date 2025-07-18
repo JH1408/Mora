@@ -2,7 +2,8 @@ import { ArrowLeft, Brain, Eye } from 'lucide-react';
 import Link from 'next/link';
 
 import { Button } from '@/components/ui/button';
-import type { StudyCard } from '@/types/deck';
+import type { StudyMode } from '@/types/studySession';
+import { STUDY_MODES } from '@/types/studySession';
 import paths from '@/utils/paths';
 
 // @Josy TODO add some kind of tooltip to explain what recognition and recall are
@@ -12,14 +13,14 @@ const Header = ({
   studyMode,
   toggleStudyMode,
   currentCardIndex,
-  cards,
+  totalCards,
   endStudySession,
 }: {
   deckName?: string;
-  studyMode: 'recognition' | 'recall';
+  studyMode: StudyMode;
   toggleStudyMode: () => void;
-  currentCardIndex: number;
-  cards?: StudyCard[];
+  currentCardIndex: number | null;
+  totalCards?: number | null;
   endStudySession: () => void;
 }) => {
   return (
@@ -39,27 +40,31 @@ const Header = ({
               <h1 className='text-xl font-bold font-heading text-text-primary'>
                 Study Session: {deckName}
               </h1>
-              {cards && (
+              {totalCards && currentCardIndex && (
                 <p className='text-sm text-text-muted'>
-                  Card {currentCardIndex + 1} of {cards.length}
+                  Card {currentCardIndex} of {totalCards}
                 </p>
               )}
             </div>
           </div>
-          <div className='flex items-center space-x-4'>
-            <Button variant='soft' size='sm' onClick={toggleStudyMode}>
-              {studyMode === 'recognition' ? (
-                <Eye className='h-4 w-4 mr-2' />
-              ) : (
-                <Brain className='h-4 w-4 mr-2' />
-              )}
-              {studyMode === 'recognition' ? 'Recognition' : 'Recall'}
-            </Button>
+          {totalCards && currentCardIndex && (
+            <div className='flex items-center space-x-4'>
+              <Button variant='soft' size='sm' onClick={toggleStudyMode}>
+                {studyMode === STUDY_MODES.RECOGNITION ? (
+                  <Eye className='h-4 w-4 mr-2' />
+                ) : (
+                  <Brain className='h-4 w-4 mr-2' />
+                )}
+                {studyMode === STUDY_MODES.RECOGNITION
+                  ? 'Recognition'
+                  : 'Recall'}
+              </Button>
 
-            {/* <div className='text-sm text-text-secondary'>
+              {/* <div className='text-sm text-text-secondary'>
                         {sessionStats.correct}/{sessionStats.studied} correct
                     </div> */}
-          </div>
+            </div>
+          )}
         </div>
       </div>
     </header>

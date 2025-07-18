@@ -3,13 +3,15 @@ import { Volume2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import type { StudyCard } from '@/types/deck';
+import type { StudyMode } from '@/types/studySession';
+import { STUDY_MODES } from '@/types/studySession';
 
 const getCurrentText = (
   isFlipped: boolean,
-  studyMode: 'recognition' | 'recall',
+  studyMode: StudyMode,
   currentCard: StudyCard
 ) => {
-  if (studyMode === 'recognition') {
+  if (studyMode === STUDY_MODES.RECOGNITION) {
     return isFlipped ? currentCard.backText : currentCard.frontText;
   }
   return isFlipped ? currentCard.frontText : currentCard.backText;
@@ -25,7 +27,7 @@ const StudyCard = ({
 }: {
   isFlipped: boolean;
   setIsFlipped: (isFlipped: boolean) => void;
-  studyMode: 'recognition' | 'recall';
+  studyMode: StudyMode;
   currentCard: StudyCard;
   speakText: (text: string) => void;
   fontClass: string;
@@ -44,7 +46,7 @@ const StudyCard = ({
               isFlipped ? 'transform rotate-y-180' : ''
             }`}
           >
-            {studyMode === 'recognition'
+            {studyMode === STUDY_MODES.RECOGNITION
               ? isFlipped
                 ? 'Back'
                 : 'Front'
