@@ -8,6 +8,24 @@ import { Textarea } from '@/components/ui/textarea';
 import { useCreateCard } from '@/utils/hooks/useApi';
 import { getLanguageClasses } from '@/utils/languages';
 
+const cardFields = {
+  frontText: {
+    label: 'Front',
+    value: 'frontText',
+    placeholder: 'Enter the question or prompt...',
+  },
+  backText: {
+    label: 'Back',
+    value: 'backText',
+    placeholder: 'Enter the answer or explanation...',
+  },
+  phoneticSpelling: {
+    label: 'Phonetic Spelling (Optional)',
+    value: 'phoneticSpelling',
+    placeholder: 'Enter the phonetic spelling...',
+  },
+};
+
 const CreateNewCard = ({
   deckId,
   deckScript,
@@ -64,43 +82,19 @@ const CreateNewCard = ({
         <CardContent className='space-y-4'>
           <form onSubmit={handleSubmit}>
             <div className='grid grid-cols-1 md:grid-cols-2 gap-4 mb-4'>
-              <div className='space-y-2'>
-                <Label htmlFor='frontText' className='text-text-secondary'>
-                  Front
-                </Label>
-                <Textarea
-                  placeholder='Enter the question or prompt...'
-                  className={`min-h-[100px] resize-none border-neutral-4 focus:border-primary-500 ${fontClass}`}
-                  name='frontText'
-                  dir='auto'
-                />
-              </div>
-
-              <div className='space-y-2'>
-                <Label htmlFor='backText' className='text-text-secondary'>
-                  Back
-                </Label>
-                <Textarea
-                  placeholder='Enter the answer or explanation...'
-                  className={`min-h-[100px] resize-none border-neutral-4 focus:border-primary-500 ${fontClass}`}
-                  name='backText'
-                  dir='auto'
-                />
-              </div>
-              <div className='space-y-2'>
-                <Label
-                  htmlFor='phoneticSpelling'
-                  className='text-text-secondary'
-                >
-                  Phonetic Spelling
-                </Label>
-                <Textarea
-                  placeholder='Enter the phonetic spelling (optional)...'
-                  className={`min-h-[100px] resize-none border-neutral-4 focus:border-primary-500 ${fontClass}`}
-                  name='phoneticSpelling'
-                  dir='auto'
-                />
-              </div>
+              {Object.values(cardFields).map((field) => (
+                <div className='space-y-2' key={field.value}>
+                  <Label htmlFor={field.value} className='text-text-secondary'>
+                    {field.label}
+                  </Label>
+                  <Textarea
+                    placeholder={field.placeholder}
+                    className={`min-h-[100px] resize-none border-neutral-4 focus:border-primary-500 ${fontClass}`}
+                    name={field.value}
+                    dir='auto'
+                  />
+                </div>
+              ))}
             </div>
 
             <div

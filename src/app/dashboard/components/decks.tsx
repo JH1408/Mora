@@ -143,7 +143,9 @@ const Decks = ({
                                 className='w-full'
                               >
                                 <SquarePen className='h-4 w-4 mr-1' />
-                                Manage Cards
+                                {deck.cardsCount > 0
+                                  ? 'Manage Cards'
+                                  : 'Add Cards'}
                               </Button>
                             </Link>
                           </div>

@@ -34,14 +34,21 @@ const ManageCardsPage = () => {
     ) {
       return;
     }
-    updateCard({
-      id: cardId,
-      data: {
-        frontText: updatedCard.frontText,
-        backText: updatedCard.backText,
+    updateCard(
+      {
+        id: cardId,
+        data: {
+          frontText: updatedCard.frontText,
+          backText: updatedCard.backText,
+          phoneticSpelling: updatedCard.phoneticSpelling || undefined,
+        },
       },
-    });
-    setEditingCardId(null);
+      {
+        onSuccess: () => {
+          setEditingCardId(null);
+        },
+      }
+    );
   };
 
   const fontClass = getLanguageClasses(deck?.language?.script).fontClass;
