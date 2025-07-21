@@ -1,7 +1,7 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { toast } from 'sonner';
 
-import { languageApi, deckApi, cardApi, studyApi } from '@/lib/api';
+import { languageApi, deckApi, cardApi, studyApi } from '@/utils/api';
 import type {
   Card,
   Deck,
@@ -11,7 +11,7 @@ import type {
   UpdateCardRequest,
   SubmitStudyResultRequest,
   CompleteStudySessionRequest,
-} from '@/types/deck';
+} from '@/utils/types/deck';
 
 // Query keys for React Query
 export const queryKeys = {

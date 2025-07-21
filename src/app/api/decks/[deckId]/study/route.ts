@@ -2,9 +2,9 @@ import { NextRequest, NextResponse } from 'next/server';
 import { getServerSession } from 'next-auth';
 import { z } from 'zod';
 
-import { authOptions } from '@/lib/auth';
-import { prisma } from '@/lib/prisma';
-import { studyParamsSchema } from '@/lib/schemas';
+import { authOptions } from '@/utils/auth';
+import { prisma } from '@/utils/prisma';
+import { studyParamsSchema } from '@/utils/schemas';
 import { getDueCards, sortCardsByPriority } from '@/utils/spacedRepetition';
 
 export async function GET(

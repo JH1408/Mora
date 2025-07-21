@@ -6,9 +6,6 @@ import { toast } from 'sonner';
 
 import { Progress } from '@/components/ui/progress';
 import Spinner from '@/components/ui/spinner';
-import type { StudyCard as StudyCardType } from '@/types/deck';
-import type { StudyMode } from '@/types/studySession';
-import { STUDY_MODES } from '@/types/studySession';
 import paths from '@/utils/clientPaths';
 import {
   useCompleteStudySession,
@@ -17,6 +14,9 @@ import {
   useStudyCards,
 } from '@/utils/hooks/useApi';
 import { getLanguageClasses } from '@/utils/languages';
+import type { StudyCard as StudyCardType } from '@/utils/types/deck';
+import type { StudyMode } from '@/utils/types/studySession';
+import { STUDY_MODES } from '@/utils/types/studySession';
 
 import AnswerControls from './components/answer-controls';
 import Header from './components/header';

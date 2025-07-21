@@ -31,7 +31,7 @@ export type {
   // Utility Types
   StudyMode,
   Difficulty,
-} from '@/lib/schemas';
+} from '@/utils/schemas';
 
 // Re-export schemas for runtime validation if needed
 export {
@@ -62,7 +62,7 @@ export {
   completeStudySessionSchema,
   deckStatsSchema,
   apiErrorSchema,
-} from '@/lib/schemas';
+} from '@/utils/schemas';
 
 // Legacy constants for backward compatibility
 export const DIFFICULTY_OPTIONS = [

@@ -26,12 +26,20 @@ const CreateNewCard = ({
     const formData = new FormData(e.target as HTMLFormElement);
     const frontText = formData.get('frontText') as string;
     const backText = formData.get('backText') as string;
+    const phoneticSpelling = formData.get('phoneticSpelling');
     if (!frontText.trim().length || !backText.trim().length) {
       setIsMissingFields(true);
       return;
     }
     createCard(
-      { deckId, frontText, backText },
+      {
+        deckId,
+        frontText,
+        backText,
+        phoneticSpelling: phoneticSpelling
+          ? (phoneticSpelling as string)
+          : undefined,
+      },
       {
         onSuccess: () => {
           (e.target as HTMLFormElement).reset();
@@ -76,6 +84,20 @@ const CreateNewCard = ({
                   placeholder='Enter the answer or explanation...'
                   className={`min-h-[100px] resize-none border-neutral-4 focus:border-primary-500 ${fontClass}`}
                   name='backText'
+                  dir='auto'
+                />
+              </div>
+              <div className='space-y-2'>
+                <Label
+                  htmlFor='phoneticSpelling'
+                  className='text-text-secondary'
+                >
+                  Phonetic Spelling
+                </Label>
+                <Textarea
+                  placeholder='Enter the phonetic spelling (optional)...'
+                  className={`min-h-[100px] resize-none border-neutral-4 focus:border-primary-500 ${fontClass}`}
+                  name='phoneticSpelling'
                   dir='auto'
                 />
               </div>

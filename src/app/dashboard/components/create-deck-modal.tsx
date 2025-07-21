@@ -21,8 +21,8 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import Spinner from '@/components/ui/spinner';
-import { Difficulty, DIFFICULTY_OPTIONS, Language } from '@/types/deck';
 import { useCreateDeck } from '@/utils/hooks/useApi';
+import { Difficulty, DIFFICULTY_OPTIONS, Language } from '@/utils/types/deck';
 
 interface CreateDeckModalProps {
   isOpen: boolean;

@@ -2,9 +2,9 @@ import { ArrowLeft, Brain, Eye } from 'lucide-react';
 import Link from 'next/link';
 
 import { Button } from '@/components/ui/button';
-import type { StudyMode } from '@/types/studySession';
-import { STUDY_MODES } from '@/types/studySession';
 import paths from '@/utils/clientPaths';
+import type { StudyMode } from '@/utils/types/studySession';
+import { STUDY_MODES } from '@/utils/types/studySession';
 
 // @Josy TODO add some kind of tooltip to explain what recognition and recall are
 

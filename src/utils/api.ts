@@ -1,3 +1,4 @@
+import apiPaths from '@/utils/apiPaths';
 import type {
   Card,
   Deck,
@@ -15,8 +16,7 @@ import type {
   SubmitStudyResultRequest,
   CompleteStudySessionRequest,
   StudyMode,
-} from '@/types/deck';
-import apiPaths from '@/utils/apiPaths';
+} from '@/utils/types/deck';
 
 // Generic fetch wrapper with error handling
 async function apiFetch<T>(

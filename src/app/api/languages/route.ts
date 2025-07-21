@@ -1,12 +1,12 @@
 import { NextResponse } from 'next/server';
 
-import { prisma } from '@/lib/prisma';
+import { prisma } from '@/utils/prisma';
 import {
   languageSchema,
   languagesSchema,
   type Language,
   type Languages,
-} from '@/lib/schemas';
+} from '@/utils/schemas';
 
 // Re-export for backward compatibility
 export { languageSchema, languagesSchema };

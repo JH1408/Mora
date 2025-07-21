@@ -1,4 +1,4 @@
-import { Deck, Difficulty } from '@/lib/schemas';
+import { Deck, Difficulty } from './schemas';
 
 interface LanguageStats {
   code: string;

@@ -2,16 +2,13 @@
 
 import Image from 'next/image';
 import Link from 'next/link';
-import { useSession } from 'next-auth/react';
 
 import { ClientOnly } from '@/components/client-only';
 import { Button } from '@/components/ui/button';
-import Spinner from '@/components/ui/spinner';
-import paths from '@/utils/clientPaths';
+
+import Auth from './auth';
 
 function HomeContent() {
-  const { data: session, status } = useSession();
-
   return (
     <div className='min-h-screen bg-background-light p-8'>
       <div className='w-full flex justify-between items-center'>
@@ -24,31 +21,7 @@ function HomeContent() {
           className='h-10 w-auto'
           priority
         />
-        <div className='flex gap-4 justify-center'>
-          {status === 'loading' ? (
-            <Spinner />
-          ) : session ? (
-            <div className='flex items-center gap-4'>
-              <span className='text-sm text-muted-foreground'>
-                Welcome, {session.user?.name}!
-              </span>
-              <Link href={paths.dashboard}>
-                <Button size='lg'>Dashboard</Button>
-              </Link>
-            </div>
-          ) : (
-            <>
-              <Link href={paths.login}>
-                <Button variant='soft' size='lg'>
-                  Login
-                </Button>
-              </Link>
-              <Link href={paths.login}>
-                <Button size='lg'>Signup</Button>
-              </Link>
-            </>
-          )}
-        </div>
+        <Auth />
       </div>
 
       <div className='mt-16 text-center'>
@@ -59,13 +32,11 @@ function HomeContent() {
           Create personalized flashcard decks, track your progress, and learn
           efficiently with our spaced repetition system.
         </p>
-        {!session && (
-          <Link href='/login'>
-            <Button size='lg' className='text-lg px-8 py-4'>
-              Get Started
-            </Button>
-          </Link>
-        )}
+        <Link href='/login'>
+          <Button size='lg' className='text-lg px-8 py-4'>
+            Get Started
+          </Button>
+        </Link>
       </div>
     </div>
   );

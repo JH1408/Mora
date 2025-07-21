@@ -2,9 +2,9 @@ import { NextRequest, NextResponse } from 'next/server';
 import { getServerSession } from 'next-auth';
 import { z } from 'zod';
 
-import { authOptions } from '@/lib/auth';
-import { prisma } from '@/lib/prisma';
-import { updateDeckSchema } from '@/lib/schemas';
+import { authOptions } from '@/utils/auth';
+import { prisma } from '@/utils/prisma';
+import { updateDeckSchema } from '@/utils/schemas';
 
 export async function GET(
   request: NextRequest,

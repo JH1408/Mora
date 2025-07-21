@@ -5,9 +5,9 @@ import { useRef } from 'react';
 
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import type { StudyCard } from '@/types/deck';
-import type { StudyMode } from '@/types/studySession';
-import { STUDY_MODES } from '@/types/studySession';
+import type { StudyCard } from '@/utils/types/deck';
+import type { StudyMode } from '@/utils/types/studySession';
+import { STUDY_MODES } from '@/utils/types/studySession';
 
 const getCurrentText = (
   isFlipped: boolean,

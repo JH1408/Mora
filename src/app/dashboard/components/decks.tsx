@@ -12,9 +12,9 @@ import {
   CollapsibleContent,
   CollapsibleTrigger,
 } from '@/components/ui/collapsible';
-import type { Deck } from '@/types/deck';
 import { getLanguageStats } from '@/utils/deckUtils';
 import { formatDifficulty } from '@/utils/deckUtils';
+import type { Deck } from '@/utils/types/deck';
 
 import DeckStats from './deck-stats';
 
