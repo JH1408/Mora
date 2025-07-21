@@ -7,16 +7,20 @@ const DeckStats = ({ deckId }: { deckId: string }) => {
     <>
       <div className='flex justify-between text-sm text-text-secondary'>
         <span>{deckStats.deck.totalCards} cards</span>
-        <span>{deckStats.deck.dueCards} cards ready for review</span>
+        {deckStats.deck.totalCards > 0 ? (
+          <span>{deckStats.deck.dueCards} cards ready for review</span>
+        ) : null}
       </div>
-      <p className='text-xs text-text-muted'>
-        Last studied:{' '}
-        {deckStats.recentSessions[0].completedAt
-          ? new Date(
-              deckStats.recentSessions[0].completedAt
-            ).toLocaleDateString()
-          : 'Never'}
-      </p>
+      {deckStats.deck.totalCards > 0 ? (
+        <p className='text-xs text-text-muted'>
+          Last studied:{' '}
+          {deckStats.recentSessions[0]?.completedAt
+            ? new Date(
+                deckStats.recentSessions[0].completedAt
+              ).toLocaleDateString()
+            : 'Never'}
+        </p>
+      ) : null}
     </>
   );
 };

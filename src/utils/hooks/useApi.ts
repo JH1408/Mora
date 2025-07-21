@@ -98,6 +98,11 @@ export const useDeleteDeck = () => {
       queryClient.removeQueries({ queryKey: queryKeys.deck(deletedId) });
       // Invalidate decks list
       queryClient.invalidateQueries({ queryKey: queryKeys.decks });
+      toast.success('Deck has been deleted successfully.');
+    },
+    onError: (error) => {
+      console.error('Delete deck error:', error);
+      toast.error('Failed to delete deck. Please try again.');
     },
   });
 };

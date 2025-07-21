@@ -1,6 +1,7 @@
-import { useDrag } from '@use-gesture/react';
+import { useGesture } from '@use-gesture/react';
 import { Volume2 } from 'lucide-react';
 import { useState } from 'react';
+import { useRef } from 'react';
 
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -47,67 +48,70 @@ const StudyCard = ({
   onSwipeRight?: () => void;
   hasBeenFlipped: boolean;
 }) => {
-  const handleSpeakButtonClick = () => {
+  const handleSpeakButtonClick = (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.stopPropagation();
     const textToSpeak = getCurrentText(isFlipped, studyMode, currentCard);
     speakText(textToSpeak);
   };
 
   const [dragOffset, setDragOffset] = useState(0);
-  const [wasDragged, setWasDragged] = useState(false);
+  const wasDraggedRef = useRef(false);
   const [isDragging, setIsDragging] = useState(false);
 
-  const bind = useDrag(
-    ({
-      movement: [mx],
-      direction: [xDir],
-      velocity: [vx],
-      cancel,
-      canceled,
-      active,
-    }) => {
-      // Update drag offset for visual feedback
-      setDragOffset(mx);
-      setIsDragging(active);
+  const bind = useGesture(
+    {
+      onDrag: ({
+        movement: [mx],
+        direction: [xDir],
+        velocity: [vx],
+        cancel,
+        canceled,
+        active,
+      }) => {
+        // Update drag offset for visual feedback
+        setDragOffset(mx);
+        setIsDragging(active);
 
-      // Check if this was a swipe
-      if (canceled) {
-        setDragOffset(0);
-        setWasDragged(false);
-        setIsDragging(false);
-        return;
-      }
-
-      // Trigger swipe if movement is significant
-      if (Math.abs(mx) > 300 && Math.abs(vx) > 0.5) {
-        if (xDir > 0 && onSwipeRight) {
-          onSwipeRight();
-        } else if (xDir < 0 && onSwipeLeft) {
-          onSwipeLeft();
+        // Check if this was a swipe
+        if (canceled) {
+          return;
         }
-        cancel();
-      }
 
-      // Mark as dragged if there was significant movement
-      if (Math.abs(mx) > 10) {
-        setWasDragged(true);
-      }
+        // Trigger swipe if movement is significant
+        if (Math.abs(mx) > 300 && Math.abs(vx) > 0.5) {
+          if (xDir > 0 && onSwipeRight) {
+            onSwipeRight();
+          } else if (xDir < 0 && onSwipeLeft) {
+            onSwipeLeft();
+          }
+          cancel();
+        }
+
+        // Mark as dragged if there was significant movement
+        if (Math.abs(mx) > 10) {
+          wasDraggedRef.current = true;
+        }
+      },
+      onClick: () => {
+        if (wasDraggedRef.current) {
+          setDragOffset(0);
+          wasDraggedRef.current = false;
+          setIsDragging(false);
+          return;
+        }
+        setIsFlipped(!isFlipped);
+      },
     },
     {
-      axis: 'x',
-      filterTaps: true,
-      bounds: { left: -400, right: 400 },
-      rubberband: true,
-      enabled: hasBeenFlipped,
+      drag: {
+        axis: 'x',
+        filterTaps: true,
+        bounds: { left: -400, right: 400 },
+        rubberband: true,
+        enabled: hasBeenFlipped,
+      },
     }
   );
-
-  const handleClick = () => {
-    // Only flip if there was no drag
-    if (!wasDragged) {
-      setIsFlipped(!isFlipped);
-    }
-    setWasDragged(false);
-  };
 
   return (
     <div className='relative'>
@@ -123,7 +127,6 @@ const StudyCard = ({
           transition: isDragging ? 'none' : 'all 0.3s ease',
           touchAction: 'none', // Prevent default touch behaviors
         }}
-        onClick={handleClick}
       >
         <CardHeader className='text-center'>
           <CardTitle

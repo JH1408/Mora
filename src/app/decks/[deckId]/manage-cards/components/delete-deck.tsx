@@ -1,4 +1,3 @@
-import { Card } from '@prisma/client';
 import { Loader2, Trash2 } from 'lucide-react';
 
 import { AlertDialog } from '@/components/ui/alert-dialog';
@@ -12,46 +11,44 @@ import { AlertDialogTitle } from '@/components/ui/alert-dialog';
 import { AlertDialogTrigger } from '@/components/ui/alert-dialog';
 import { Button } from '@/components/ui/button';
 
-const DeleteCard = ({
-  card,
-  deleteCard,
-  isDeletingCard,
+const DeleteDeck = ({
+  onDeleteDeck,
+  isDeletingDeck,
 }: {
-  card: Card;
-  deleteCard: (id: string) => void;
-  isDeletingCard: boolean;
+  onDeleteDeck: () => void;
+  isDeletingDeck: boolean;
 }) => {
   return (
     <AlertDialog>
       <AlertDialogTrigger asChild>
-        <Button variant='ghost-destructive' size='sm'>
+        <Button variant='ghost-destructive' size='sm' className='self-center'>
           <Trash2 className='h-4 w-4 mr-1' />
-          Delete
+          Delete Deck
         </Button>
       </AlertDialogTrigger>
       <AlertDialogContent>
         <AlertDialogHeader>
-          <AlertDialogTitle>Delete Card</AlertDialogTitle>
+          <AlertDialogTitle>Delete Deck</AlertDialogTitle>
           <AlertDialogDescription>
-            Are you sure you want to delete this card? This action cannot be
+            Are you sure you want to delete this deck? This action cannot be
             undone.
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
           <AlertDialogCancel asChild>
-            <Button variant='ghost' size='sm' disabled={isDeletingCard}>
+            <Button variant='ghost' size='sm' disabled={isDeletingDeck}>
               Cancel
             </Button>
           </AlertDialogCancel>
           <AlertDialogAction asChild>
             <Button
               variant='destructive'
-              onClick={() => deleteCard(card.id)}
-              disabled={isDeletingCard}
+              onClick={onDeleteDeck}
+              disabled={isDeletingDeck}
               className='min-w-[80px]'
               size='sm'
             >
-              {isDeletingCard ? <Loader2 className='h-4 w-4 mr-1' /> : 'Delete'}
+              {isDeletingDeck ? <Loader2 className='h-4 w-4 mr-1' /> : 'Delete'}
             </Button>
           </AlertDialogAction>
         </AlertDialogFooter>
@@ -60,4 +57,4 @@ const DeleteCard = ({
   );
 };
 
-export default DeleteCard;
+export default DeleteDeck;

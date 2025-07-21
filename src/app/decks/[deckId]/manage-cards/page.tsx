@@ -48,7 +48,7 @@ const ManageCardsPage = () => {
 
   return (
     <div className='min-h-screen bg-gradient-to-br from-primary-100 to-accent-100 pb-6 relative'>
-      <Header deckName={deck?.name} />
+      <Header deckName={deck?.name} deckId={deckId as string} />
       <main className='max-w-4xl mx-auto px-4 sm:px-6 lg:px-8'>
         <CreateNewCard
           deckId={deckId as string}

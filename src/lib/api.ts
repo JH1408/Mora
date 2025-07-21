@@ -68,7 +68,7 @@ export const deckApi = {
 
   update: (id: string, data: UpdateDeckRequest): Promise<Deck> =>
     apiFetch<Deck>(apiPaths.decks.byId(id), {
-      method: 'PUT',
+      method: 'PATCH',
       body: JSON.stringify(data),
     }),
 

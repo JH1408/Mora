@@ -61,7 +61,7 @@ export default function DashboardPage() {
             deckCount={deckCount}
           />
           {isLoadingDecks && <Spinner className='absolute top-1/2 left-1/2 ' />}
-          <Decks decks={decks} />
+          <Decks decks={decks} setIsCreateModalOpen={setIsCreateModalOpen} />
           {!decks.length && !isLoadingDecks && (
             <NoDecks setIsCreateModalOpen={setIsCreateModalOpen} />
           )}
