@@ -41,6 +41,9 @@ const ManageCardsPage = () => {
           frontText: updatedCard.frontText,
           backText: updatedCard.backText,
           phoneticSpelling: updatedCard.phoneticSpelling || undefined,
+          handwritingData: updatedCard.handwritingData
+            ? (updatedCard.handwritingData as string)
+            : undefined,
         },
       },
       {

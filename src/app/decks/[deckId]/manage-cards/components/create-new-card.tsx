@@ -1,4 +1,4 @@
-import { Loader2, Plus, Save } from 'lucide-react';
+import { Loader2, Pen, Plus, Save } from 'lucide-react';
 import { useState } from 'react';
 
 import { Button } from '@/components/ui/button';
@@ -7,6 +7,8 @@ import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { useCreateCard } from '@/utils/hooks/useApi';
 import { getLanguageClasses } from '@/utils/languages';
+
+import CanvasModal from './canvas-modal';
 
 const cardFields = {
   frontText: {
@@ -35,6 +37,8 @@ const CreateNewCard = ({
 }) => {
   const { mutate: createCard, isPending: isCreatingCard } = useCreateCard();
   const [isMissingFields, setIsMissingFields] = useState(false);
+  const [showHandwritingCanvas, setShowHandwritingCanvas] = useState(false);
+  const [handwritingData, setHandwritingData] = useState<string | null>(null);
 
   const { fontClass } = getLanguageClasses(deckScript);
 
@@ -57,6 +61,7 @@ const CreateNewCard = ({
         phoneticSpelling: phoneticSpelling
           ? (phoneticSpelling as string)
           : undefined,
+        handwritingData: handwritingData ?? undefined,
       },
       {
         onSuccess: () => {
@@ -95,6 +100,25 @@ const CreateNewCard = ({
                   />
                 </div>
               ))}
+              <div className='space-y-2'>
+                <Label
+                  htmlFor='new-handwriting'
+                  className='text-text-secondary'
+                >
+                  Handwritten Content
+                  <span className='text-text-muted'>(optional)</span>
+                </Label>
+                <div className='space-y-2'>
+                  <button
+                    onClick={() => setShowHandwritingCanvas(true)}
+                    type='button'
+                    className='border w-full min-h-[100px] border-dashed hover:bg-primary-50 gap-2 whitespace-nowrap rounded-lg text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none shrink-0 outline-none focus-visible:ring-2 focus-visible:ring-offset-2 cursor-pointer border-neutral-4 hover:border-primary-500 flex items-center justify-center'
+                  >
+                    <Pen className='h-4 w-4 mr-1' />
+                    {handwritingData ? 'Edit' : 'Click to draw'}
+                  </button>
+                </div>
+              </div>
             </div>
 
             <div
@@ -119,6 +143,12 @@ const CreateNewCard = ({
           </form>
         </CardContent>
       </Card>
+      <CanvasModal
+        isOpen={showHandwritingCanvas}
+        onClose={() => setShowHandwritingCanvas(false)}
+        onSave={setHandwritingData}
+        handwritingData={handwritingData}
+      />
     </section>
   );
 };

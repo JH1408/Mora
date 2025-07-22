@@ -214,3 +214,9 @@
     pointer-events: auto !important;
   }
 }
+
+/* Force react-colorful color picker to have only top corners rounded in modal popover */
+.react-colorful__last-control {
+  border-bottom-left-radius: 0px !important;
+  border-bottom-right-radius: 0px !important;
+}
