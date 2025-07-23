@@ -57,8 +57,8 @@ const Header = ({ deckName, deckId }: HeaderProps) => {
           <div className='flex items-center space-x-4 w-full'>
             <Link href={paths.dashboard}>
               <Button variant='ghost' size='sm'>
-                <ArrowLeft className='h-4 w-4 mr-2' />
-                Back to Dashboard
+                <ArrowLeft className='h-4 w-4 mr-0 sm:mr-2' />
+                <span className='hidden sm:inline'>Back to Dashboard</span>
               </Button>
             </Link>
 

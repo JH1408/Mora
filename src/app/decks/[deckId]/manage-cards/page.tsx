@@ -44,6 +44,9 @@ const ManageCardsPage = () => {
           handwritingData: updatedCard.handwritingData
             ? (updatedCard.handwritingData as string)
             : undefined,
+          handwritingImage: updatedCard.handwritingImage
+            ? (updatedCard.handwritingImage as string)
+            : undefined,
         },
       },
       {

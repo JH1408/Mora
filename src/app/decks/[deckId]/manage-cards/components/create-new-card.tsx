@@ -22,7 +22,7 @@ const cardFields = {
     placeholder: 'Enter the answer or explanation...',
   },
   phoneticSpelling: {
-    label: 'Phonetic Spelling (Optional)',
+    label: 'Phonetic Spelling',
     value: 'phoneticSpelling',
     placeholder: 'Enter the phonetic spelling...',
   },
@@ -39,8 +39,13 @@ const CreateNewCard = ({
   const [isMissingFields, setIsMissingFields] = useState(false);
   const [showHandwritingCanvas, setShowHandwritingCanvas] = useState(false);
   const [handwritingData, setHandwritingData] = useState<string | null>(null);
-
+  const [handwritingImage, setHandwritingImage] = useState<string | null>(null);
   const { fontClass } = getLanguageClasses(deckScript);
+
+  const onSaveHandwriting = (data: { json: string; imageData: string }) => {
+    setHandwritingData(data.json);
+    setHandwritingImage(data.imageData);
+  };
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -62,6 +67,7 @@ const CreateNewCard = ({
           ? (phoneticSpelling as string)
           : undefined,
         handwritingData: handwritingData ?? undefined,
+        handwritingImage: handwritingImage ?? undefined,
       },
       {
         onSuccess: () => {
@@ -90,7 +96,10 @@ const CreateNewCard = ({
               {Object.values(cardFields).map((field) => (
                 <div className='space-y-2' key={field.value}>
                   <Label htmlFor={field.value} className='text-text-secondary'>
-                    {field.label}
+                    {field.label}{' '}
+                    {field.value === 'phoneticSpelling' && (
+                      <span className='text-text-muted'>(optional)</span>
+                    )}
                   </Label>
                   <Textarea
                     placeholder={field.placeholder}
@@ -146,7 +155,7 @@ const CreateNewCard = ({
       <CanvasModal
         isOpen={showHandwritingCanvas}
         onClose={() => setShowHandwritingCanvas(false)}
-        onSave={setHandwritingData}
+        onSave={onSaveHandwriting}
         handwritingData={handwritingData}
       />
     </section>

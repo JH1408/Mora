@@ -52,6 +52,7 @@ export const createCardSchema = z.object({
   usageContext: z.string().optional(),
   tags: z.array(z.string()).optional(),
   handwritingData: z.string().optional(),
+  handwritingImage: z.string().optional(),
 });
 
 export const updateCardSchema = z.object({
@@ -69,6 +70,7 @@ export const updateCardSchema = z.object({
   usageContext: z.string().optional(),
   tags: z.array(z.string()).optional(),
   handwritingData: z.string().optional(),
+  handwritingImage: z.string().optional(),
 });
 
 // Study Request Schemas
@@ -156,6 +158,7 @@ export const cardSchema = z.object({
   usageContext: z.string().nullable().optional(),
   tags: z.array(z.string()).optional(),
   handwritingData: z.string().optional(),
+  handwritingImage: z.string().optional(),
   createdAt: z.union([z.string(), z.date()]),
   updatedAt: z.union([z.string(), z.date()]),
 });
@@ -190,6 +193,8 @@ export const studyCardSchema = z.object({
   phoneticSpelling: z.string().nullable().optional(),
   usageContext: z.string().nullable().optional(),
   tags: z.array(z.string()).optional(),
+  handwritingData: z.string().optional(),
+  handwritingImage: z.string().optional(),
   createdAt: z.union([z.string(), z.date()]),
   cardProgress: cardProgressSchema.nullable().optional(),
 });

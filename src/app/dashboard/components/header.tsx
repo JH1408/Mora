@@ -41,8 +41,8 @@ const Header = ({ userName }: { userName: string | null }) => {
               <span>Welcome back, {userName || ''}!</span>
             </div>
             <Button variant='soft-secondary' size='sm' onClick={handleSignout}>
-              <LogOut className='h-4 w-4 mr-2' />
-              Logout
+              <LogOut className='h-4 w-4 mr-0 sm:mr-2' />
+              <span className='hidden sm:inline'>Logout</span>
             </Button>
           </div>
         </div>

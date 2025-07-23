@@ -41,6 +41,7 @@ export async function POST(request: NextRequest) {
         usageContext: validatedData.usageContext,
         tags: validatedData.tags || [],
         handwritingData: validatedData.handwritingData,
+        handwritingImage: validatedData.handwritingImage,
       },
     });
 

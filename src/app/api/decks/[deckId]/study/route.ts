@@ -73,6 +73,8 @@ export async function GET(
       phoneticSpelling: card.phoneticSpelling,
       usageContext: card.usageContext,
       tags: card.tags,
+      handwritingData: card.handwritingData,
+      handwritingImage: card.handwritingImage,
       createdAt: card.createdAt,
       cardProgress: card.cardProgress[0] || null,
     }));

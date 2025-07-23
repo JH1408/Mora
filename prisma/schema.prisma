@@ -117,6 +117,7 @@ model Card {
   phoneticSpelling  String? @map("phonetic_spelling")
   usageContext      String? @map("usage_context")
   handwritingData   Json?   @map("handwriting_data")
+  handwritingImage   String?   @map("handwriting_image")
   tags              Json?   @default("[]")
   createdAt         DateTime @default(now()) @map("created_at")
   updatedAt         DateTime @updatedAt @map("updated_at")

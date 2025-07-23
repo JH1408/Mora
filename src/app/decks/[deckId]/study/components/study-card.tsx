@@ -1,5 +1,6 @@
 import { useGesture } from '@use-gesture/react';
 import { Volume2 } from 'lucide-react';
+import Image from 'next/image';
 import { useState } from 'react';
 import { useRef } from 'react';
 
@@ -113,6 +114,9 @@ const StudyCard = ({
     }
   );
 
+  const shouldShowExtraContent =
+    getCurrentText(isFlipped, studyMode, currentCard) === currentCard.backText;
+
   return (
     <div className='relative'>
       <Card
@@ -136,6 +140,18 @@ const StudyCard = ({
           >
             {getCardTitle(isFlipped, studyMode)}
           </CardTitle>
+          {shouldShowExtraContent && (
+            <Button
+              variant='soft-secondary'
+              size='sm'
+              onClick={handleSpeakButtonClick}
+              className={`absolute top-4  z-10 ${
+                isFlipped ? 'transform rotate-y-180 left-4' : 'right-4'
+              }`}
+            >
+              <Volume2 className='h-4 w-4' />
+            </Button>
+          )}
         </CardHeader>
 
         <CardContent className='flex items-center justify-center min-h-[300px]'>
@@ -149,16 +165,21 @@ const StudyCard = ({
             >
               {getCurrentText(isFlipped, studyMode, currentCard)}
             </div>
-            {getCurrentText(isFlipped, studyMode, currentCard) ===
-              currentCard.backText && (
-              <Button
-                variant='soft-secondary'
-                size='sm'
-                onClick={handleSpeakButtonClick}
-              >
-                <Volume2 className='h-4 w-4 mr-2' />
-                Listen
-              </Button>
+
+            {shouldShowExtraContent && currentCard.phoneticSpelling && (
+              <div className='text-3xl text-primary-700'>
+                {currentCard.phoneticSpelling}
+              </div>
+            )}
+            {shouldShowExtraContent && currentCard.handwritingImage && (
+              <div className='text-3xl text-primary-700'>
+                <Image
+                  src={currentCard.handwritingImage}
+                  alt='Handwriting'
+                  width={200}
+                  height={200}
+                />
+              </div>
             )}
           </div>
           {!isFlipped && (

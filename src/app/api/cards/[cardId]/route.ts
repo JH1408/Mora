@@ -120,6 +120,9 @@ export async function PUT(
         ...(validatedData.handwritingData !== undefined && {
           handwritingData: validatedData.handwritingData,
         }),
+        ...(validatedData.handwritingImage !== undefined && {
+          handwritingImage: validatedData.handwritingImage,
+        }),
       },
     });
 

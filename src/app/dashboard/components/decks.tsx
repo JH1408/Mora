@@ -120,7 +120,7 @@ const Decks = ({
                         <div className='space-y-2 flex flex-col justify-between h-full'>
                           <DeckStats deckId={deck.id} />
 
-                          <div className='flex space-x-2 pt-2 w-full'>
+                          <div className='flex space-x-2 pt-2 w-full h-full items-end'>
                             <Link
                               href={`/decks/${deck.id}/study`}
                               className='flex-1'

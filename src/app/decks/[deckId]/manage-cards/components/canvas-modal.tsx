@@ -22,7 +22,7 @@ const CanvasModal = ({
 }: {
   isOpen: boolean;
   onClose: () => void;
-  onSave: (data: string) => void;
+  onSave: (data: { json: string; imageData: string }) => void;
   handwritingData: string | null;
 }) => {
   const canvasRef = useRef<ReactSketchCanvasRef>(null);
@@ -46,8 +46,13 @@ const CanvasModal = ({
   const saveDrawing = async () => {
     const data = await canvasRef.current?.exportPaths();
     const json = JSON.stringify(data);
-
-    onSave(json);
+    const imageData = await canvasRef.current?.exportImage('png');
+    console.log('saveDrawing', { imageData, data });
+    if (!imageData || !data) {
+      toast.error("Oops, we couldn't save this drawing. Please try again.");
+      return;
+    }
+    onSave({ json, imageData });
     handleClose();
   };
 
@@ -66,6 +71,7 @@ const CanvasModal = ({
               "Oops, we couldn't load this drawing. Please try again."
             );
             console.error('Failed to load drawing data:', error);
+            hasLoadedPaths.current = true;
           }
         }
       }

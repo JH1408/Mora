@@ -30,15 +30,16 @@ const Header = ({
           <div className='flex items-center space-x-4'>
             <Link href={paths.dashboard} onClick={endStudySession}>
               <Button variant='ghost' size='sm'>
-                <ArrowLeft className='h-4 w-4 mr-2' />
-                Back to Dashboard
+                <ArrowLeft className='h-4 w-4 mr-0 sm:mr-2' />
+                <span className='hidden sm:inline'>Back to Dashboard</span>
               </Button>
             </Link>
 
             <div className='h-6 w-px bg-neutral-3' />
             <div>
               <h1 className='text-xl font-bold font-heading text-text-primary'>
-                Study Session: {deckName}
+                <span className='hidden sm:inline'>Study Session: </span>
+                {deckName}
               </h1>
               {!!totalCards && !!currentCardIndex && (
                 <p className='text-sm text-text-muted'>
