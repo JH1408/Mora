@@ -166,6 +166,9 @@
   [data-sonner-toaster] {
     z-index: 99999 !important;
     position: fixed !important;
+    display: flex !important;
+    flex-direction: column;
+    align-items: center;
   }
 
   /* Toast styling */
@@ -189,6 +192,34 @@
     background: #48bb78 !important;
     border: 1px solid #48bb78 !important;
     color: #ffffff !important;
+  }
+
+  /* Offline toast styling */
+  [data-sonner-toast][data-type='offline'] {
+    background: #fed7d7 !important;
+    border: 1px solid #fed7d7 !important;
+    color: #000000 !important;
+  }
+
+  .toast-offline {
+    background: #fed7d7 !important;
+    color: #000000 !important;
+    border: 1px solid #fed7d7 !important;
+    width: auto !important;
+  }
+
+  /* Online toast styling */
+  [data-sonner-toast][data-type='online'] {
+    background: #c6f6d5 !important;
+    border: 1px solid #c6f6d5 !important;
+    color: #000000 !important;
+  }
+
+  .toast-online {
+    background: #c6f6d5 !important;
+    color: #000000 !important;
+    border: 1px solid #c6f6d5 !important;
+    width: auto !important;
   }
 
   /* Prevent toast close button from closing modal */

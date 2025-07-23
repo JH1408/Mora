@@ -74,7 +74,7 @@ const ManageCardsPage = () => {
           </section>
         )}
 
-        {isLoadingDeck && <Spinner className='absolute top-1/2 left-1/2 ' />}
+        {isLoadingDeck && <Spinner className='relative top-24 left-1/2 ' />}
 
         {!!deck?.cardsCount && deck.cardsCount > 0 && (
           <section>

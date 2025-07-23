@@ -136,8 +136,8 @@ const CreateNewCard = ({
               }`}
             >
               {isMissingFields && (
-                <div className='text-error text-sm self-center ml-2'>
-                  Please fill in all fields.
+                <div className='text-error text-sm self-center mr-4'>
+                  Please fill in all mandatory fields.
                 </div>
               )}
               <Button type='submit' disabled={isCreatingCard}>

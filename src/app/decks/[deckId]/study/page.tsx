@@ -13,6 +13,7 @@ import {
   useSubmitStudyResult,
   useStudyCards,
 } from '@/utils/hooks/useApi';
+import { useNetworkStatus } from '@/utils/hooks/useNetworkStatus';
 import { getLanguageClasses } from '@/utils/languages';
 import type { StudyCard as StudyCardType } from '@/utils/types/deck';
 import type { StudyMode } from '@/utils/types/studySession';
@@ -25,6 +26,7 @@ import StudyCard from './components/study-card';
 
 // @Josy: progress display is wrong when in free practice mode
 const Study = () => {
+  useNetworkStatus();
   const router = useRouter();
   const { deckId } = useParams<{ deckId: string }>();
   const {

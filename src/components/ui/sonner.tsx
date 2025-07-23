@@ -23,6 +23,12 @@ const Toaster = ({ ...props }: ToasterProps) => {
           '--error-bg': '#f56565',
           '--error-text': '#ffffff',
           '--error-border': '#f56565',
+          '--online-bg': '#c6f6d5',
+          '--online-text': '#000000',
+          '--online-border': '#c6f6d5',
+          '--offline-bg': '#fed7d7',
+          '--offline-text': '#000000',
+          '--offline-border': '#fed7d7',
         } as React.CSSProperties
       }
       {...props}

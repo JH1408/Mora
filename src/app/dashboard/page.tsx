@@ -1,13 +1,11 @@
 'use client';
 
-import { Plus } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { useSession } from 'next-auth/react';
 import { useEffect, useMemo, useState } from 'react';
 
 import CreateDeckModal from '@/app/dashboard/components/create-deck-modal';
 import ErrorMessage from '@/components/error-message';
-import { Button } from '@/components/ui/button';
 import Spinner from '@/components/ui/spinner';
 import { countUniqueLanguages } from '@/utils/deckUtils';
 import { useDecks, useLanguages } from '@/utils/hooks/useApi';
@@ -70,16 +68,6 @@ export default function DashboardPage() {
           )}
         </div>
       </main>
-
-      <div className='fixed bottom-6 right-6 z-50'>
-        <Button
-          onClick={() => setIsCreateModalOpen(true)}
-          size='lg'
-          className='rounded-full w-14 h-14 bg-primary-600 hover:bg-primary-700 text-white shadow-primary hover:shadow-lg transition-all duration-200'
-        >
-          <Plus className='h-6 w-6' />
-        </Button>
-      </div>
       <CreateDeckModal
         isOpen={isCreateModalOpen}
         onClose={() => setIsCreateModalOpen(false)}
