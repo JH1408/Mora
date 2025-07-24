@@ -143,7 +143,6 @@ export const deckSchema = z.object({
     name: z.string().nullable().optional(),
     email: z.string().nullable().optional(),
   }),
-  cards: z.array(z.any()).optional(),
 });
 
 export const decksSchema = z.array(deckSchema);

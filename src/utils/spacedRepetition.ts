@@ -65,7 +65,11 @@ export function calculateNextReview(
  * Get cards that are due for review
  */
 export function getDueCards(
-  cards: Array<{ id: string; cardProgress?: CardProgressData | null }>
+  cards: Array<{
+    id: string;
+    createdAt: Date;
+    cardProgress?: CardProgressData | null;
+  }>
 ) {
   const now = new Date();
   const fourHoursFromNow = new Date(now.getTime() + 4 * 60 * 60 * 1000);
@@ -82,7 +86,11 @@ export function getDueCards(
  * Sort cards by priority for study
  */
 export function sortCardsByPriority(
-  cards: Array<{ id: string; cardProgress?: CardProgressData | null }>
+  cards: Array<{
+    id: string;
+    createdAt: Date;
+    cardProgress?: CardProgressData | null;
+  }>
 ) {
   return cards.sort((a, b) => {
     // New cards (no progress) have highest priority

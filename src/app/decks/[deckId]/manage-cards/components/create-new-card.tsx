@@ -78,7 +78,7 @@ const CreateNewCard = ({
   };
 
   return (
-    <section>
+    <section className='my-2'>
       <h2 className='text-2xl font-bold font-heading text-text-primary py-6'>
         Create New Card
       </h2>

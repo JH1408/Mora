@@ -12,15 +12,12 @@ const Header = ({
   deckName,
   studyMode,
   toggleStudyMode,
-  currentCardIndex,
-  totalCards,
+
   endStudySession,
 }: {
   deckName?: string;
   studyMode: StudyMode;
   toggleStudyMode: () => void;
-  currentCardIndex: number | null;
-  totalCards?: number | null;
   endStudySession: () => void;
 }) => {
   return (
@@ -41,27 +38,18 @@ const Header = ({
                 <span className='hidden sm:inline'>Study Session: </span>
                 {deckName}
               </h1>
-              {!!totalCards && !!currentCardIndex && (
-                <p className='text-sm text-text-muted'>
-                  Card {currentCardIndex} of {totalCards}
-                </p>
-              )}
             </div>
           </div>
-          {!!totalCards && !!currentCardIndex && (
-            <div className='flex items-center space-x-4'>
-              <Button variant='soft' size='sm' onClick={toggleStudyMode}>
-                {studyMode === STUDY_MODES.RECOGNITION ? (
-                  <Eye className='h-4 w-4 mr-2' />
-                ) : (
-                  <Brain className='h-4 w-4 mr-2' />
-                )}
-                {studyMode === STUDY_MODES.RECOGNITION
-                  ? 'Recognition'
-                  : 'Recall'}
-              </Button>
-            </div>
-          )}
+          <div className='flex items-center space-x-4'>
+            <Button variant='soft' size='sm' onClick={toggleStudyMode}>
+              {studyMode === STUDY_MODES.RECOGNITION ? (
+                <Eye className='h-4 w-4 mr-2' />
+              ) : (
+                <Brain className='h-4 w-4 mr-2' />
+              )}
+              {studyMode === STUDY_MODES.RECOGNITION ? 'Recognition' : 'Recall'}
+            </Button>
+          </div>
         </div>
       </div>
     </header>

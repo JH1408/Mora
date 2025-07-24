@@ -1,7 +1,19 @@
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import {
+  useQuery,
+  useMutation,
+  useQueryClient,
+  useInfiniteQuery,
+} from '@tanstack/react-query';
 import { toast } from 'sonner';
 
-import { languageApi, deckApi, cardApi, studyApi } from '@/utils/api';
+import {
+  languageApi,
+  deckApi,
+  cardApi,
+  studyApi,
+  fetchPaginatedStudyCards,
+  fetchPaginatedCards,
+} from '@/utils/api';
 import type {
   Card,
   Deck,
@@ -13,20 +25,25 @@ import type {
   CompleteStudySessionRequest,
 } from '@/utils/types/deck';
 
-// Query keys for React Query
+const DEFAULT_LIMIT = 20;
+
 export const queryKeys = {
   languages: ['languages'] as const,
   language: (id: string) => ['languages', id] as const,
   decks: ['decks'] as const,
   deck: (id: string) => ['decks', id] as const,
+  deckStats: (id: string) => ['deckStats', id] as const,
+  infiniteStudyCards: (id: string, limit = DEFAULT_LIMIT) =>
+    ['studyCards', id, limit] as const,
+  infiniteCards: (id: string, isPracticeSession?: boolean) =>
+    ['cards', id, isPracticeSession] as const,
 };
 
-// Language hooks
 export const useLanguages = () => {
   return useQuery({
     queryKey: queryKeys.languages,
     queryFn: languageApi.getAll,
-    staleTime: 5 * 60 * 1000, // 5 minutes - languages don't change often
+    staleTime: 60 * 60 * 1000, // 60 minutes - languages don't change often
   });
 };
 
@@ -38,7 +55,6 @@ export const useLanguage = (id: string) => {
   });
 };
 
-// Deck hooks
 export const useDecks = () => {
   return useQuery({
     queryKey: queryKeys.decks,
@@ -61,7 +77,6 @@ export const useCreateDeck = () => {
   return useMutation({
     mutationFn: (data: CreateDeckRequest) => deckApi.create(data),
     onSuccess: (data: Deck) => {
-      // Invalidate and refetch decks list
       queryClient.invalidateQueries({ queryKey: queryKeys.decks });
       toast.success(`"${data.name}" has been created successfully.`);
     },
@@ -80,9 +95,7 @@ export const useUpdateDeck = () => {
     mutationFn: ({ id, data }: { id: string; data: UpdateDeckRequest }) =>
       deckApi.update(id, data),
     onSuccess: (updatedDeck) => {
-      // Update the specific deck in cache
       queryClient.setQueryData(queryKeys.deck(updatedDeck.id), updatedDeck);
-      // Invalidate decks list
       queryClient.invalidateQueries({ queryKey: queryKeys.decks });
     },
   });
@@ -94,9 +107,7 @@ export const useDeleteDeck = () => {
   return useMutation({
     mutationFn: (id: string) => deckApi.delete(id),
     onSuccess: (_, deletedId) => {
-      // Remove the deck from cache
       queryClient.removeQueries({ queryKey: queryKeys.deck(deletedId) });
-      // Invalidate decks list
       queryClient.invalidateQueries({ queryKey: queryKeys.decks });
       toast.success('Deck has been deleted successfully.');
     },
@@ -112,10 +123,13 @@ export const useCreateCard = () => {
   return useMutation({
     mutationFn: (data: CreateCardRequest) => cardApi.create(data),
     onSuccess: (data: Card) => {
-      // Invalidate and refetch deck
-      queryClient.invalidateQueries({ queryKey: queryKeys.deck(data.deckId) });
-      // Also invalidate decks list to update card count
+      queryClient.invalidateQueries({
+        queryKey: queryKeys.infiniteCards(data.deckId),
+      });
       queryClient.invalidateQueries({ queryKey: queryKeys.decks });
+      queryClient.invalidateQueries({
+        queryKey: queryKeys.deckStats(data.deckId),
+      });
       toast.success('Card has been created successfully.');
     },
     onError: (error) => {
@@ -130,8 +144,13 @@ export const useDeleteCard = () => {
   return useMutation({
     mutationFn: (id: string) => cardApi.delete(id),
     onSuccess: (_, deletedId) => {
-      queryClient.invalidateQueries({ queryKey: queryKeys.deck(deletedId) });
+      queryClient.invalidateQueries({
+        queryKey: queryKeys.infiniteCards(deletedId),
+      });
       queryClient.invalidateQueries({ queryKey: queryKeys.decks });
+      queryClient.invalidateQueries({
+        queryKey: queryKeys.deckStats(deletedId),
+      });
       toast.success('Card has been deleted successfully.');
     },
     onError: (error) => {
@@ -147,9 +166,8 @@ export const useUpdateCard = () => {
     mutationFn: ({ id, data }: { id: string; data: UpdateCardRequest }) =>
       cardApi.update(id, data),
     onSuccess: (updatedCard) => {
-      // Invalidate the specific deck to refresh the cards
       queryClient.invalidateQueries({
-        queryKey: queryKeys.deck(updatedCard.deckId),
+        queryKey: queryKeys.infiniteCards(updatedCard.deckId),
       });
       toast.success('Card has been updated successfully.');
     },
@@ -186,7 +204,10 @@ export const useCompleteStudySession = (deckId: string) => {
       studyApi.completeStudySession(deckId, data),
     onSuccess: () => {
       // Invalidate deck stats and study session
-      queryClient.invalidateQueries({ queryKey: queryKeys.deck(deckId) });
+      queryClient.invalidateQueries({ queryKey: queryKeys.deckStats(deckId) });
+      queryClient.invalidateQueries({
+        queryKey: queryKeys.infiniteStudyCards(deckId),
+      });
     },
     onError: (error) => {
       console.error('Complete study session error:', error);
@@ -197,7 +218,7 @@ export const useCompleteStudySession = (deckId: string) => {
 
 export const useDeckStats = (deckId: string) => {
   return useQuery({
-    queryKey: ['deckStats', deckId],
+    queryKey: queryKeys.deckStats(deckId),
     queryFn: () => deckApi.getStats(deckId),
     enabled: !!deckId,
     staleTime: 30 * 1000, // 30 seconds
@@ -205,10 +226,29 @@ export const useDeckStats = (deckId: string) => {
 };
 
 // @Josy TODO: think about stale time and gcTime - we don't want to refetch while the user is studying?
-export const useStudyCards = (deckId: string) => {
-  return useQuery({
-    queryKey: ['studyCards', deckId],
-    queryFn: () => studyApi.getStudyCards(deckId),
+export const useInfiniteStudyCards = (
+  deckId: string,
+  limit = DEFAULT_LIMIT
+) => {
+  return useInfiniteQuery({
+    queryKey: queryKeys.infiniteStudyCards(deckId, limit),
+    queryFn: ({ pageParam }) =>
+      fetchPaginatedStudyCards(deckId, pageParam, limit),
+    getNextPageParam: (lastPage) => lastPage.nextCursor,
+    initialPageParam: undefined,
     enabled: !!deckId,
   });
 };
+
+export const useInfiniteCards = (deckId: string, isPracticeSession?: boolean) =>
+  useInfiniteQuery({
+    queryKey: queryKeys.infiniteCards(deckId, isPracticeSession),
+    queryFn: ({ pageParam }) =>
+      fetchPaginatedCards(deckId as string, pageParam),
+    getNextPageParam: (lastPage) => lastPage.nextCursor,
+    initialPageParam: undefined,
+    enabled:
+      isPracticeSession === undefined
+        ? !!deckId
+        : isPracticeSession && !!deckId,
+  });

@@ -101,6 +101,18 @@ export const cardApi = {
     }),
 };
 
+export async function fetchPaginatedCards(
+  deckId: string,
+  cursor?: string,
+  limit = 20
+) {
+  const params = new URLSearchParams({ limit: String(limit) });
+  if (cursor) params.append('cursor', cursor);
+  const res = await fetch(`/api/decks/${deckId}/cards?${params}`);
+  if (!res.ok) throw new Error('Failed to fetch cards');
+  return res.json();
+}
+
 // Study API functions
 export const studyApi = {
   getStudyCards: (
@@ -108,11 +120,13 @@ export const studyApi = {
     params?: {
       limit?: number;
       studyMode?: StudyMode;
+      cursor?: string;
     }
   ): Promise<StudySessionData> => {
     const searchParams = new URLSearchParams();
     if (params?.limit) searchParams.append('limit', params.limit.toString());
     if (params?.studyMode) searchParams.append('studyMode', params.studyMode);
+    if (params?.cursor) searchParams.append('cursor', params.cursor);
 
     const queryString = searchParams.toString();
     const endpoint = `${apiPaths.decks.study.base(deckId)}${
@@ -140,3 +154,16 @@ export const studyApi = {
       body: JSON.stringify(data),
     }),
 };
+
+// Infinite pagination helper for study cards
+export async function fetchPaginatedStudyCards(
+  deckId: string,
+  cursor?: string,
+  limit = 20
+) {
+  const params = new URLSearchParams({ limit: String(limit) });
+  if (cursor) params.append('cursor', cursor);
+  const res = await fetch(`/api/decks/${deckId}/study?${params}`);
+  if (!res.ok) throw new Error('Failed to fetch study cards');
+  return res.json();
+}

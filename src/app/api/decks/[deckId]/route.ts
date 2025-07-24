@@ -34,11 +34,6 @@ export async function GET(
         _count: {
           select: { cards: true },
         },
-        cards: {
-          orderBy: {
-            createdAt: 'desc',
-          },
-        },
       },
     });
 

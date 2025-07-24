@@ -6,6 +6,7 @@ import { authOptions } from '@/utils/auth';
 import { prisma } from '@/utils/prisma';
 import { studyParamsSchema } from '@/utils/schemas';
 import { getDueCards, sortCardsByPriority } from '@/utils/spacedRepetition';
+import type { CardProgressData } from '@/utils/spacedRepetition';
 
 export async function GET(
   request: NextRequest,
@@ -29,6 +30,7 @@ export async function GET(
     const { searchParams } = new URL(request.url);
     const limit = parseInt(searchParams.get('limit') || '20');
     const studyMode = searchParams.get('studyMode') || 'recognition';
+    const cursorParam = searchParams.get('cursor');
 
     // Validate parameters
     const validatedParams = studyParamsSchema.parse({ limit, studyMode });
@@ -66,15 +68,26 @@ export async function GET(
     });
 
     // Transform cards to include progress data
-    const cardsWithProgress = cards.map((card) => ({
+    const cardsWithProgress: Array<{
+      id: string;
+      frontText: string;
+      backText: string;
+      phoneticSpelling?: string;
+      usageContext?: string;
+      tags?: string[];
+      handwritingData?: unknown;
+      handwritingImage?: string;
+      createdAt: Date;
+      cardProgress?: CardProgressData | null;
+    }> = cards.map((card) => ({
       id: card.id,
       frontText: card.frontText,
       backText: card.backText,
-      phoneticSpelling: card.phoneticSpelling,
-      usageContext: card.usageContext,
-      tags: card.tags,
-      handwritingData: card.handwritingData,
-      handwritingImage: card.handwritingImage,
+      phoneticSpelling: card.phoneticSpelling ?? undefined,
+      usageContext: card.usageContext ?? undefined,
+      tags: Array.isArray(card.tags) ? (card.tags as string[]) : undefined,
+      handwritingData: card.handwritingData ?? undefined,
+      handwritingImage: card.handwritingImage ?? undefined,
       createdAt: card.createdAt,
       cardProgress: card.cardProgress[0] || null,
     }));
@@ -83,8 +96,46 @@ export async function GET(
     const dueCards = getDueCards(cardsWithProgress);
     const sortedCards = sortCardsByPriority(dueCards);
 
-    // Limit the number of cards returned
-    const studyCards = sortedCards.slice(0, validatedParams.limit);
+    // Cursor-based pagination for due cards
+    let startIdx = 0;
+    if (cursorParam) {
+      try {
+        const parsed = JSON.parse(cursorParam);
+        if (parsed && parsed.createdAt && parsed.id) {
+          startIdx = sortedCards.findIndex(
+            (card) =>
+              card.createdAt instanceof Date &&
+              new Date(card.createdAt).getTime() ===
+                new Date(parsed.createdAt).getTime() &&
+              card.id === parsed.id
+          );
+          if (startIdx !== -1) {
+            startIdx += 1; // start after the cursor
+          } else {
+            startIdx = 0;
+          }
+        }
+      } catch (error) {
+        console.error('Invalid cursor:', error);
+      }
+    }
+
+    const paginatedCards = sortedCards.slice(
+      startIdx,
+      startIdx + validatedParams.limit + 1
+    );
+    let nextCursor: string | null = null;
+    if (paginatedCards.length > validatedParams.limit) {
+      const nextCard = paginatedCards.pop();
+      nextCursor = JSON.stringify({
+        createdAt:
+          nextCard!.createdAt instanceof Date
+            ? nextCard!.createdAt.toISOString()
+            : nextCard!.createdAt,
+        id: nextCard!.id,
+      });
+    }
+    const studyCards = paginatedCards;
 
     // Create or update study session (mode-agnostic, but set studyMode to 'recognition')
     const today = new Date().toISOString().split('T')[0];
@@ -94,11 +145,7 @@ export async function GET(
         id: sessionId,
       },
       update: {
-        cardsStudied: 0,
-        correctAnswers: 0,
-        startedAt: new Date(),
-        completedAt: null,
-        studyMode: 'recognition', // always set to 'recognition' for now
+        // For now, leave this empty or only update fields that should change
       },
       create: {
         id: sessionId,
@@ -122,6 +169,7 @@ export async function GET(
         startedAt: studySession.startedAt,
       },
       cards: studyCards,
+      nextCursor, // <-- add nextCursor to response
       totalDue: dueCards.length,
       totalCards: cards.length,
     };
