@@ -1,7 +1,7 @@
 import * as Popover from '@radix-ui/react-popover';
 import { HexColorInput, HexColorPicker } from 'react-colorful';
 
-const PopoverPicker = ({
+const PopoverColorPicker = ({
   color,
   onChange,
 }: {
@@ -50,4 +50,4 @@ const PopoverPicker = ({
   );
 };
 
-export default PopoverPicker;
+export default PopoverColorPicker;

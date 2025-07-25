@@ -12,7 +12,7 @@ import {
 } from '@/components/ui/dialog';
 import Spinner from '@/components/ui/spinner';
 
-import PopoverPicker from './popover-picker';
+import PopoverColorPicker from './popover-color-picker';
 
 const CanvasModal = ({
   isOpen,
@@ -106,7 +106,7 @@ const CanvasModal = ({
           ref={handleCanvasRef}
         />
         <div className='flex items-center gap-4 ml-2 mt-2'>
-          <PopoverPicker color={color} onChange={setColor} />
+          <PopoverColorPicker color={color} onChange={setColor} />
           <Button
             variant={isEraseMode ? 'soft-accent' : 'soft-secondary'}
             onClick={() => {

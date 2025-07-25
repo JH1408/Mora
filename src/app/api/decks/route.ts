@@ -93,13 +93,28 @@ export async function GET() {
             cards: true,
           },
         },
+        studySessions: {
+          where: { completedAt: { not: null } },
+          orderBy: { completedAt: 'desc' },
+          take: 1,
+          select: { completedAt: true },
+        },
       },
       orderBy: {
         createdAt: 'desc',
       },
     });
 
-    return NextResponse.json(decks);
+    // Add lastStudiedAt to each deck
+    const decksWithLastStudied = decks.map((deck) => {
+      const { studySessions, ...rest } = deck;
+      return {
+        ...rest,
+        lastStudiedAt: studySessions?.[0]?.completedAt ?? null,
+      };
+    });
+
+    return NextResponse.json(decksWithLastStudied);
   } catch (error) {
     console.error('Error fetching decks:', error);
     return NextResponse.json(

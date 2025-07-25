@@ -5,6 +5,7 @@ interface LanguageStats {
   name: string;
   deckCount: number;
   decks: Deck[];
+  mostRecentDate?: Date;
 }
 
 export const getLanguageStats = (decks: Deck[]): LanguageStats[] => {
@@ -19,6 +20,7 @@ export const getLanguageStats = (decks: Deck[]): LanguageStats[] => {
         name,
         deckCount: 0,
         decks: [],
+        mostRecentDate: undefined,
       });
     }
 
@@ -27,9 +29,25 @@ export const getLanguageStats = (decks: Deck[]): LanguageStats[] => {
     stats.decks.push(deck);
   });
 
-  return Array.from(languageMap.values()).sort(
-    (a, b) => b.deckCount - a.deckCount
-  );
+  for (const stats of languageMap.values()) {
+    stats.mostRecentDate = stats.decks.reduce(
+      (latest: Date | undefined, deck) => {
+        const dateRaw = deck.lastStudiedAt ?? deck.createdAt;
+        const date = dateRaw ? new Date(dateRaw) : undefined;
+        if (!latest || (date && date > latest)) {
+          return date;
+        }
+        return latest;
+      },
+      undefined
+    );
+  }
+
+  return Array.from(languageMap.values()).sort((a, b) => {
+    const aTime = a.mostRecentDate ? a.mostRecentDate.getTime() : 0;
+    const bTime = b.mostRecentDate ? b.mostRecentDate.getTime() : 0;
+    return bTime - aTime;
+  });
 };
 
 export const countUniqueLanguages = (decks: Deck[]): number => {

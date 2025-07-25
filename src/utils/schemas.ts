@@ -143,6 +143,7 @@ export const deckSchema = z.object({
     name: z.string().nullable().optional(),
     email: z.string().nullable().optional(),
   }),
+  lastStudiedAt: z.union([z.string(), z.date()]).nullable().optional(),
 });
 
 export const decksSchema = z.array(deckSchema);

@@ -103,7 +103,6 @@ export const useUpdateDeck = () => {
 
 export const useDeleteDeck = () => {
   const queryClient = useQueryClient();
-
   return useMutation({
     mutationFn: (id: string) => deckApi.delete(id),
     onSuccess: (_, deletedId) => {
@@ -184,8 +183,7 @@ export const useSubmitStudyResult = (deckId: string) => {
     mutationFn: (data: SubmitStudyResultRequest) =>
       studyApi.submitStudyResult(deckId, data),
     onSuccess: () => {
-      // @Josy TODO: do we really want this?
-      // Invalidate deck stats and study cards
+      queryClient.invalidateQueries({ queryKey: queryKeys.decks });
       queryClient.invalidateQueries({ queryKey: queryKeys.deck(deckId) });
     },
     onError: (error) => {
