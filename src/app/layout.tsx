@@ -3,6 +3,7 @@ import { Inter } from 'next/font/google';
 
 import './globals.css';
 import { Providers } from '@/components/providers';
+import RoutePrefetcher from '@/components/route-prefetcher';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -27,7 +28,10 @@ export default function RootLayout({
         />
       </head>
       <body className={inter.className}>
-        <Providers>{children}</Providers>
+        <Providers>
+          <RoutePrefetcher />
+          {children}
+        </Providers>
       </body>
     </html>
   );

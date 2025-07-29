@@ -1,8 +1,24 @@
+import { Skeleton } from '@/components/ui/skeleton';
 import { useDeckStats } from '@/utils/hooks/useApi';
 
 const DeckStats = ({ deckId }: { deckId: string }) => {
-  const { data: deckStats } = useDeckStats(deckId);
+  const { data: deckStats, isLoading: isLoadingDeckStats } =
+    useDeckStats(deckId);
+
+  if (isLoadingDeckStats) {
+    return (
+      <>
+        <div className='flex justify-between text-sm text-text-secondary'>
+          <Skeleton className='w-20 h-4' />
+          <Skeleton className='w-32 h-4' />
+        </div>
+        <Skeleton className='w-40 h-3 mt-1' />
+      </>
+    );
+  }
+
   if (!deckStats) return null;
+
   return (
     <>
       <div className='flex justify-between text-sm text-text-secondary'>
