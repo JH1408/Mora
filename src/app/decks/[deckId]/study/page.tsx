@@ -1,7 +1,7 @@
 'use client';
 
 import { useParams, useRouter } from 'next/navigation';
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState, useCallback } from 'react';
 import { toast } from 'sonner';
 
 import { Progress } from '@/components/ui/progress';
@@ -85,7 +85,7 @@ const Study = () => {
     }
   }, [studySession, cardQueue, isPracticeSession]);
 
-  const endStudySession = () => {
+  const endStudySession = useCallback(() => {
     if (!studySession) return;
     if (!isPracticeSession) {
       const sessionEnd = new Date();
@@ -103,7 +103,8 @@ const Study = () => {
         studiedCorrectly === 1 ? '' : 's'
       }.`
     );
-  };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [completeStudySession, isPracticeSession, studySession]);
 
   const speakText = (text: string) => {
     if ('speechSynthesis' in window && studySession) {
@@ -238,7 +239,7 @@ const Study = () => {
     };
     window.addEventListener('beforeunload', handleBeforeUnload);
     return () => window.removeEventListener('beforeunload', handleBeforeUnload);
-  }, []);
+  }, [endStudySession]);
 
   return (
     <div className='min-h-screen bg-gradient-to-br from-primary-100 to-accent-100'>

@@ -6,13 +6,14 @@ interface LanguageStats {
   deckCount: number;
   decks: Deck[];
   mostRecentDate?: Date;
+  id: string;
 }
 
 export const getLanguageStats = (decks: Deck[]): LanguageStats[] => {
   const languageMap = new Map<string, LanguageStats>();
 
   decks.forEach((deck) => {
-    const { code, name } = deck.language;
+    const { code, name, id } = deck.language;
 
     if (!languageMap.has(code)) {
       languageMap.set(code, {
@@ -21,6 +22,7 @@ export const getLanguageStats = (decks: Deck[]): LanguageStats[] => {
         deckCount: 0,
         decks: [],
         mostRecentDate: undefined,
+        id,
       });
     }
 

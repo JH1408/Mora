@@ -17,7 +17,7 @@ import Stats from './components/stats';
 export default function DashboardPage() {
   const { data: session } = useSession();
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
-
+  const [language, setLanguage] = useState<string>('');
   const {
     data: decks = [],
     isLoading: isLoadingDecks,
@@ -39,7 +39,13 @@ export default function DashboardPage() {
             deckCount={deckCount}
           />
           {isLoadingDecks && <Spinner className='absolute top-1/2 left-1/2 ' />}
-          <Decks decks={decks} setIsCreateModalOpen={setIsCreateModalOpen} />
+          <Decks
+            decks={decks}
+            openCreateDeckModal={(languageId) => {
+              setIsCreateModalOpen(true);
+              setLanguage(languageId);
+            }}
+          />
           {!decks.length && !isLoadingDecks && (
             <NoDecks setIsCreateModalOpen={setIsCreateModalOpen} />
           )}
@@ -50,8 +56,13 @@ export default function DashboardPage() {
       </main>
       <CreateDeckModal
         isOpen={isCreateModalOpen}
-        onClose={() => setIsCreateModalOpen(false)}
+        onClose={() => {
+          setIsCreateModalOpen(false);
+          setLanguage('');
+        }}
         languages={languages}
+        language={language}
+        setLanguage={setLanguage}
       />
     </div>
   );

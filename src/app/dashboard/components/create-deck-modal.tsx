@@ -28,15 +28,18 @@ interface CreateDeckModalProps {
   isOpen: boolean;
   onClose: () => void;
   languages: Language[];
+  language: string;
+  setLanguage: (language: string) => void;
 }
 
 const CreateDeckModal: React.FC<CreateDeckModalProps> = ({
   isOpen,
   onClose,
   languages,
+  language,
+  setLanguage,
 }) => {
   const [deckName, setDeckName] = useState('');
-  const [language, setLanguage] = useState('');
   const [difficulty, setDifficulty] = useState('');
   const { mutate: createDeck, isPending: isCreatingDeck } = useCreateDeck();
 

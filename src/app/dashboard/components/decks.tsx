@@ -33,10 +33,10 @@ const getDifficultyColor = (difficulty: string) => {
 
 const Decks = ({
   decks,
-  setIsCreateModalOpen,
+  openCreateDeckModal,
 }: {
   decks: Deck[];
-  setIsCreateModalOpen: (isOpen: boolean) => void;
+  openCreateDeckModal: (languageId: string) => void;
 }) => {
   const languageStats = useMemo(() => getLanguageStats(decks), [decks]);
 
@@ -156,7 +156,7 @@ const Decks = ({
                   <Card className='hover:shadow-primary py-6 transition-shadow duration-200 border-neutral-3 items-center h-full flex flex-col min-h-[220px]'>
                     <button
                       className='w-full flex-1 flex flex-col items-center justify-evenly h-full cursor-pointer'
-                      onClick={() => setIsCreateModalOpen(true)}
+                      onClick={() => openCreateDeckModal(languageStat.id)}
                     >
                       <CardTitle className='text-lg font-medium text-text-primary line-clamp-2'>
                         Add a New Deck
