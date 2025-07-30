@@ -27,7 +27,7 @@ export default function RootLayout({
           crossOrigin='anonymous'
         />
       </head>
-      <body className={inter.className}>
+      <body className={inter.className} suppressHydrationWarning={true}>
         <Providers>
           <RoutePrefetcher />
           {children}

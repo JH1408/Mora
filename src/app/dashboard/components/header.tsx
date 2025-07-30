@@ -4,6 +4,11 @@ import { signOut } from 'next-auth/react';
 import { toast } from 'sonner';
 
 import { Button } from '@/components/ui/button';
+import {
+  Header as BaseHeader,
+  HeaderLeft,
+  HeaderRight,
+} from '@/components/ui/header';
 import paths from '@/utils/clientPaths';
 
 const Header = ({ userName }: { userName: string | null }) => {
@@ -17,37 +22,32 @@ const Header = ({ userName }: { userName: string | null }) => {
       toast.error('Oops, we could not sign you out. Please try again.');
     }
   };
-  return (
-    <header className='bg-background-white border-b border-neutral-3 shadow-soft sticky top-0 z-40'>
-      <div className='max-w-7xl mx-auto px-4 sm:px-6 lg:px-8'>
-        <div className='flex items-center justify-between h-16'>
-          <div className='flex items-center space-x-3'>
-            <div>
-              <Image
-                src='/images/mora_logo.png'
-                alt='Mora Logo'
-                width={0}
-                height={0}
-                sizes='100vw'
-                className='h-10 w-auto'
-                priority
-              />
-            </div>
-          </div>
 
-          <div className='flex items-center space-x-4'>
-            <div className='flex items-center space-x-2 text-sm text-text-secondary'>
-              <User className='h-4 w-4' />
-              <span>Welcome back, {userName || ''}!</span>
-            </div>
-            <Button variant='soft-secondary' size='sm' onClick={handleSignout}>
-              <LogOut className='h-4 w-4 mr-0 sm:mr-2' />
-              <span className='hidden sm:inline'>Logout</span>
-            </Button>
-          </div>
+  return (
+    <BaseHeader maxWidth='7xl'>
+      <HeaderLeft>
+        <Image
+          src='/images/mora_logo.png'
+          alt='Mora Logo'
+          width={0}
+          height={0}
+          sizes='100vw'
+          className='h-10 w-auto'
+          priority
+        />
+      </HeaderLeft>
+
+      <HeaderRight>
+        <div className='flex items-center space-x-2 text-sm text-text-secondary'>
+          <User className='h-4 w-4' />
+          <span>Welcome back, {userName || ''}!</span>
         </div>
-      </div>
-    </header>
+        <Button variant='soft-secondary' size='sm' onClick={handleSignout}>
+          <LogOut className='h-4 w-4 mr-0 sm:mr-2' />
+          <span className='hidden sm:inline'>Logout</span>
+        </Button>
+      </HeaderRight>
+    </BaseHeader>
   );
 };
 

@@ -5,30 +5,9 @@ import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
+import { cardFields } from '@/utils/utils';
 
 import CanvasModal from './canvas-modal';
-
-const LabeledTextarea = ({
-  label,
-  value,
-  onChange,
-  fontClass,
-}: {
-  label: string;
-  value: string;
-  onChange: (e: React.ChangeEvent<HTMLTextAreaElement>) => void;
-  fontClass: string;
-} & React.TextareaHTMLAttributes<HTMLTextAreaElement>) => (
-  <div className='space-y-2'>
-    <Label className='text-text-secondary text-sm'>{label}</Label>
-    <Textarea
-      value={value}
-      onChange={onChange}
-      dir='auto'
-      className={`min-h-[80px] resize-none border-neutral-4 focus:border-primary-500 ${fontClass}`}
-    />
-  </div>
-);
 
 const EditCardForm = ({
   card,
@@ -43,11 +22,12 @@ const EditCardForm = ({
   isUpdatingCard: boolean;
   fontClass: string;
 }) => {
-  const [frontText, setFrontText] = useState(card.frontText);
-  const [backText, setBackText] = useState(card.backText);
-  const [phoneticSpelling, setPhoneticSpelling] = useState(
-    card.phoneticSpelling || ''
-  );
+  const [formData, setFormData] = useState({
+    frontText: card.frontText,
+    backText: card.backText,
+    phoneticSpelling: card.phoneticSpelling || '',
+  });
+
   const [showHandwritingCanvas, setShowHandwritingCanvas] = useState(false);
   const [handwritingData, setHandwritingData] = useState(
     card.handwritingData || null
@@ -55,6 +35,15 @@ const EditCardForm = ({
   const [handwritingImage, setHandwritingImage] = useState(
     card.handwritingImage || null
   );
+
+  const handleInputChange =
+    (field: keyof typeof formData) =>
+    (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+      setFormData((prev) => ({
+        ...prev,
+        [field]: e.target.value,
+      }));
+    };
 
   const onSaveHandwriting = (data: { json: string; imageData: string }) => {
     setHandwritingData(data.json);
@@ -64,42 +53,45 @@ const EditCardForm = ({
   return (
     <div className='space-y-4'>
       <div className='grid grid-cols-1 md:grid-cols-2 gap-4'>
-        <LabeledTextarea
-          label='Front'
-          value={frontText}
-          onChange={(e) => setFrontText(e.target.value)}
-          fontClass={fontClass}
-        />
-        <LabeledTextarea
-          label='Back'
-          value={backText}
-          onChange={(e) => setBackText(e.target.value)}
-          fontClass={fontClass}
-        />
-        <LabeledTextarea
-          label='Phonetic Spelling'
-          value={phoneticSpelling}
-          onChange={(e) => setPhoneticSpelling(e.target.value)}
-          fontClass={fontClass}
-        />
-        <div className='space-y-2'>
-          <Label
-            htmlFor='new-handwriting'
-            className='text-text-secondary text-sm'
-          >
-            Handwritten Content
-          </Label>
-          <div className='space-y-2'>
-            <button
-              onClick={() => setShowHandwritingCanvas(true)}
-              type='button'
-              className='border w-full min-h-[80px] border-dashed hover:bg-primary-50 gap-2 whitespace-nowrap rounded-lg text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none shrink-0 outline-none focus-visible:ring-2 focus-visible:ring-offset-2 cursor-pointer border-neutral-4 hover:border-primary-500 flex items-center justify-center'
-            >
-              <Pen className='h-4 w-4 mr-1' />
-              {handwritingData ? 'Edit' : 'Click to draw'}
-            </button>
-          </div>
-        </div>
+        {cardFields.map((field) => {
+          if (field.value === null) {
+            return (
+              <div className='space-y-2' key={field.label + 'edit'}>
+                <Label
+                  htmlFor='new-handwriting'
+                  className='text-text-secondary text-sm'
+                >
+                  {field.label}
+                </Label>
+                <div className='space-y-2'>
+                  <button
+                    onClick={() => setShowHandwritingCanvas(true)}
+                    type='button'
+                    className='border w-full min-h-[80px] border-dashed hover:bg-primary-50 gap-2 whitespace-nowrap rounded-lg text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none shrink-0 outline-none focus-visible:ring-2 focus-visible:ring-offset-2 cursor-pointer border-neutral-4 hover:border-primary-500 flex items-center justify-center'
+                  >
+                    <Pen className='h-4 w-4 mr-1' />
+                    {handwritingData ? 'Edit' : 'Click to draw'}
+                  </button>
+                </div>
+              </div>
+            );
+          }
+          return (
+            <div className='space-y-2' key={field.value + 'edit'}>
+              <Label className='text-text-secondary text-sm'>
+                {field.label}
+              </Label>
+              <Textarea
+                value={formData[field.value as keyof typeof formData]}
+                onChange={handleInputChange(
+                  field.value as keyof typeof formData
+                )}
+                dir='auto'
+                className={`min-h-[80px] resize-none border-neutral-4 focus:border-primary-500 ${fontClass}`}
+              />
+            </div>
+          );
+        })}
       </div>
       <div className='flex justify-end space-x-2'>
         <Button variant='ghost' size='sm' onClick={onCancel}>
@@ -110,16 +102,14 @@ const EditCardForm = ({
           size='sm'
           onClick={() =>
             onSave({
-              frontText,
-              backText,
-              phoneticSpelling,
+              ...formData,
               handwritingData,
               handwritingImage,
             })
           }
           disabled={
-            !frontText.trim().length ||
-            !backText.trim().length ||
+            !formData.frontText.trim().length ||
+            !formData.backText.trim().length ||
             isUpdatingCard
           }
         >

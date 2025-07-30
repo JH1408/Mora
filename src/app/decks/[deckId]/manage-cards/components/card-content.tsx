@@ -5,6 +5,7 @@ import Image from 'next/image';
 import { Button } from '@/components/ui/button';
 import { CardFooter } from '@/components/ui/card';
 import { Label } from '@/components/ui/label';
+import { cardFields } from '@/utils/utils';
 
 import DeleteCard from './delete-card';
 
@@ -15,29 +16,8 @@ const formatCardValue = (value: unknown) => {
   return JSON.stringify(value);
 };
 
-const cardFields = {
-  frontText: {
-    label: 'Front',
-    value: 'frontText',
-  },
-  backText: {
-    label: 'Back',
-    value: 'backText',
-  },
-  phoneticSpelling: {
-    label: 'Phonetic Spelling',
-    value: 'phoneticSpelling',
-  },
-  handwriting: {
-    label: 'Handwritten Content',
-    value: null,
-  },
-};
-
 const getPresentFields = (card: Card) => {
-  return Object.values(cardFields).filter(
-    (field) => !!card[field.value as keyof Card]
-  );
+  return cardFields.filter((field) => !!card[field.value as keyof Card]);
 };
 
 const renderFieldBlock = (
@@ -102,7 +82,7 @@ const CardContent = ({
           return renderFieldBlock(
             field.label,
             card[field.value as keyof Card],
-            field.value!,
+            field.value! + 'card',
             fontClass
           );
         })}
@@ -115,11 +95,11 @@ const CardContent = ({
         {presentFields.map((field) => {
           if (field.value === 'phoneticSpelling') {
             return (
-              <div className='md:col-span-1' key='phoneticSpelling'>
+              <div className='md:col-span-1' key={field.value + 'card'}>
                 {renderFieldBlock(
-                  'Phonetic Spelling',
+                  field.label,
                   card.phoneticSpelling,
-                  'phoneticSpelling',
+                  field.value! + 'card',
                   fontClass
                 )}
               </div>
@@ -128,7 +108,7 @@ const CardContent = ({
           return renderFieldBlock(
             field.label,
             card[field.value as keyof Card],
-            field.value!,
+            field.value! + 'card',
             fontClass
           );
         })}
@@ -144,7 +124,7 @@ const CardContent = ({
             return renderFieldBlock(
               field.label,
               card[field.value as keyof Card],
-              field.value!,
+              field.value! + 'card',
               fontClass
             );
           })}

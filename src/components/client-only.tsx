@@ -7,7 +7,7 @@ interface ClientOnlyProps {
   fallback?: React.ReactNode;
 }
 
-export function ClientOnly({ children, fallback = null }: ClientOnlyProps) {
+export const ClientOnly = ({ children, fallback = null }: ClientOnlyProps) => {
   const [hasMounted, setHasMounted] = useState(false);
 
   useEffect(() => {
@@ -19,4 +19,4 @@ export function ClientOnly({ children, fallback = null }: ClientOnlyProps) {
   }
 
   return <>{children}</>;
-}
+};

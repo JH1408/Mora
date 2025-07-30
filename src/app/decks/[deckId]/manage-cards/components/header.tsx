@@ -5,6 +5,14 @@ import { useState, useRef } from 'react';
 import { useEffect } from 'react';
 
 import { Button } from '@/components/ui/button';
+import {
+  Header as BaseHeader,
+  HeaderLeft,
+  HeaderRight,
+  HeaderDivider,
+  HeaderTitle,
+  HeaderSubtitle,
+} from '@/components/ui/header';
 import paths from '@/utils/clientPaths';
 import { useDeleteDeck, useUpdateDeck } from '@/utils/hooks/useApi';
 
@@ -51,68 +59,62 @@ const Header = ({ deckName, deckId }: HeaderProps) => {
   };
 
   return (
-    <header className='bg-background-white border-b border-neutral-3 shadow-soft sticky top-0 z-40'>
-      <div className='max-w-4xl mx-auto px-4 sm:px-6 lg:px-8'>
-        <div className='flex items-center justify-between h-16'>
-          <div className='flex items-center space-x-4 w-full'>
-            <Link href={paths.dashboard}>
-              <Button variant='ghost' size='sm'>
-                <ArrowLeft className='h-4 w-4 mr-0 sm:mr-2' />
-                <span className='hidden sm:inline'>Back to Dashboard</span>
-              </Button>
-            </Link>
+    <BaseHeader maxWidth='4xl'>
+      <HeaderLeft className='space-x-4 w-full'>
+        <Link href={paths.dashboard}>
+          <Button variant='ghost' size='sm'>
+            <ArrowLeft className='h-4 w-4 mr-0 sm:mr-2' />
+            <span className='hidden sm:inline'>Back to Dashboard</span>
+          </Button>
+        </Link>
 
-            <div className='h-6 w-px bg-primary-200' />
-            <div className='flex justify-between w-full'>
-              <div>
-                <h1 className='text-xl font-bold font-heading text-text-primary'>
-                  Manage Cards
-                </h1>
-                {deckName && (
-                  <p
-                    className='text-sm text-text-muted cursor-pointer'
-                    onClick={() => setIsEditing(true)}
-                  >
-                    in{' '}
-                    {isEditing ? (
-                      <input
-                        ref={inputRef}
-                        className='text-sm text-text-muted bg-transparent focus:outline-none'
-                        value={inputValue}
-                        onChange={(e) => setInputValue(e.target.value)}
-                        onBlur={handleSave}
-                        onKeyDown={(e) => {
-                          if (e.key === 'Enter') {
-                            handleSave();
-                          } else if (e.key === 'Escape') {
-                            setIsEditing(false);
-                            setInputValue(deckName);
-                          }
-                        }}
-                        disabled={isUpdating}
-                        autoFocus
-                      />
-                    ) : (
-                      deckName
-                    )}
-                  </p>
+        <HeaderDivider className='bg-primary-200' />
+
+        <div className='flex justify-between w-full'>
+          <div>
+            <HeaderTitle>Manage Cards</HeaderTitle>
+            {deckName && (
+              <HeaderSubtitle onClick={() => setIsEditing(true)}>
+                in{' '}
+                {isEditing ? (
+                  <input
+                    ref={inputRef}
+                    className='text-sm text-text-muted bg-transparent focus:outline-none'
+                    value={inputValue}
+                    onChange={(e) => setInputValue(e.target.value)}
+                    onBlur={handleSave}
+                    onKeyDown={(e) => {
+                      if (e.key === 'Enter') {
+                        handleSave();
+                      } else if (e.key === 'Escape') {
+                        setIsEditing(false);
+                        setInputValue(deckName);
+                      }
+                    }}
+                    disabled={isUpdating}
+                    autoFocus
+                  />
+                ) : (
+                  deckName
                 )}
-              </div>
-              <DeleteDeck
-                onDeleteDeck={() => {
-                  deleteDeck(deckId, {
-                    onSuccess: () => {
-                      router.push(paths.dashboard);
-                    },
-                  });
-                }}
-                isDeletingDeck={isDeleting}
-              />
-            </div>
+              </HeaderSubtitle>
+            )}
           </div>
+          <HeaderRight>
+            <DeleteDeck
+              onDeleteDeck={() => {
+                deleteDeck(deckId, {
+                  onSuccess: () => {
+                    router.push(paths.dashboard);
+                  },
+                });
+              }}
+              isDeletingDeck={isDeleting}
+            />
+          </HeaderRight>
         </div>
-      </div>
-    </header>
+      </HeaderLeft>
+    </BaseHeader>
   );
 };
 
