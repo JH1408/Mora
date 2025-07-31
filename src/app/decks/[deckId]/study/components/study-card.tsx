@@ -65,39 +65,43 @@ const StudyCard = ({
         movement: [mx],
         direction: [xDir],
         velocity: [vx],
-        cancel,
-        canceled,
         active,
+        last,
       }) => {
         // Update drag offset for visual feedback
         setDragOffset(mx);
         setIsDragging(active);
 
-        // Check if this was a swipe
-        if (canceled) {
+        if (last) {
+          // Check if this was a swipe - use different thresholds for mouse vs touch
+          const isSwipe =
+            Math.abs(mx) > 300 && (Math.abs(vx) > 0.5 || Math.abs(mx) > 400);
+
+          if (isSwipe) {
+            if (xDir < 0 && onSwipeRight) {
+              onSwipeRight();
+            } else if (xDir > 0 && onSwipeLeft) {
+              onSwipeLeft();
+            }
+            // Reset drag offset immediately for swipes
+            setDragOffset(0);
+          } else {
+            // Return to original position if not a swipe
+            setDragOffset(0);
+          }
+          setIsDragging(false);
+          // Don't reset wasDraggedRef here - let the onClick handler check it
           return;
         }
 
-        // Trigger swipe if movement is significant
-        if (Math.abs(mx) > 300 && Math.abs(vx) > 0.5) {
-          if (xDir > 0 && onSwipeRight) {
-            onSwipeRight();
-          } else if (xDir < 0 && onSwipeLeft) {
-            onSwipeLeft();
-          }
-          cancel();
-        }
-
-        // Mark as dragged if there was significant movement
         if (Math.abs(mx) > 10) {
           wasDraggedRef.current = true;
         }
       },
       onClick: () => {
+        // Only trigger click if there was no drag
         if (wasDraggedRef.current) {
-          setDragOffset(0);
-          wasDraggedRef.current = false;
-          setIsDragging(false);
+          wasDraggedRef.current = false; // Reset for next interaction
           return;
         }
         setIsFlipped(!isFlipped);
@@ -107,9 +111,10 @@ const StudyCard = ({
       drag: {
         axis: 'x',
         filterTaps: true,
-        bounds: { left: -400, right: 400 },
+        bounds: { left: -500, right: 500 },
         rubberband: true,
         enabled: hasBeenFlipped,
+        from: () => [dragOffset, 0],
       },
     }
   );
@@ -128,8 +133,10 @@ const StudyCard = ({
           transform: `translateX(${dragOffset}px) ${
             isFlipped ? 'rotateY(180deg)' : ''
           }`,
-          transition: isDragging ? 'none' : 'all 0.3s ease',
-          touchAction: 'none', // Prevent default touch behaviors
+          transition: isDragging
+            ? 'none'
+            : 'transform 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+          touchAction: 'none',
         }}
       >
         <CardHeader className='text-center'>

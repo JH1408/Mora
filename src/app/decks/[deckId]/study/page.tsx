@@ -166,6 +166,7 @@ const Study = () => {
         return [...rest, first];
       }
     });
+    console.log('running');
     setIsFlipped(false);
     setHasBeenFlipped(false);
     // Only submit study result if this is NOT a practice session
@@ -200,6 +201,7 @@ const Study = () => {
   const handleSetIsFlipped = (flipped: boolean) => {
     setIsFlipped(flipped);
     if (flipped) {
+      console.trace('setting has been flipped true');
       setHasBeenFlipped(true);
     }
   };

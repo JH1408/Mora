@@ -12,8 +12,21 @@ const PopoverColorPicker = ({
     <Popover.Root>
       <Popover.Trigger asChild>
         <div
-          className='w-8 h-8 rounded-full cursor-pointer shadow-soft'
+          className='w-8 h-8 rounded-full cursor-pointer shadow-soft touch-manipulation'
           style={{ backgroundColor: color }}
+          onPointerDown={(e) => {
+            if (e.pointerType === 'pen') {
+              e.preventDefault();
+              e.stopPropagation();
+              e.currentTarget.click();
+            }
+          }}
+          onPointerUp={(e) => {
+            if (e.pointerType === 'pen') {
+              e.preventDefault();
+              e.stopPropagation();
+            }
+          }}
         />
       </Popover.Trigger>
       <Popover.Portal>
