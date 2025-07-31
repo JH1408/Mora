@@ -122,7 +122,11 @@ const ManageCardsPage = () => {
           <Spinner className='relative top-24 left-1/2 ' />
         )}
         <section>
-          {deck?.cardsCount && deck?.cardsCount > 0 && allCards.length > 0 && (
+          {!!(
+            deck?.cardsCount &&
+            deck?.cardsCount > 0 &&
+            allCards.length > 0
+          ) && (
             <h2 className='text-2xl font-bold font-heading text-text-primary py-6'>
               Existing Cards ({deck?.cardsCount})
             </h2>

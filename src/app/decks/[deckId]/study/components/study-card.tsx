@@ -172,12 +172,12 @@ const StudyCard = ({
               </div>
             )}
             {shouldShowExtraContent && currentCard.handwritingImage && (
-              <div className='text-3xl text-primary-700'>
+              <div>
                 <Image
                   src={currentCard.handwritingImage}
                   alt='Handwriting'
-                  width={200}
-                  height={200}
+                  width={300}
+                  height={300}
                 />
               </div>
             )}
