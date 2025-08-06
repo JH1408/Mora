@@ -1,11 +1,15 @@
 import type { Metadata } from 'next';
-import { Inter } from 'next/font/google';
+import { Inter, Playfair_Display } from 'next/font/google';
 
 import './globals.css';
 import { Providers } from '@/components/providers';
 import RoutePrefetcher from '@/components/route-prefetcher';
 
 const inter = Inter({ subsets: ['latin'] });
+const playfair = Playfair_Display({
+  subsets: ['latin'],
+  variable: '--font-playfair',
+});
 
 export const metadata: Metadata = {
   title: 'Mora',
@@ -27,7 +31,10 @@ export default function RootLayout({
           crossOrigin='anonymous'
         />
       </head>
-      <body className={inter.className} suppressHydrationWarning={true}>
+      <body
+        className={`${inter.className} ${playfair.variable}`}
+        suppressHydrationWarning={true}
+      >
         <Providers>
           <RoutePrefetcher />
           {children}

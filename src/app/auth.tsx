@@ -1,3 +1,5 @@
+'use client';
+
 import Link from 'next/link';
 import { useSession } from 'next-auth/react';
 
@@ -14,7 +16,7 @@ const Auth = () => {
         <Spinner />
       ) : session ? (
         <div className='flex items-center gap-4'>
-          <span className='text-sm text-muted-foreground'>
+          <span className='hidden sm:block text-sm text-muted-foreground'>
             Welcome, {session.user?.name}!
           </span>
           <Link href={paths.dashboard}>

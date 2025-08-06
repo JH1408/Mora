@@ -7,6 +7,10 @@
 @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@100;200;300;400;500;600;700;800;900&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+Arabic:wght@100;200;300;400;500;600;700;800;900&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+Devanagari:wght@100;200;300;400;500;600;700;800;900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400..700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Merriweather:ital,opsz,wght@0,18..144,300..900;1,18..144,300..900&display=swap');
 
 @theme {
   --color-primary-50: #f5f2f7;
@@ -83,8 +87,14 @@
   --color-info: #4299e1;
   --color-info-dark: #2b6cb0;
 
-  --font-family-sans: Inter, system-ui, sans-serif;
-  --font-family-heading: Poppins, system-ui, sans-serif;
+  --color-gradient-primary: #593f62;
+  --color-gradient-secondary: #066f5a;
+  --color-gradient-accent: #17547e;
+
+  --font-sans: Inter, system-ui, sans-serif;
+  --font-heading: 'Poppins', system-ui, sans-serif;
+  --font-hero: 'Playfair Display', system-ui, serif;
+  --font-handwriting: 'Dancing Script', system-ui, sans-serif;
 
   --shadow-soft: 0 2px 15px rgba(89, 63, 98, 0.1);
   --shadow-primary: 0 4px 25px rgba(89, 63, 98, 0.2);
@@ -148,6 +158,24 @@
 
   .font-latin {
     font-family: 'Inter', 'Noto Sans', system-ui, sans-serif;
+    font-feature-settings: 'liga' 1, 'kern' 1;
+  }
+
+  .font-heading,
+  h1.font-heading,
+  h2.font-heading,
+  h3.font-heading {
+    font-family: var(--font-heading) !important;
+    font-feature-settings: 'liga' 1, 'kern' 1;
+  }
+
+  .font-hero {
+    font-family: var(--font-hero) !important;
+    font-feature-settings: 'liga' 1, 'kern' 1;
+  }
+
+  .font-handwriting {
+    font-family: var(--font-handwriting) !important;
     font-feature-settings: 'liga' 1, 'kern' 1;
   }
 

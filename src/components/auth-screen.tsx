@@ -16,6 +16,8 @@ import {
 } from '@/components/ui/card';
 import paths from '@/utils/clientPaths';
 
+import Spinner from './ui/spinner';
+
 const signUpText = {
   title: 'Welcome to Mora',
   description: 'Create a free account to start learning',
@@ -83,23 +85,10 @@ const AuthScreen = ({ isSignUp = false }: { isSignUp?: boolean }) => {
     }
   };
 
-  // Show loading while checking session
-  if (status === 'loading') {
+  if (status === 'authenticated' || status === 'loading') {
     return (
       <div className='min-h-screen bg-background-light flex items-center justify-center p-4'>
-        <div className='w-8 h-8 border-4 border-primary border-t-transparent rounded-full animate-spin'></div>
-      </div>
-    );
-  }
-
-  // Don't show login page if already authenticated
-  if (status === 'authenticated') {
-    return (
-      <div className='min-h-screen bg-background-light flex items-center justify-center p-4'>
-        <div className='text-center'>
-          <div className='w-8 h-8 border-4 border-primary border-t-transparent rounded-full animate-spin mx-auto mb-4'></div>
-          <p className='text-muted-foreground'>Redirecting...</p>
-        </div>
+        <Spinner className='relative top-24 left-1/2' />
       </div>
     );
   }

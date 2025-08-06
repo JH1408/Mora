@@ -10,8 +10,10 @@ const config: Config = {
   theme: {
     extend: {
       fontFamily: {
-        sans: ['Inter', 'system-ui', 'sans-serif'],
-        heading: ['Poppins', 'system-ui', 'sans-serif'],
+        sans: ['var(--font-sans)'],
+        heading: ['var(--font-heading)'],
+        hero: ['var(--font-hero)'],
+        handwriting: ['var(--font-handwriting)'],
       },
       backgroundImage: {
         'gradient-primary': 'linear-gradient(135deg, #99e1d9 0%, #83c9f4 100%)',

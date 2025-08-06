@@ -1,17 +1,27 @@
 'use client';
 
 import Image from 'next/image';
-import Link from 'next/link';
 
-import { ClientOnly } from '@/components/client-only';
-import { Button } from '@/components/ui/button';
+import { useScrollThreshold } from '../utils/hooks/use-scroll-threshold';
 
 import Auth from './auth';
+import CtaSection from './cta-section';
+import Footer from './footer';
+import Hero from './hero';
+import KeyFeatures from './key-features';
 
-function HomeContent() {
+export default function Home() {
+  const hasScrolled = useScrollThreshold(50);
+
   return (
-    <div className='min-h-screen bg-background-light p-8'>
-      <div className='w-full flex justify-between items-center'>
+    <div className='min-h-screen bg-gradient-to-br from-primary-100 to-accent-100'>
+      <div
+        className={`sticky top-0 z-50 w-full flex justify-between items-center px-4 sm:px-6 lg:px-8 py-4 transition-all duration-300 ${
+          hasScrolled
+            ? 'bg-accent-100/50 backdrop-blur-md border-b border-primary-200/50'
+            : 'bg-transparent'
+        }`}
+      >
         <Image
           src='/images/mora_logo.png'
           alt='Mora Logo'
@@ -24,39 +34,12 @@ function HomeContent() {
         <Auth />
       </div>
 
-      <div className='mt-16 text-center'>
-        <h1 className='text-4xl font-bold mb-4'>
-          Master Any Language with Smart Flashcards
-        </h1>
-        <p className='text-xl text-muted-foreground mb-8 max-w-2xl mx-auto'>
-          Create personalized flashcard decks, track your progress, and learn
-          efficiently with our spaced repetition system.
-        </p>
-        <Link href='/login'>
-          <Button size='lg' className='text-lg px-8 py-4'>
-            Get Started
-          </Button>
-        </Link>
+      <div className='px-4 sm:px-6 lg:px-8 pt-8'>
+        <Hero />
+        <KeyFeatures />
+        <CtaSection />
       </div>
+      <Footer />
     </div>
-  );
-}
-
-export default function Home() {
-  return (
-    <ClientOnly
-      fallback={
-        <div className='min-h-screen bg-background-light p-8'>
-          <div className='w-full flex justify-between items-center'>
-            <div className='text-2xl font-bold'>Mora</div>
-            <div className='flex gap-4 justify-center'>
-              <div className='w-8 h-8 border-2 border-primary border-t-transparent rounded-full animate-spin'></div>
-            </div>
-          </div>
-        </div>
-      }
-    >
-      <HomeContent />
-    </ClientOnly>
   );
 }
