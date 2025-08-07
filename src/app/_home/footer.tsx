@@ -4,23 +4,18 @@ import Link from 'next/link';
 
 import { Button } from '@/components/ui/button';
 
-const productLinks = [
-  { href: '/features', label: 'Features' },
-  { href: '/pricing', label: 'Pricing' },
-  { href: '/languages', label: 'Supported Languages' },
-  { href: '/roadmap', label: 'Roadmap' },
+const companyLinks = [
+  { href: '/about', label: 'About' },
+  { href: '/privacy', label: 'Privacy Policy' },
+  { href: '/terms', label: 'Terms of Service' },
 ];
 
 const supportLinks = [
-  { href: '/help', label: 'Help Center' },
-  { href: '/contact', label: 'Contact Us' },
-  { href: '/feedback', label: 'Send Feedback' },
-  { href: '/status', label: 'System Status' },
-];
-
-const legalLinks = [
-  { href: '/privacy', label: 'Privacy Policy' },
-  { href: '/terms', label: 'Terms of Service' },
+  { href: 'mailto:info@josyhartig.com', label: 'Contact Us' },
+  {
+    href: 'mailto:info@josyhartig.com?subject=Feature Request',
+    label: 'Request a Feature',
+  },
 ];
 
 const renderLinkList = (links: Array<{ href: string; label: string }>) => (
@@ -29,7 +24,7 @@ const renderLinkList = (links: Array<{ href: string; label: string }>) => (
       <li key={link.href}>
         <Link
           href={link.href}
-          className='text-muted-foreground hover:text-text-primary transition-colors duration-200'
+          className='text-muted-foreground hover:text-primary-500 transition-colors duration-200'
         >
           {link.label}
         </Link>
@@ -74,29 +69,20 @@ const Footer = () => {
             </div>
 
             <div>
-              <h3 className='font-semibold text-text-primary mb-4'>Product</h3>
-              {renderLinkList(productLinks)}
+              <h3 className='font-semibold text-text-primary mb-4'>Support</h3>
+              {renderLinkList(supportLinks)}
             </div>
 
             <div>
-              <h3 className='font-semibold text-text-primary mb-4'>Support</h3>
-              {renderLinkList(supportLinks)}
+              <h3 className='font-semibold text-text-primary mb-4'>Company</h3>
+              {renderLinkList(companyLinks)}
             </div>
           </div>
 
           <div className='border-t border-primary-100 mt-12 pt-8'>
             <div className='flex flex-col sm:flex-row justify-between items-center space-y-4 sm:space-y-0'>
               <div className='flex items-center space-x-6 text-sm text-muted-foreground'>
-                <span>&copy; 2025 Mora. All rights reserved.</span>
-                {legalLinks.map((link) => (
-                  <Link
-                    key={link.href}
-                    href={link.href}
-                    className='hover:text-text-primary transition-colors duration-200'
-                  >
-                    {link.label}
-                  </Link>
-                ))}
+                <span>&copy; {new Date().getFullYear()} Mora</span>
               </div>
 
               <div className='flex items-center space-x-4'>

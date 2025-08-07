@@ -2,13 +2,13 @@
 
 import Image from 'next/image';
 
-import { useScrollThreshold } from '../utils/hooks/use-scroll-threshold';
+import { useScrollThreshold } from '../utils/hooks/useScrollThreshold';
 
-import Auth from './auth';
-import CtaSection from './cta-section';
-import Footer from './footer';
-import Hero from './hero';
-import KeyFeatures from './key-features';
+import Auth from './_home/auth';
+import CtaSection from './_home/cta-section';
+import Footer from './_home/footer';
+import Hero from './_home/hero';
+import KeyFeatures from './_home/key-features';
 
 export default function Home() {
   const hasScrolled = useScrollThreshold(50);
