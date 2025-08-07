@@ -179,12 +179,13 @@ const StudyCard = ({
               </div>
             )}
             {shouldShowExtraContent && currentCard.handwritingImage && (
-              <div>
+              <div className='w-full max-w-[300px] h-[200px] flex items-center justify-center'>
                 <Image
                   src={currentCard.handwritingImage}
-                  alt='Handwriting'
+                  alt='Handwritten Content'
                   width={300}
-                  height={300}
+                  height={200}
+                  className='max-w-full max-h-full object-contain'
                 />
               </div>
             )}

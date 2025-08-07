@@ -55,6 +55,7 @@ export async function GET(
     // Transform cards to include progress data
     const cardsWithProgress = cards.map((card) => ({
       id: card.id,
+      createdAt: card.createdAt,
       cardProgress: card.cardProgress[0] || null,
     }));
 

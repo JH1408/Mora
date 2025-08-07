@@ -42,6 +42,13 @@ const Study = () => {
     isError: isErrorStudySession,
   } = useInfiniteStudyCards(deckId as string);
 
+  const studySession = studyData?.pages[0]; // meta/session info is always in first page
+
+  const isPracticeSession = useMemo(
+    () => studySession && studySession.totalDue === 0,
+    [studySession]
+  );
+
   const {
     data: cardsData,
     fetchNextPage: fetchNextCardsPage,
@@ -49,7 +56,9 @@ const Study = () => {
     isFetchingNextPage: isFetchingNextCardsPage,
     isLoading: isLoadingCards,
     isError: isErrorLoadingCards,
-  } = useInfiniteCards(deckId as string);
+  } = useInfiniteCards(deckId as string, isPracticeSession); // Only load cards for practice sessions
+
+  const cards = cardsData?.pages[0]?.cards;
 
   const { data: deck } = useDeck(deckId as string);
   const { mutate: completeStudySession } = useCompleteStudySession(
@@ -61,14 +70,6 @@ const Study = () => {
   const [isFlipped, setIsFlipped] = useState(false);
   const [hasBeenFlipped, setHasBeenFlipped] = useState(false);
   const [studiedCorrectly, setStudiedCorrectly] = useState(0);
-
-  const studySession = studyData?.pages[0]; // meta/session info is always in first page
-  const cards = cardsData?.pages[0]?.cards;
-
-  const isPracticeSession = useMemo(
-    () => studySession && studySession.totalDue === 0,
-    [studySession]
-  );
 
   const currentCard = cardQueue?.[0];
 
@@ -85,26 +86,28 @@ const Study = () => {
     }
   }, [studySession, cardQueue, isPracticeSession]);
 
-  const endStudySession = useCallback(() => {
-    if (!studySession) return;
-    if (!isPracticeSession) {
-      const sessionEnd = new Date();
-      const sessionStart = new Date(studySession.studySession.startedAt);
-      const sessionDuration = Math.round(
-        (sessionEnd.getTime() - sessionStart.getTime()) / 1000
+  const endStudySession = useCallback(
+    (studiedCorrectly: number) => {
+      if (!studySession) return;
+      if (!isPracticeSession) {
+        const sessionEnd = new Date();
+        const sessionStart = new Date(studySession.studySession.startedAt);
+        const sessionDuration = Math.round(
+          (sessionEnd.getTime() - sessionStart.getTime()) / 1000
+        );
+        completeStudySession({
+          studySessionId: studySession.studySession.id,
+          sessionDuration,
+        });
+      }
+      toast.success(
+        `Session complete! You studied ${studiedCorrectly} card${
+          studiedCorrectly === 1 ? '' : 's'
+        }.`
       );
-      completeStudySession({
-        studySessionId: studySession.studySession.id,
-        sessionDuration,
-      });
-    }
-    toast.success(
-      `Session complete! You studied ${studiedCorrectly} card${
-        studiedCorrectly === 1 ? '' : 's'
-      }.`
-    );
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [completeStudySession, isPracticeSession, studySession]);
+    },
+    [completeStudySession, isPracticeSession, studySession]
+  );
 
   const speakText = (text: string) => {
     if ('speechSynthesis' in window && studySession) {
@@ -166,7 +169,6 @@ const Study = () => {
         return [...rest, first];
       }
     });
-    console.log('running');
     setIsFlipped(false);
     setHasBeenFlipped(false);
     // Only submit study result if this is NOT a practice session
@@ -191,7 +193,7 @@ const Study = () => {
     fetchNextPage();
 
     if (cardQueue?.length === 1 && isCorrect) {
-      endStudySession();
+      endStudySession(studiedCorrectly + 1);
       setTimeout(() => {
         router.push(paths.dashboard);
       }, 500);
@@ -201,7 +203,6 @@ const Study = () => {
   const handleSetIsFlipped = (flipped: boolean) => {
     setIsFlipped(flipped);
     if (flipped) {
-      console.trace('setting has been flipped true');
       setHasBeenFlipped(true);
     }
   };
@@ -237,11 +238,11 @@ const Study = () => {
   useEffect(() => {
     const handleBeforeUnload = (e: BeforeUnloadEvent) => {
       e.preventDefault();
-      endStudySession();
+      endStudySession(studiedCorrectly);
     };
     window.addEventListener('beforeunload', handleBeforeUnload);
     return () => window.removeEventListener('beforeunload', handleBeforeUnload);
-  }, [endStudySession]);
+  }, [endStudySession, studiedCorrectly]);
 
   return (
     <div className='min-h-screen bg-gradient-to-br from-primary-100 to-accent-100'>
@@ -249,7 +250,7 @@ const Study = () => {
         deckName={isPracticeSession ? deck?.name : studySession?.deck.name}
         studyMode={studyMode}
         toggleStudyMode={toggleStudyMode}
-        endStudySession={endStudySession}
+        endStudySession={() => endStudySession(studiedCorrectly)}
       />
       {(isLoadingStudySession || (isLoadingCards && isPracticeSession)) && (
         <Spinner className='absolute top-1/2 left-1/2 ' />

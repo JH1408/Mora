@@ -1,8 +1,6 @@
-'use client';
-
 import Link from 'next/link';
 
-import { Button } from '@/components/ui/button';
+import { StaticButton } from '@/components/ui/button';
 
 const Hero = () => {
   return (
@@ -20,13 +18,13 @@ const Hero = () => {
 
         <div className='flex flex-col sm:flex-row gap-4 sm:gap-6 justify-center items-center'>
           <Link href='/login' className='w-full sm:w-auto'>
-            <Button
+            <StaticButton
               variant='gradient'
               size='xl-3'
               className='w-full sm:w-auto text-base sm:text-lg md:text-lg lg:text-lg xl:text-lg px-6 sm:px-8 md:px-8 lg:px-8 xl:px-8 py-3 sm:py-4 md:py-4 lg:py-4 xl:py-4 rounded-xl shadow-lg hover:shadow-xl transition-all duration-200'
             >
               Get Started
-            </Button>
+            </StaticButton>
           </Link>
         </div>
       </div>

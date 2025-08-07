@@ -3,7 +3,7 @@
 import Link from 'next/link';
 import { useSession } from 'next-auth/react';
 
-import { Button } from '@/components/ui/button';
+import { StaticButton } from '@/components/ui/button';
 import Spinner from '@/components/ui/spinner';
 import paths from '@/utils/clientPaths';
 
@@ -20,18 +20,18 @@ const Auth = () => {
             Welcome, {session.user?.name}!
           </span>
           <Link href={paths.dashboard}>
-            <Button size='lg'>Dashboard</Button>
+            <StaticButton size='lg'>Dashboard</StaticButton>
           </Link>
         </div>
       ) : (
         <>
           <Link href={paths.login}>
-            <Button variant='soft' size='lg'>
+            <StaticButton variant='soft' size='lg'>
               Login
-            </Button>
+            </StaticButton>
           </Link>
           <Link href={paths.login}>
-            <Button size='lg'>Signup</Button>
+            <StaticButton size='lg'>Signup</StaticButton>
           </Link>
         </>
       )}

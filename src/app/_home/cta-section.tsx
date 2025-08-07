@@ -1,8 +1,6 @@
-'use client';
-
 import Link from 'next/link';
 
-import { Button } from '@/components/ui/button';
+import { StaticButton } from '@/components/ui/button';
 
 const CtaSection = () => {
   return (
@@ -27,13 +25,13 @@ const CtaSection = () => {
 
         <div className='flex flex-col sm:flex-row gap-4 justify-center items-center'>
           <Link href='/signup'>
-            <Button
+            <StaticButton
               variant='gradient'
               size='xl-3'
               className='text-lg px-8 py-4 rounded-xl shadow-lg hover:shadow-xl transition-shadow duration-200'
             >
               Start Learning Today
-            </Button>
+            </StaticButton>
           </Link>
         </div>
       </div>

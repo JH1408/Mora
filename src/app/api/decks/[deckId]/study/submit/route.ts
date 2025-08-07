@@ -27,7 +27,6 @@ export async function POST(
 
     // Parse and validate the request body
     const body = await request.json();
-    console.log({ body });
     const validatedData = submitStudySchema.parse(body);
 
     // Check if the card exists and belongs to the user's deck

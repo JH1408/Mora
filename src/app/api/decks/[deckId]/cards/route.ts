@@ -6,9 +6,9 @@ const PAGE_SIZE = 20;
 
 export async function GET(
   req: NextRequest,
-  { params }: { params: { deckId: string } }
+  { params }: { params: Promise<{ deckId: string }> }
 ) {
-  const { deckId } = params;
+  const { deckId } = await params;
   const searchParams = req.nextUrl.searchParams;
   const cursorParam = searchParams.get('cursor');
   const limit = parseInt(searchParams.get('limit') || `${PAGE_SIZE}`, 10);

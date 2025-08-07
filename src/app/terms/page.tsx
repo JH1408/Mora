@@ -12,12 +12,7 @@ const TermsPage = () => {
             Terms of Service
           </h1>
           <p className='text-lg text-muted-foreground mb-8'>
-            Last updated:{' '}
-            {new Date().toLocaleDateString('en-US', {
-              year: 'numeric',
-              month: 'long',
-              day: 'numeric',
-            })}
+            Last updated: August 7, 2025
           </p>
         </section>
 

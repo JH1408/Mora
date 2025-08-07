@@ -235,6 +235,8 @@ export const useInfiniteStudyCards = (
     getNextPageParam: (lastPage) => lastPage.nextCursor,
     initialPageParam: undefined,
     enabled: !!deckId,
+    staleTime: 5 * 60 * 1000,
+    gcTime: 10 * 60 * 1000,
   });
 };
 
@@ -249,4 +251,6 @@ export const useInfiniteCards = (deckId: string, isPracticeSession?: boolean) =>
       isPracticeSession === undefined
         ? !!deckId
         : isPracticeSession && !!deckId,
+    staleTime: 5 * 60 * 1000,
+    gcTime: 10 * 60 * 1000,
   });
