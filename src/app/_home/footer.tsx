@@ -10,9 +10,9 @@ const companyLinks = [
 ];
 
 const supportLinks = [
-  { href: 'mailto:info@josyhartig.com', label: 'Contact Us' },
+  { href: 'mailto:hello@usemora.co', label: 'Contact Us' },
   {
-    href: 'mailto:info@josyhartig.com?subject=Feature Request',
+    href: 'mailto:hello@usemora.co?subject=Feature Request',
     label: 'Request a Feature',
   },
 ];

@@ -7,6 +7,7 @@ import { Button } from '@/components/ui/button';
 import {
   Dialog,
   DialogContent,
+  DialogDescription,
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog';
@@ -274,6 +275,10 @@ const CanvasModal = ({
           <DialogTitle className='flex items-center space-x-2 font-heading'>
             <span className='text-text-primary'>Draw Handwritten Content</span>
           </DialogTitle>
+          <DialogDescription className='text-text-muted hidden'>
+            Use your mouse, touch or stylus to draw handwritten content for your
+            flashcard.
+          </DialogDescription>
         </DialogHeader>
         <canvas
           ref={handleCanvasRef}

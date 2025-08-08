@@ -48,7 +48,7 @@ const renderHandwritingBlock = (src: string) => (
         alt='Handwritten Content'
         width={200}
         height={200}
-        style={{ objectFit: 'contain', maxHeight: 300 }}
+        className='object-contain max-h-[300px] w-auto h-auto'
       />
     </div>
   </div>

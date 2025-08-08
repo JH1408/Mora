@@ -55,6 +55,8 @@ const CreateNewCard = ({
       {
         onSuccess: () => {
           (e.target as HTMLFormElement).reset();
+          setHandwritingData(null);
+          setHandwritingImage(null);
         },
       }
     );

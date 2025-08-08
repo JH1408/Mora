@@ -184,28 +184,33 @@ const PrivacyPage = () => {
                 for more information.
               </li>
               <li>
-                <strong>SQLite Database</strong> - For storing your account
-                information, flashcards, study progress, and learning data
-                locally on our servers. Data is processed in the same location
-                where our application is hosted (currently Vercel&apos;s
-                infrastructure). SQLite is an open-source database that does not
-                have its own privacy policy as it is self-hosted.
+                <strong>Neon Database</strong> - For storing your account
+                information, flashcards, study progress, and learning data in a
+                PostgreSQL database. Neon processes your data in the United
+                States and other countries where Neon operates. Please review{' '}
+                <a
+                  href='https://neon.tech/legal/privacy-policy'
+                  target='_blank'
+                  rel='noopener noreferrer'
+                  className='text-primary-600 hover:text-primary-700 underline'
+                >
+                  Neon&apos;s Privacy Policy
+                </a>{' '}
+                for more information.
               </li>
               <li>
-                <strong>NextAuth.js</strong> - For session management and
-                authentication. NextAuth processes session tokens and user
-                authentication data to maintain your login state. Data is
-                processed on our servers and in your browser. NextAuth.js is an
-                open-source library that does not have its own privacy policy as
-                it is self-hosted.
-              </li>
-              <li>
-                <strong>Browser APIs</strong> - We use your browser&apos;s
-                built-in Web Speech API for text-to-speech functionality and
-                Canvas API for handwriting features. These APIs process data
-                locally in your browser and do not send data to external
-                services. No external privacy policy applies as these are
-                built-in browser features.
+                <strong>GitHub</strong> - For hosting our source code and
+                version control. GitHub may process metadata about our codebase
+                and development activities. Please review{' '}
+                <a
+                  href='https://docs.github.com/en/site-policy/privacy-policies/github-privacy-statement'
+                  target='_blank'
+                  rel='noopener noreferrer'
+                  className='text-primary-600 hover:text-primary-700 underline'
+                >
+                  GitHub&apos;s Privacy Statement
+                </a>{' '}
+                for more information.
               </li>
             </ul>
             <p className='text-muted-foreground leading-relaxed'>
@@ -231,10 +236,10 @@ const PrivacyPage = () => {
             <p className='text-muted-foreground leading-relaxed'>
               To exercise these rights, please contact us at{' '}
               <a
-                href='mailto:info@josyhartig.com'
+                href='mailto:hello@usemora.co'
                 className='text-primary-600 hover:text-primary-700 underline'
               >
-                info@josyhartig.com
+                hello@usemora.co
               </a>
             </p>
           </section>
@@ -284,10 +289,10 @@ const PrivacyPage = () => {
               If you have any questions about this Privacy Policy, please
               contact us at{' '}
               <a
-                href='mailto:info@josyhartig.com'
+                href='mailto:hello@usemora.co'
                 className='text-primary-600 hover:text-primary-700 underline'
               >
-                info@josyhartig.com
+                hello@usemora.co
               </a>
             </p>
           </section>
