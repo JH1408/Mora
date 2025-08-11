@@ -203,7 +203,7 @@ export const useCompleteStudySession = (deckId: string) => {
     onSuccess: () => {
       // Invalidate deck stats and study session
       queryClient.invalidateQueries({ queryKey: queryKeys.deckStats(deckId) });
-      queryClient.invalidateQueries({
+      queryClient.removeQueries({
         queryKey: queryKeys.infiniteStudyCards(deckId),
       });
     },

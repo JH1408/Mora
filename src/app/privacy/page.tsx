@@ -130,6 +130,38 @@ const PrivacyPage = () => {
 
           <section>
             <h2 className='text-2xl font-semibold text-text-primary mb-4'>
+              Cookies
+            </h2>
+            <p className='text-muted-foreground leading-relaxed mb-4'>
+              We use cookies to maintain your authentication session and improve
+              your experience:
+            </p>
+            <ul className='list-disc pl-6 text-muted-foreground space-y-2 mb-6'>
+              <li>
+                <strong>Session Cookies:</strong> NextAuth.js uses HTTP-only
+                cookies to maintain your login state and authentication session
+              </li>
+              <li>
+                <strong>Duration:</strong> Session cookies expire after 7 days
+                of inactivity
+              </li>
+              <li>
+                <strong>Purpose:</strong> Authentication and session management
+                only
+              </li>
+              <li>
+                <strong>Third-party:</strong> No third-party cookies are used
+              </li>
+            </ul>
+            <p className='text-muted-foreground leading-relaxed'>
+              You can control cookies through your browser settings, though
+              disabling session cookies will prevent you from staying logged in
+              to the application.
+            </p>
+          </section>
+
+          <section>
+            <h2 className='text-2xl font-semibold text-text-primary mb-4'>
               Data Processors
             </h2>
             <p className='text-muted-foreground leading-relaxed mb-4'>
@@ -173,6 +205,23 @@ const PrivacyPage = () => {
                 application. Vercel processes your IP address and usage data to
                 provide hosting services. Data is processed in the United States
                 and other countries where Vercel operates. Please review{' '}
+                <a
+                  href='https://vercel.com/legal/privacy-policy'
+                  target='_blank'
+                  rel='noopener noreferrer'
+                  className='text-primary-600 hover:text-primary-700 underline'
+                >
+                  Vercel&apos;s Privacy Policy
+                </a>{' '}
+                for more information.
+              </li>
+              <li>
+                <strong>Vercel Analytics</strong> - For website analytics and
+                performance monitoring. Vercel Analytics collects anonymous
+                usage data including page views, performance metrics, and user
+                interactions to help us improve the application. Data is
+                processed in the United States and other countries where Vercel
+                operates. Please review{' '}
                 <a
                   href='https://vercel.com/legal/privacy-policy'
                   target='_blank'

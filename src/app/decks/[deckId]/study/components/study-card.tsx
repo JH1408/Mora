@@ -183,9 +183,10 @@ const StudyCard = ({
                 <Image
                   src={currentCard.handwritingImage}
                   alt='Handwritten Content'
-                  width={300}
-                  height={200}
-                  className='max-w-full max-h-full object-contain'
+                  width={0}
+                  height={0}
+                  sizes='100vw'
+                  className='max-w-full max-h-full object-contain w-auto h-auto'
                 />
               </div>
             )}

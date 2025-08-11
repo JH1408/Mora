@@ -30,7 +30,7 @@ const Auth = () => {
               Login
             </StaticButton>
           </Link>
-          <Link href={paths.login}>
+          <Link href={paths.signup}>
             <StaticButton size='lg'>Signup</StaticButton>
           </Link>
         </>
