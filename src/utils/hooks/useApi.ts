@@ -59,7 +59,7 @@ export const useDecks = () => {
   return useQuery({
     queryKey: queryKeys.decks,
     queryFn: deckApi.getAll,
-    staleTime: 30 * 1000, // 30 seconds
+    staleTime: 60 * 1000,
   });
 };
 
@@ -178,14 +178,10 @@ export const useUpdateCard = () => {
 };
 
 export const useSubmitStudyResult = (deckId: string) => {
-  const queryClient = useQueryClient();
   return useMutation({
     mutationFn: (data: SubmitStudyResultRequest) =>
       studyApi.submitStudyResult(deckId, data),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: queryKeys.decks });
-      queryClient.invalidateQueries({ queryKey: queryKeys.deck(deckId) });
-    },
+    // No cache invalidation needed - we'll invalidate at session completion
     onError: (error) => {
       console.error('Submit study result error:', error);
       toast.error(
@@ -201,7 +197,8 @@ export const useCompleteStudySession = (deckId: string) => {
     mutationFn: (data: CompleteStudySessionRequest) =>
       studyApi.completeStudySession(deckId, data),
     onSuccess: () => {
-      // Invalidate deck stats and study session
+      queryClient.invalidateQueries({ queryKey: queryKeys.decks });
+      queryClient.invalidateQueries({ queryKey: queryKeys.deck(deckId) });
       queryClient.invalidateQueries({ queryKey: queryKeys.deckStats(deckId) });
       queryClient.removeQueries({
         queryKey: queryKeys.infiniteStudyCards(deckId),
@@ -219,11 +216,10 @@ export const useDeckStats = (deckId: string) => {
     queryKey: queryKeys.deckStats(deckId),
     queryFn: () => deckApi.getStats(deckId),
     enabled: !!deckId,
-    staleTime: 30 * 1000, // 30 seconds
+    staleTime: 60 * 1000, // 1 minute
   });
 };
 
-// @Josy TODO: think about stale time and gcTime - we don't want to refetch while the user is studying?
 export const useInfiniteStudyCards = (
   deckId: string,
   limit = DEFAULT_LIMIT
@@ -235,8 +231,8 @@ export const useInfiniteStudyCards = (
     getNextPageParam: (lastPage) => lastPage.nextCursor,
     initialPageParam: undefined,
     enabled: !!deckId,
-    staleTime: 5 * 60 * 1000,
-    gcTime: 10 * 60 * 1000,
+    staleTime: 30 * 60 * 1000, // 30 minutes - prevent refetch during study sessions
+    gcTime: 60 * 60 * 1000, // 1 hour - keep in cache longer for study sessions
   });
 };
 
@@ -251,6 +247,10 @@ export const useInfiniteCards = (deckId: string, isPracticeSession?: boolean) =>
       isPracticeSession === undefined
         ? !!deckId
         : isPracticeSession && !!deckId,
-    staleTime: 5 * 60 * 1000,
-    gcTime: 10 * 60 * 1000,
+    staleTime: isPracticeSession
+      ? 30 * 60 * 1000 // 30 minutes for practice sessions
+      : 5 * 60 * 1000, // 5 minutes for regular card management
+    gcTime: isPracticeSession
+      ? 60 * 60 * 1000 // 1 hour for practice sessions
+      : 10 * 60 * 1000, // 10 minutes for regular card management
   });

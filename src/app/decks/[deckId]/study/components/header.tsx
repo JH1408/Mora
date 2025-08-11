@@ -13,8 +13,6 @@ import paths from '@/utils/clientPaths';
 import type { StudyMode } from '@/utils/types/studySession';
 import { STUDY_MODES } from '@/utils/types/studySession';
 
-// @Josy TODO add some kind of tooltip to explain what recognition and recall are
-
 const Header = ({
   deckName,
   studyMode,
@@ -46,13 +44,20 @@ const Header = ({
       </HeaderLeft>
 
       <HeaderRight>
-        <Button variant='soft' size='sm' onClick={toggleStudyMode}>
+        <Button
+          variant='soft'
+          size='sm'
+          onClick={toggleStudyMode}
+          className='w-36'
+        >
           {studyMode === STUDY_MODES.RECOGNITION ? (
             <Eye className='h-4 w-4 mr-2' />
           ) : (
             <Brain className='h-4 w-4 mr-2' />
           )}
-          {studyMode === STUDY_MODES.RECOGNITION ? 'Recognition' : 'Recall'}
+          {studyMode === STUDY_MODES.RECOGNITION
+            ? 'Front-to-Back'
+            : 'Back-to-Front'}
         </Button>
       </HeaderRight>
     </BaseHeader>

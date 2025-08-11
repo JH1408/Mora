@@ -1,4 +1,5 @@
-import { Analytics } from '@vercel/analytics/next';
+import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
+import { Analytics as VercelAnalytics } from '@vercel/analytics/next';
 import type { Metadata } from 'next';
 import { Inter, Playfair_Display } from 'next/font/google';
 
@@ -38,7 +39,8 @@ export default function RootLayout({
       >
         <Providers>
           <RoutePrefetcher />
-          <Analytics />
+          <VercelAnalytics />
+          <ReactQueryDevtools />
           {children}
         </Providers>
       </body>

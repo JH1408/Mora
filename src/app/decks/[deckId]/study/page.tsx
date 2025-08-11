@@ -1,5 +1,6 @@
 'use client';
 
+import { useQueryClient } from '@tanstack/react-query';
 import { useParams, useRouter } from 'next/navigation';
 import React, { useEffect, useMemo, useState, useCallback } from 'react';
 import { toast } from 'sonner';
@@ -13,6 +14,7 @@ import {
   useSubmitStudyResult,
   useInfiniteStudyCards,
   useInfiniteCards,
+  queryKeys,
 } from '@/utils/hooks/useApi';
 import { useNetworkStatus } from '@/utils/hooks/useNetworkStatus';
 import { getLanguageClasses } from '@/utils/languages';
@@ -29,6 +31,7 @@ const Study = () => {
   useNetworkStatus();
   const router = useRouter();
   const { deckId } = useParams<{ deckId: string }>();
+  const queryClient = useQueryClient();
   const [studyMode, setStudyMode] = useState<StudyMode>(
     STUDY_MODES.RECOGNITION
   );
@@ -99,23 +102,28 @@ const Study = () => {
           studySessionId: studySession.studySession.id,
           sessionDuration,
         });
+      } else {
+        queryClient.invalidateQueries({
+          queryKey: queryKeys.infiniteStudyCards(deckId as string),
+        });
       }
-      toast.success(
-        `Session complete! You studied ${studiedCorrectly} card${
-          studiedCorrectly === 1 ? '' : 's'
-        }.`
-      );
+      if (studiedCorrectly > 0) {
+        toast.success(
+          `Session complete! You studied ${studiedCorrectly} card${
+            studiedCorrectly === 1 ? '' : 's'
+          }.`
+        );
+      }
     },
-    [completeStudySession, isPracticeSession, studySession]
+    [completeStudySession, isPracticeSession, studySession, deckId, queryClient]
   );
 
   const speakText = (text: string) => {
-    if (!('speechSynthesis' in window)) {
-      toast.error('Text-to-speech is not supported in your browser');
+    if (!studySession) {
       return;
     }
-
-    if (!studySession) {
+    if (!('speechSynthesis' in window)) {
+      toast.error('Text-to-speech is not supported in your browser');
       return;
     }
 
@@ -125,7 +133,6 @@ const Study = () => {
       );
 
       speechSynthesis.cancel();
-
       const utterance = new SpeechSynthesisUtterance(text);
       utterance.lang = studySession.deck.language.code;
       utterance.rate = 1;
@@ -142,12 +149,10 @@ const Study = () => {
           utterance.voice = preferredVoice;
         }
       }
-
       // Safari-specific: Resume if paused and ensure we're not in a suspended state
       if (speechSynthesis.paused) {
         speechSynthesis.resume();
       }
-
       // Safari-specific: Add a small delay to ensure the API is ready
       if (isSafari) {
         setTimeout(() => {
