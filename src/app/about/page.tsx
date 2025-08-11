@@ -41,7 +41,7 @@ const AboutPage = () => {
               <span className='font-semibold text-text-primary'>
                 spaced repetition
               </span>{' '}
-              with repetition & recognition modes.
+              with front-to-back and back-to-front study modes.
             </Paragraph>
 
             <Paragraph>
