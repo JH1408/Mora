@@ -110,13 +110,54 @@ const Study = () => {
   );
 
   const speakText = (text: string) => {
-    if ('speechSynthesis' in window && studySession) {
+    if (!('speechSynthesis' in window)) {
+      toast.error('Text-to-speech is not supported in your browser');
+      return;
+    }
+
+    if (!studySession) {
+      return;
+    }
+
+    try {
+      const isSafari = /^((?!chrome|android).)*safari/i.test(
+        navigator.userAgent
+      );
+
+      speechSynthesis.cancel();
+
       const utterance = new SpeechSynthesisUtterance(text);
       utterance.lang = studySession.deck.language.code;
       utterance.rate = 1;
-      speechSynthesis.speak(utterance);
-    } else {
-      toast.error('Text-to-speech is not supported in your browser');
+      utterance.volume = 1;
+
+      if (isSafari) {
+        const voices = speechSynthesis.getVoices();
+        const preferredVoice = voices.find(
+          (voice) =>
+            voice.lang === studySession.deck.language.code ||
+            voice.lang.startsWith(studySession.deck.language.code.split('-')[0])
+        );
+        if (preferredVoice) {
+          utterance.voice = preferredVoice;
+        }
+      }
+
+      // Safari-specific: Resume if paused and ensure we're not in a suspended state
+      if (speechSynthesis.paused) {
+        speechSynthesis.resume();
+      }
+
+      // Safari-specific: Add a small delay to ensure the API is ready
+      if (isSafari) {
+        setTimeout(() => {
+          speechSynthesis.speak(utterance);
+        }, 100);
+      } else {
+        speechSynthesis.speak(utterance);
+      }
+    } catch {
+      toast.error('Failed to start text-to-speech');
     }
   };
 
