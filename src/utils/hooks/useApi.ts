@@ -138,17 +138,17 @@ export const useCreateCard = () => {
   });
 };
 
-export const useDeleteCard = () => {
+export const useDeleteCard = (deckId: string) => {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: (id: string) => cardApi.delete(id),
-    onSuccess: (_, deletedId) => {
+    onSuccess: () => {
       queryClient.invalidateQueries({
-        queryKey: queryKeys.infiniteCards(deletedId),
+        queryKey: queryKeys.infiniteCards(deckId),
       });
       queryClient.invalidateQueries({ queryKey: queryKeys.decks });
       queryClient.invalidateQueries({
-        queryKey: queryKeys.deckStats(deletedId),
+        queryKey: queryKeys.deckStats(deckId),
       });
       toast.success('Card has been deleted successfully.');
     },

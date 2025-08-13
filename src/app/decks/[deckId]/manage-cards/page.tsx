@@ -32,7 +32,9 @@ const ManageCardsPage = () => {
     isError: isDeckError,
     isLoading: isLoadingDeck,
   } = useDeck(deckId as string);
-  const { mutate: deleteCard, isPending: isDeletingCard } = useDeleteCard();
+  const { mutate: deleteCard, isPending: isDeletingCard } = useDeleteCard(
+    deckId as string
+  );
   const { mutate: updateCard, isPending: isUpdatingCard } = useUpdateCard();
 
   const handleUpdateCard = (cardId: string, updatedCard: Partial<CardType>) => {
