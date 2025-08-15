@@ -57,6 +57,7 @@ const ManageCardsPage = () => {
           handwritingImage: updatedCard.handwritingImage
             ? (updatedCard.handwritingImage as string)
             : undefined,
+          usageContext: updatedCard.usageContext || undefined,
         },
       },
       {

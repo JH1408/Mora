@@ -26,6 +26,7 @@ import AnswerControls from './components/answer-controls';
 import Header from './components/header';
 import PracticeSessionDialog from './components/practice-session-dialog';
 import StudyCard from './components/study-card';
+import UsageContext from './components/usage-context';
 
 const Study = () => {
   useNetworkStatus();
@@ -314,32 +315,71 @@ const Study = () => {
       )}
       {shouldShowStudyCard && (
         <>
-          <div className='max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-4'>
-            <Progress value={calculateProgressPercentage()} className='h-2' />
-          </div>
+          {(() => {
+            const studyContent = (
+              <div className='space-y-6'>
+                <StudyCard
+                  isFlipped={isFlipped}
+                  setIsFlipped={handleSetIsFlipped}
+                  studyMode={studyMode}
+                  currentCard={currentCard}
+                  speakText={speakText}
+                  fontClass={
+                    getLanguageClasses(studySession?.deck.language.script)
+                      .fontClass
+                  }
+                  hasBeenFlipped={hasBeenFlipped}
+                  onSwipeLeft={() => handleStudyResult(false)}
+                  onSwipeRight={() => handleStudyResult(true)}
+                />
+                <AnswerControls
+                  hasBeenFlipped={hasBeenFlipped}
+                  handleStudyResult={handleStudyResult}
+                />
+              </div>
+            );
 
-          <main className='max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8'>
-            <div className='space-y-6'>
-              <StudyCard
-                isFlipped={isFlipped}
-                setIsFlipped={handleSetIsFlipped}
-                studyMode={studyMode}
-                currentCard={currentCard}
-                speakText={speakText}
-                fontClass={
-                  getLanguageClasses(studySession?.deck.language.script)
-                    .fontClass
-                }
-                hasBeenFlipped={hasBeenFlipped}
-                onSwipeLeft={() => handleStudyResult(false)}
-                onSwipeRight={() => handleStudyResult(true)}
-              />
-              <AnswerControls
-                hasBeenFlipped={hasBeenFlipped}
-                handleStudyResult={handleStudyResult}
-              />
-            </div>
-          </main>
+            return (
+              <>
+                {/* Desktop: Two-column layout */}
+                <div className='hidden lg:grid lg:grid-cols-[1fr_320px]'>
+                  {/* Left column: Study content */}
+                  <div className='flex flex-col items-center min-h-[calc(100vh-4rem)] px-8 mt-4'>
+                    <div className='w-full max-w-2xl space-y-6'>
+                      <Progress
+                        value={calculateProgressPercentage()}
+                        className='h-2'
+                      />
+                      {studyContent}
+                    </div>
+                  </div>
+
+                  {/* Right column: Usage context */}
+                  <div className='bg-[#fafafa] border-l border-gray-200 p-4 overflow-y-auto'>
+                    <UsageContext usageContext={currentCard.usageContext} />
+                  </div>
+                </div>
+
+                {/* Mobile: Study content */}
+                <div className='lg:hidden'>
+                  <div className='mx-auto px-4 sm:px-6 lg:px-8 py-4 max-w-4xl'>
+                    <Progress
+                      value={calculateProgressPercentage()}
+                      className='h-2'
+                    />
+                  </div>
+
+                  <main className='mx-auto px-4 sm:px-6 lg:px-8 py-8 max-w-4xl'>
+                    {studyContent}
+                  </main>
+                </div>
+                {/* Mobile: Usage context at bottom */}
+                <div className='lg:hidden w-full bg-white border-t border-neutral-200 p-4 absolute bottom-0 left-0 right-0 pb-10'>
+                  <UsageContext usageContext={currentCard.usageContext} />
+                </div>
+              </>
+            );
+          })()}
         </>
       )}
     </div>
