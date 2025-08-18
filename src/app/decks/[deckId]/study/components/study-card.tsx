@@ -163,7 +163,7 @@ const StudyCard = ({
 
         <CardContent className='flex items-center justify-center min-h-[300px]'>
           <div
-            className={`text-center space-y-4 transition-all duration-300 ${
+            className={`text-center space-y-4 transition-all duration-300 mt-[-50px] ${
               isFlipped ? 'transform rotate-y-180' : ''
             }`}
           >

@@ -374,7 +374,7 @@ const Study = () => {
                   </main>
                 </div>
                 {/* Mobile: Usage context at bottom */}
-                <div className='lg:hidden w-full bg-white border-t border-neutral-200 p-4 absolute bottom-0 left-0 right-0 pb-10'>
+                <div className='lg:hidden w-full bg-white border-t border-neutral-200 p-4 absolute bottom-0 left-0 right-0 pb-16'>
                   <UsageContext usageContext={currentCard.usageContext} />
                 </div>
               </>
