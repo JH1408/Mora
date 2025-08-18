@@ -37,6 +37,7 @@ const CreateNewCard = ({
     const frontText = formData.get('frontText') as string;
     const backText = formData.get('backText') as string;
     const phoneticSpelling = formData.get('phoneticSpelling');
+    const usageContext = formData.get('usageContext');
     if (!frontText.trim().length || !backText.trim().length) {
       setIsMissingFields(true);
       return;
@@ -51,6 +52,7 @@ const CreateNewCard = ({
           : undefined,
         handwritingData: handwritingData ?? undefined,
         handwritingImage: handwritingImage ?? undefined,
+        usageContext: usageContext ? (usageContext as string) : undefined,
       },
       {
         onSuccess: () => {
@@ -103,13 +105,18 @@ const CreateNewCard = ({
                   );
                 }
                 return (
-                  <div className='space-y-2' key={field.value + 'create'}>
+                  <div
+                    className={`space-y-2 ${
+                      field.value === 'usageContext' ? 'col-span-full' : ''
+                    }`}
+                    key={field.value + 'create'}
+                  >
                     <Label
                       htmlFor={field.value}
                       className='text-text-secondary'
                     >
                       {field.label}{' '}
-                      {field.value === 'phoneticSpelling' && (
+                      {field.isOptional && (
                         <span className='text-text-muted'>(optional)</span>
                       )}
                     </Label>

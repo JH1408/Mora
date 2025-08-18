@@ -26,6 +26,7 @@ const EditCardForm = ({
     frontText: card.frontText,
     backText: card.backText,
     phoneticSpelling: card.phoneticSpelling || '',
+    usageContext: card.usageContext || '',
   });
 
   const [showHandwritingCanvas, setShowHandwritingCanvas] = useState(false);
@@ -77,7 +78,12 @@ const EditCardForm = ({
             );
           }
           return (
-            <div className='space-y-2' key={field.value + 'edit'}>
+            <div
+              className={`space-y-2 ${
+                field.value === 'usageContext' ? 'col-span-full' : ''
+              }`}
+              key={field.value + 'edit'}
+            >
               <Label className='text-text-secondary text-sm'>
                 {field.label}
               </Label>
