@@ -104,11 +104,15 @@ export const cardApi = {
 export async function fetchPaginatedCards(
   deckId: string,
   cursor?: string,
-  limit = 20
+  limit = 20,
+  searchQuery?: string
 ) {
+  console.log('running');
   const params = new URLSearchParams({ limit: String(limit) });
   if (cursor) params.append('cursor', cursor);
+  if (searchQuery?.trim()) params.append('search', searchQuery.trim());
   const res = await fetch(`/api/decks/${deckId}/cards?${params}`);
+  console.log({ res, searchQuery });
   if (!res.ok) throw new Error('Failed to fetch cards');
   return res.json();
 }
