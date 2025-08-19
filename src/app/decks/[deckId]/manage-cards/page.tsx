@@ -2,12 +2,14 @@
 
 import type { Card as CardType } from '@prisma/client';
 import { useVirtualizer } from '@tanstack/react-virtual';
+import { Search } from 'lucide-react';
 import { useParams } from 'next/navigation';
 import { useMemo, useState } from 'react';
 import { useRef, useEffect } from 'react';
 
 import ErrorMessage from '@/components/error-message';
 import { Card, CardContent as _CardContent } from '@/components/ui/card';
+import { Input } from '@/components/ui/input';
 import Spinner from '@/components/ui/spinner';
 import {
   useDeck,
@@ -21,6 +23,7 @@ import CardContent from './components/card-content';
 import CreateNewCard from './components/create-new-card';
 import EditCardForm from './components/edit-card';
 import Header from './components/header';
+import useSearchCards from './hooks/use-search-cards';
 
 const ManageCardsPage = () => {
   const { deckId } = useParams();
@@ -36,6 +39,8 @@ const ManageCardsPage = () => {
     deckId as string
   );
   const { mutate: updateCard, isPending: isUpdatingCard } = useUpdateCard();
+
+  const { query, debouncedQuery, error, handleInputChange } = useSearchCards();
 
   const handleUpdateCard = (cardId: string, updatedCard: Partial<CardType>) => {
     if (
@@ -76,7 +81,9 @@ const ManageCardsPage = () => {
     hasNextPage,
     isFetchingNextPage,
     isLoading: isLoadingCards,
-  } = useInfiniteCards(deckId as string);
+    isError: isCardsError,
+  } = useInfiniteCards(deckId as string, undefined, debouncedQuery);
+  const isSearchError = isCardsError && debouncedQuery;
 
   const allCards = useMemo(
     () => (cards ? cards.pages.flatMap((page) => page.cards) : []),
@@ -116,29 +123,67 @@ const ManageCardsPage = () => {
           deckId={deckId as string}
           deckScript={deck?.language?.script}
         />
-        {isDeckError && (
+        {(isDeckError || (isCardsError && !isSearchError)) && (
           <section>
             <ErrorMessage message="Oops, we couldn't load this deck." />
           </section>
         )}
-        {(isLoadingDeck || isLoadingCards) && (
-          <Spinner className='relative top-24 left-1/2 ' />
+        {isSearchError && (
+          <section>
+            <ErrorMessage message='Oops, we couldn’t find any cards matching your search.' />
+          </section>
         )}
+
         <section>
-          {!!(
-            deck?.cardsCount &&
-            deck?.cardsCount > 0 &&
-            allCards.length > 0
-          ) && (
-            <h2 className='text-2xl font-bold font-heading text-text-primary py-6'>
-              Existing Cards ({deck?.cardsCount})
-            </h2>
+          {!!(deck?.cardsCount && deck?.cardsCount > 0) && (
+            <div className='flex gap-4 items-start justify-between py-6'>
+              <h2 className='text-2xl font-bold font-heading text-text-primary'>
+                Existing Cards
+              </h2>
+              <div className='w-full max-w-sm flex flex-col gap-1'>
+                <Input
+                  placeholder='Search cards'
+                  className='bg-white/70'
+                  icon={<Search className='w-4 h-4' />}
+                  value={query}
+                  onChange={handleInputChange}
+                  aria-invalid={!!error}
+                  aria-describedby={error ? 'search-error' : undefined}
+                  maxLength={200}
+                  pattern='[^<>]*'
+                />
+                {error && (
+                  <p
+                    id='search-error'
+                    className='text-sm text-error text-right'
+                  >
+                    {error}
+                  </p>
+                )}
+              </div>
+            </div>
+          )}
+          {debouncedQuery &&
+            !isSearchError &&
+            !isLoadingCards &&
+            allCards.length === 0 && (
+              <section>
+                <p className='text-sm text-text-secondary text-center my-8'>
+                  No cards found matching your search.
+                </p>
+              </section>
+            )}
+          {(isLoadingDeck || isLoadingCards) && (
+            <div className='relative my-8 z-10 flex items-center justify-center pointer-events-none'>
+              <Spinner />
+            </div>
           )}
           <div
             style={{
               height: `${rowVirtualizer.getTotalSize()}px`,
               width: '100%',
               position: 'relative',
+              minHeight: isLoadingDeck || isLoadingCards ? '200px' : undefined,
             }}
           >
             <div

@@ -35,8 +35,11 @@ export const queryKeys = {
   deckStats: (id: string) => ['deckStats', id] as const,
   infiniteStudyCards: (id: string, limit = DEFAULT_LIMIT) =>
     ['studyCards', id, limit] as const,
-  infiniteCards: (id: string, isPracticeSession?: boolean) =>
-    ['cards', id, isPracticeSession] as const,
+  infiniteCards: (
+    id: string,
+    isPracticeSession?: boolean,
+    searchQuery?: string
+  ) => ['cards', id, isPracticeSession, searchQuery] as const,
 };
 
 export const useLanguages = () => {
@@ -236,11 +239,15 @@ export const useInfiniteStudyCards = (
   });
 };
 
-export const useInfiniteCards = (deckId: string, isPracticeSession?: boolean) =>
+export const useInfiniteCards = (
+  deckId: string,
+  isPracticeSession?: boolean,
+  searchQuery?: string
+) =>
   useInfiniteQuery({
-    queryKey: queryKeys.infiniteCards(deckId, isPracticeSession),
+    queryKey: queryKeys.infiniteCards(deckId, isPracticeSession, searchQuery),
     queryFn: ({ pageParam }) =>
-      fetchPaginatedCards(deckId as string, pageParam),
+      fetchPaginatedCards(deckId as string, pageParam, undefined, searchQuery),
     getNextPageParam: (lastPage) => lastPage.nextCursor,
     initialPageParam: undefined,
     enabled:
