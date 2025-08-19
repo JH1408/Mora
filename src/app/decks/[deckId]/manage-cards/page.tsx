@@ -83,6 +83,7 @@ const ManageCardsPage = () => {
     isLoading: isLoadingCards,
     isError: isCardsError,
   } = useInfiniteCards(deckId as string, undefined, debouncedQuery);
+
   const isSearchError = isCardsError && debouncedQuery;
 
   const allCards = useMemo(
@@ -130,7 +131,7 @@ const ManageCardsPage = () => {
         )}
         {isSearchError && (
           <section>
-            <ErrorMessage message='Oops, we couldn’t find any cards matching your search.' />
+            <ErrorMessage message='Oops, something went wrong while searching for cards.' />
           </section>
         )}
 

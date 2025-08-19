@@ -31,20 +31,21 @@ const useSearchCards = () => {
   const [error, setError] = useState<string | null>(null);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value;
-    const sanitizedInput = sanitizeInput(value);
-    const validationError = validateInput(sanitizedInput);
-
-    setQuery(sanitizedInput);
-    setError(validationError);
+    setQuery(e.target.value);
+    setError(null);
   };
 
   useEffect(() => {
+    const sanitizedValue = sanitizeInput(debouncedQuery);
+    const trimmedValue = sanitizedValue.trim();
+    const validationError = validateInput(trimmedValue);
+    setError(validationError);
+
     const urlSearchParams = new URLSearchParams(
       Array.from(searchParams.entries())
     );
-    if (debouncedQuery.trim()) {
-      urlSearchParams.set('search', debouncedQuery.trim());
+    if (!validationError && trimmedValue) {
+      urlSearchParams.set('search', trimmedValue);
     } else {
       urlSearchParams.delete('search');
     }
@@ -56,7 +57,6 @@ const useSearchCards = () => {
 
   return {
     query,
-    setQuery,
     debouncedQuery: debouncedQuery.length > 0 ? debouncedQuery : undefined,
     error,
     handleInputChange,
