@@ -4,6 +4,7 @@ import { z } from 'zod';
 
 import { authOptions } from '@/utils/auth';
 import { prisma } from '@/utils/prisma';
+import { build429Response, checkRateLimit } from '@/utils/rateLimit';
 import { createDeckSchema } from '@/utils/schemas';
 
 export async function POST(request: NextRequest) {
@@ -14,6 +15,19 @@ export async function POST(request: NextRequest) {
     if (!session?.user?.id) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
+
+    // Rate limit: per-user deck creation
+    const rate = await checkRateLimit({
+      limiterName: 'deck-create-per-user-1m-30',
+      windowMs: 60_000,
+      maxRequests: 30,
+      key: `deck:create:${session.user.id}`,
+    });
+    if (!rate.success)
+      return build429Response(
+        rate,
+        'Too many decks created. Please slow down.'
+      );
 
     // Parse and validate the request body
     const body = await request.json();

@@ -4,6 +4,7 @@ import { z } from 'zod';
 
 import { authOptions } from '@/utils/auth';
 import { prisma } from '@/utils/prisma';
+import { build429Response, checkRateLimit } from '@/utils/rateLimit';
 import { createCardSchema } from '@/utils/schemas';
 
 export async function POST(request: NextRequest) {
@@ -14,6 +15,16 @@ export async function POST(request: NextRequest) {
     if (!session?.user?.id) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
+
+    // Rate limit: per-user card creation
+    const rate = await checkRateLimit({
+      limiterName: 'card-create-per-user-1m-30',
+      windowMs: 60_000,
+      maxRequests: 30,
+      key: `card:create:${session.user.id}`,
+    });
+    if (!rate.success)
+      return build429Response(rate, 'Rate limit exceeded. Please slow down.');
 
     // Parse and validate the request body
     const body = await request.json();
