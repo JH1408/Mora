@@ -12,7 +12,7 @@ const PrivacyPage = () => {
             Privacy Policy
           </h1>
           <p className='text-lg text-muted-foreground mb-8'>
-            Last updated: August 11, 2025
+            Last updated: August 19, 2025
           </p>
         </section>
 
@@ -70,6 +70,7 @@ const PrivacyPage = () => {
               app:
             </p>
             <ul className='list-disc pl-6 text-muted-foreground space-y-2'>
+              <li>IP address and browser user agent</li>
               <li>Device information and browser type</li>
               <li>Usage patterns and study sessions</li>
               <li>App performance and error logs</li>
@@ -105,6 +106,34 @@ const PrivacyPage = () => {
               <li>Secure authentication and authorization</li>
               <li>Regular security audits and updates</li>
               <li>Limited access to personal data on a need-to-know basis</li>
+            </ul>
+          </section>
+
+          <section>
+            <h2 className='text-2xl font-semibold text-text-primary mb-4'>
+              Security and Abuse Prevention
+            </h2>
+            <p className='text-muted-foreground leading-relaxed mb-4'>
+              To protect our services from abuse (e.g., rate limiting, bot/spam
+              prevention, and denial-of-service mitigation), we process limited
+              technical data such as IP address, browser user agent, and
+              timestamps. For authenticated requests, we may associate these
+              events with your account ID.
+            </p>
+            <ul className='list-disc pl-6 text-muted-foreground space-y-2 mb-6'>
+              <li>
+                <strong>Purpose:</strong> Security, fraud/abuse prevention, and
+                service reliability
+              </li>
+              <li>
+                <strong>Legal Basis (EU/UK):</strong> Legitimate interests in
+                securing our services
+              </li>
+              <li>
+                <strong>Retention:</strong> Security counters are ephemeral and
+                automatically expire within short windows (typically 1 minute
+                and up to 24 hours for daily limits)
+              </li>
             </ul>
           </section>
 
@@ -212,6 +241,22 @@ const PrivacyPage = () => {
                   className='text-primary-600 hover:text-primary-700 underline'
                 >
                   Vercel&apos;s Privacy Policy
+                </a>{' '}
+                for more information.
+              </li>
+              <li>
+                <strong>Upstash (Redis)</strong> - For rate limiting and abuse
+                prevention. Upstash processes IP addresses and related metadata
+                to enforce request limits and protect the service. Data may be
+                processed in the United States and other regions where Upstash
+                operates. Please review{' '}
+                <a
+                  href='https://upstash.com/legal/privacy'
+                  target='_blank'
+                  rel='noopener noreferrer'
+                  className='text-primary-600 hover:text-primary-700 underline'
+                >
+                  Upstash&apos;s Privacy Policy
                 </a>{' '}
                 for more information.
               </li>

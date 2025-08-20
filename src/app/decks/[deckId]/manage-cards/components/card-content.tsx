@@ -39,7 +39,9 @@ const renderFieldBlock = (
   <div className='space-y-2 flex flex-col' key={key}>
     <Label className='text-text-secondary text-sm'>{label}</Label>
     <div className='p-3 bg-neutral-1 rounded-md border border-neutral-3 flex-1'>
-      <p className={`text-text-primary whitespace-pre-wrap ${fontClass}`}>
+      <p
+        className={`text-text-primary whitespace-pre-wrap ${fontClass} select-text`}
+      >
         {formatCardValue(value)}
       </p>
     </div>

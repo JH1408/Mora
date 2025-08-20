@@ -279,3 +279,8 @@
   border-bottom-left-radius: 0px !important;
   border-bottom-right-radius: 0px !important;
 }
+
+img {
+  -webkit-user-drag: none;
+  user-select: none;
+}
