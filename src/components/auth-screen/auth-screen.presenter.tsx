@@ -1,3 +1,9 @@
+import Image from 'next/image';
+import Link from 'next/link';
+
+import paths from '@/utils/clientPaths';
+
+import { Button } from '../ui/button';
 import {
   Card,
   CardContent,
@@ -6,10 +12,6 @@ import {
   CardTitle,
 } from '../ui/card';
 import Spinner from '../ui/spinner';
-import Link from 'next/link';
-import Image from 'next/image';
-import paths from '@/utils/clientPaths';
-import { Button } from '../ui/button';
 
 const signUpText = {
   title: 'Welcome to Mora',

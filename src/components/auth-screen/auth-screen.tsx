@@ -6,7 +6,6 @@ import { useEffect, useState } from 'react';
 
 import paths from '@/utils/clientPaths';
 
-import Spinner from '../ui/spinner';
 import AuthScreenPresenter from './auth-screen.presenter';
 
 const AuthScreen = ({ isSignUp = false }: { isSignUp?: boolean }) => {

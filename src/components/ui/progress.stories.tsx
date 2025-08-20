@@ -1,4 +1,5 @@
-import type { Meta, StoryObj } from '@storybook/react';
+import type { Meta, StoryObj } from '@storybook/nextjs-vite';
+
 import { Progress } from './progress';
 
 const meta = {
@@ -16,7 +17,7 @@ export default meta;
 type Story = StoryObj<typeof meta>;
 
 export const Defaut: Story = {
-  render: (args) => (
+  render: () => (
     <div className='space-y-4 w-full max-w-md'>
       <div>
         <div className='flex justify-between text-sm mb-2'>

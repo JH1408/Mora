@@ -1,7 +1,9 @@
-import type { Meta, StoryObj } from '@storybook/react';
-import StudyCard from './study-card';
-import { STUDY_MODES } from '@/utils/types/studySession';
+import type { Meta, StoryObj } from '@storybook/nextjs-vite';
+
 import type { StudyCard as StudyCardType } from '@/utils/types/deck';
+import { STUDY_MODES } from '@/utils/types/studySession';
+
+import StudyCard from './study-card';
 
 const demoCard: StudyCardType = {
   id: '1',

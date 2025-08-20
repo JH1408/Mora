@@ -1,11 +1,12 @@
-import type { Meta, StoryObj } from '@storybook/react';
+import type { Meta, StoryObj } from '@storybook/nextjs-vite';
 import { useState } from 'react';
+
+import { Button } from './button';
 import {
   Collapsible,
   CollapsibleContent,
   CollapsibleTrigger,
 } from './collapsible';
-import { Button } from './button';
 
 const meta = {
   title: 'UI/Collapsible',

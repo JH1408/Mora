@@ -1,10 +1,6 @@
-import type { Meta, StoryObj } from '@storybook/react';
-import {
-  Accordion,
-  AccordionContent,
-  AccordionItem,
-  AccordionTrigger,
-} from './accordion';
+import type { Meta, StoryObj } from '@storybook/nextjs-vite';
+
+import { Accordion, AccordionContent, AccordionTrigger } from './accordion';
 
 const meta = {
   title: 'UI/Accordion',

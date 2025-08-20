@@ -1,4 +1,5 @@
-import type { Meta, StoryObj } from '@storybook/react';
+import type { Meta, StoryObj } from '@storybook/nextjs-vite';
+
 import { Label } from './label';
 
 const meta = {
@@ -18,7 +19,7 @@ type Story = StoryObj<typeof meta>;
 export const Default: Story = {};
 
 export const WithInput: Story = {
-  render: (args) => (
+  render: () => (
     <div className='grid w-full max-w-sm items-center gap-1.5'>
       <Label htmlFor='email'>Email</Label>
       <input

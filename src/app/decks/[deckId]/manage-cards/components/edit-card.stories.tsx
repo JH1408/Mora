@@ -1,6 +1,7 @@
-import type { Meta, StoryObj } from '@storybook/react';
-import EditCardForm from './edit-card';
 import type { Card } from '@prisma/client';
+import type { Meta, StoryObj } from '@storybook/nextjs-vite';
+
+import EditCardForm from './edit-card';
 
 const card: Card = {
   id: 'c1',

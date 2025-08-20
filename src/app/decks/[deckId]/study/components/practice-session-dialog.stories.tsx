@@ -1,4 +1,5 @@
-import type { Meta, StoryObj } from '@storybook/react';
+import type { Meta, StoryObj } from '@storybook/nextjs-vite';
+
 import PracticeSessionDialog from './practice-session-dialog';
 
 const meta = {

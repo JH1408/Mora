@@ -1,6 +1,7 @@
-import type { Meta, StoryObj } from '@storybook/react';
-import CardContentComponent from './card-content';
 import type { Card } from '@prisma/client';
+import type { Meta, StoryObj } from '@storybook/nextjs-vite';
+
+import CardContentComponent from './card-content';
 
 const baseCard: Card = {
   id: 'c1',

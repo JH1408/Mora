@@ -1,6 +1,8 @@
-import type { Meta, StoryObj } from '@storybook/react';
-import Header from './header';
+import type { Meta, StoryObj } from '@storybook/nextjs-vite';
+
 import { STUDY_MODES } from '@/utils/types/studySession';
+
+import Header from './header';
 
 const meta = {
   title: 'Study/Header',

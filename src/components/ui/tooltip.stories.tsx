@@ -1,11 +1,12 @@
-import type { Meta, StoryObj } from '@storybook/react';
+import type { Meta, StoryObj } from '@storybook/nextjs-vite';
+
+import { Button } from './button';
 import {
   Tooltip,
   TooltipContent,
   TooltipProvider,
   TooltipTrigger,
 } from './tooltip';
-import { Button } from './button';
 
 const meta = {
   title: 'UI/Tooltip',

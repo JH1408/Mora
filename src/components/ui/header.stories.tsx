@@ -1,4 +1,6 @@
-import type { Meta, StoryObj } from '@storybook/react';
+import type { Meta, StoryObj } from '@storybook/nextjs-vite';
+
+import { Button } from './button';
 import {
   Header,
   HeaderLeft,
@@ -8,7 +10,6 @@ import {
   HeaderTitle,
   HeaderSubtitle,
 } from './header';
-import { Button } from './button';
 
 const meta = {
   title: 'UI/Header',

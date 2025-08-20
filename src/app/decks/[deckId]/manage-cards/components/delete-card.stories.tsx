@@ -1,6 +1,7 @@
-import type { Meta, StoryObj } from '@storybook/react';
-import DeleteCard from './delete-card';
 import type { Card } from '@prisma/client';
+import type { Meta, StoryObj } from '@storybook/nextjs-vite';
+
+import DeleteCard from './delete-card';
 
 const card: Card = {
   id: 'c1',
