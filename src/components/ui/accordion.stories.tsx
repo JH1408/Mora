@@ -19,27 +19,27 @@ type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {
   render: () => (
-    <Accordion type='single' collapsible className='w-[400px]'>
-      <AccordionItem value='item-1'>
+    <div className='w-[400px] space-y-2'>
+      <Accordion defaultOpen>
         <AccordionTrigger>Is it accessible?</AccordionTrigger>
         <AccordionContent>
           Yes. It adheres to the WAI-ARIA design pattern.
         </AccordionContent>
-      </AccordionItem>
-      <AccordionItem value='item-2'>
+      </Accordion>
+      <Accordion>
         <AccordionTrigger>Is it styled?</AccordionTrigger>
         <AccordionContent>
           Yes. It comes with default styles that matches the other
           components&apos; aesthetic.
         </AccordionContent>
-      </AccordionItem>
-      <AccordionItem value='item-3'>
+      </Accordion>
+      <Accordion>
         <AccordionTrigger>Is it animated?</AccordionTrigger>
         <AccordionContent>
           Yes. It&apos;s animated by default, but you can disable it if you
           prefer.
         </AccordionContent>
-      </AccordionItem>
-    </Accordion>
+      </Accordion>
+    </div>
   ),
 };

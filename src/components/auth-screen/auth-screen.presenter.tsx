@@ -1,22 +1,15 @@
-'use client';
-
-import Image from 'next/image';
-import Link from 'next/link';
-import { useRouter, useSearchParams } from 'next/navigation';
-import { signIn, useSession } from 'next-auth/react';
-import { useEffect, useState } from 'react';
-
-import { Button } from '@/components/ui/button';
 import {
   Card,
   CardContent,
   CardDescription,
   CardHeader,
   CardTitle,
-} from '@/components/ui/card';
+} from '../ui/card';
+import Spinner from '../ui/spinner';
+import Link from 'next/link';
+import Image from 'next/image';
 import paths from '@/utils/clientPaths';
-
-import Spinner from './ui/spinner';
+import { Button } from '../ui/button';
 
 const signUpText = {
   title: 'Welcome to Mora',
@@ -54,37 +47,19 @@ const RerouteText = ({ isSignUp }: { isSignUp: boolean }) => {
   );
 };
 
-const AuthScreen = ({ isSignUp = false }: { isSignUp?: boolean }) => {
-  const [isLoading, setIsLoading] = useState(false);
-  const { data: session, status } = useSession();
-  const router = useRouter();
-  const searchParams = useSearchParams();
-
-  // Check if user is returning from OAuth
-  const error = searchParams.get('error');
-  const callbackUrl = searchParams.get('callbackUrl');
-
-  useEffect(() => {
-    if (status === 'authenticated' && session) {
-      // If there's a callback URL, use it, otherwise go to dashboard
-      const redirectTo = callbackUrl || paths.dashboard;
-      router.push(redirectTo);
-    }
-  }, [session, status, router, callbackUrl]);
-
-  const handleGoogleSignIn = async () => {
-    setIsLoading(true);
-    try {
-      // Use the default OAuth flow but with better error handling
-      await signIn('google', {
-        callbackUrl: paths.dashboard,
-      });
-    } catch (error) {
-      console.error('Sign in error:', error);
-      setIsLoading(false);
-    }
-  };
-
+const AuthScreenPresenter = ({
+  isSignUp,
+  error,
+  isLoading,
+  handleGoogleSignIn,
+  status,
+}: {
+  isSignUp: boolean;
+  error: string | null;
+  isLoading: boolean;
+  handleGoogleSignIn: () => void;
+  status: 'authenticated' | 'loading' | 'unauthenticated';
+}) => {
   if (status === 'authenticated' || status === 'loading') {
     return (
       <div className='min-h-screen bg-background-light flex items-center justify-center p-4'>
@@ -177,4 +152,4 @@ const AuthScreen = ({ isSignUp = false }: { isSignUp?: boolean }) => {
   );
 };
 
-export default AuthScreen;
+export default AuthScreenPresenter;
