@@ -4,8 +4,22 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import CreateDeckModal from './create-deck-modal';
 
 const languages = [
-  { id: 'lang-ja', code: 'ja', name: 'Japanese', script: 'Kana', rtl: false },
-  { id: 'lang-th', code: 'th', name: 'Thai', script: 'Thai', rtl: false },
+  {
+    id: 'lang-ja',
+    code: 'ja',
+    name: 'Japanese',
+    script: 'Kana',
+    rtl: false,
+    ttsSupported: true,
+  },
+  {
+    id: 'lang-th',
+    code: 'th',
+    name: 'Thai',
+    script: 'Thai',
+    rtl: false,
+    ttsSupported: true,
+  },
 ];
 
 const meta = {
