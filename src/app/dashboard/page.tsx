@@ -1,7 +1,8 @@
 'use client';
 
-import { useSession } from 'next-auth/react';
 import { useMemo, useState } from 'react';
+
+import { useSession } from 'next-auth/react';
 
 import CreateDeckModal from '@/app/dashboard/components/create-deck-modal';
 import ErrorMessage from '@/components/error-message';

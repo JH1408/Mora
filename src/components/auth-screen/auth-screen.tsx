@@ -1,8 +1,9 @@
 'use client';
 
 import { useRouter, useSearchParams } from 'next/navigation';
-import { signIn, useSession } from 'next-auth/react';
 import { useEffect, useState } from 'react';
+
+import { signIn, useSession } from 'next-auth/react';
 
 import paths from '@/utils/clientPaths';
 

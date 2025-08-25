@@ -1,11 +1,12 @@
 'use client';
 
-import type { Card as CardType } from '@prisma/client';
-import { useVirtualizer } from '@tanstack/react-virtual';
-import { Search } from 'lucide-react';
 import { useParams } from 'next/navigation';
 import { useMemo, useState } from 'react';
 import { useRef, useEffect } from 'react';
+
+import type { Card as CardType } from '@prisma/client';
+import { useVirtualizer } from '@tanstack/react-virtual';
+import { Search } from 'lucide-react';
 
 import ErrorMessage from '@/components/error-message';
 import { Card, CardContent as _CardContent } from '@/components/ui/card';

@@ -1,8 +1,9 @@
 'use client';
 
-import { useQueryClient } from '@tanstack/react-query';
 import { useParams, useRouter } from 'next/navigation';
-import React, { useEffect, useMemo, useState, useCallback } from 'react';
+import { useEffect, useMemo, useState, useCallback } from 'react';
+
+import { useQueryClient } from '@tanstack/react-query';
 import { toast } from 'sonner';
 
 import { Progress } from '@/components/ui/progress';

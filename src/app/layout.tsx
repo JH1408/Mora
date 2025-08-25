@@ -1,7 +1,8 @@
-import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
-import { Analytics as VercelAnalytics } from '@vercel/analytics/next';
 import type { Metadata } from 'next';
 import { Inter, Playfair_Display } from 'next/font/google';
+
+import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
+import { Analytics as VercelAnalytics } from '@vercel/analytics/next';
 
 import './globals.css';
 import { Providers } from '@/components/providers';

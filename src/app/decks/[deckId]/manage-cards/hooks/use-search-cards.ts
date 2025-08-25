@@ -1,6 +1,7 @@
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { useState } from 'react';
 import { useEffect } from 'react';
+
 import { useDebounce } from 'use-debounce';
 
 const sanitizeInput = (input: string) => {

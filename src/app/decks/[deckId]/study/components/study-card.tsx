@@ -1,8 +1,8 @@
+import Image from 'next/image';
+import { useRef, useState } from 'react';
+
 import { useGesture } from '@use-gesture/react';
 import { Volume2 } from 'lucide-react';
-import Image from 'next/image';
-import { useState } from 'react';
-import { useRef } from 'react';
 
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';

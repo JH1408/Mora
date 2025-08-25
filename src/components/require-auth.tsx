@@ -1,7 +1,8 @@
 'use client';
 import { useRouter } from 'next/navigation';
-import { useSession } from 'next-auth/react';
 import { useEffect, useMemo } from 'react';
+
+import { useSession } from 'next-auth/react';
 
 import Spinner from './ui/spinner';
 

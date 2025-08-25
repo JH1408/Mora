@@ -1,5 +1,6 @@
-import { WifiOff, Wifi } from 'lucide-react';
 import { useEffect } from 'react';
+
+import { WifiOff, Wifi } from 'lucide-react';
 import { toast } from 'sonner';
 
 export const useNetworkStatus = () => {

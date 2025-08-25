@@ -1,8 +1,9 @@
 'use client';
 
+import * as React from 'react';
+
 import * as AlertDialogPrimitive from '@radix-ui/react-alert-dialog';
 import { Slot } from '@radix-ui/react-slot';
-import * as React from 'react';
 
 import { cn } from '@/utils/utils';
 

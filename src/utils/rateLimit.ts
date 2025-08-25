@@ -1,10 +1,11 @@
 // Rate limiter utility with Upstash Redis and
 // an in-memory fallback for local dev / single instance.
 
+import { NextResponse } from 'next/server';
+
 import { Ratelimit } from '@upstash/ratelimit';
 import type { Redis } from '@upstash/redis';
 import { Redis as UpstashRedis } from '@upstash/redis';
-import { NextResponse } from 'next/server';
 
 type LimitCheckResult = {
   success: boolean;

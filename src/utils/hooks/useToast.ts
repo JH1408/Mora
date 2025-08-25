@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 
 import type { ToastActionElement, ToastProps } from '@/components/ui/toast';
 
@@ -19,7 +19,7 @@ function genId() {
   return count.toString();
 }
 
-type Action =
+export type Action =
   | {
       type: 'ADD_TOAST';
       toast: ToasterToast;
@@ -37,7 +37,7 @@ type Action =
       toastId?: ToasterToast['id'];
     };
 
-interface State {
+export interface State {
   toasts: ToasterToast[];
 }
 

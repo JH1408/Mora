@@ -1,5 +1,6 @@
+import { useState } from 'react';
+
 import { BookOpen } from 'lucide-react';
-import React, { useState } from 'react';
 import { toast } from 'sonner';
 
 import LanguageFlag from '@/components/language-flag';

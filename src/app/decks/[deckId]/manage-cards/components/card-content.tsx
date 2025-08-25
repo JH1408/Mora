@@ -1,6 +1,7 @@
+import Image from 'next/image';
+
 import type { Card } from '@prisma/client';
 import { SquarePen } from 'lucide-react';
-import Image from 'next/image';
 
 import { Button } from '@/components/ui/button';
 import { CardFooter } from '@/components/ui/card';

@@ -1,5 +1,6 @@
-import { User, LogOut } from 'lucide-react';
 import Image from 'next/image';
+
+import { User, LogOut } from 'lucide-react';
 import { signOut } from 'next-auth/react';
 import { toast } from 'sonner';
 

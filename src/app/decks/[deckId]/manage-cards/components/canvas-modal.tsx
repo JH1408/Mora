@@ -1,5 +1,6 @@
+import { useEffect, useState } from 'react';
+
 import { Eraser, Pencil, Redo, Undo } from 'lucide-react';
-import React, { useEffect, useState } from 'react';
 
 import { Button } from '@/components/ui/button';
 import {

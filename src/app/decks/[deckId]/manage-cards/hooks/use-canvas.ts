@@ -1,5 +1,6 @@
-import { getStroke } from 'perfect-freehand';
 import { useCallback, useEffect, useRef, useState } from 'react';
+
+import { getStroke } from 'perfect-freehand';
 import { toast } from 'sonner';
 
 interface Point {

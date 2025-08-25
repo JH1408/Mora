@@ -1,7 +1,8 @@
-import { Difficulty } from '@prisma/client';
-import { ChevronDown, ChevronRight, Play, Plus, SquarePen } from 'lucide-react';
 import Link from 'next/link';
 import { useMemo, useState, useEffect } from 'react';
+
+import { Difficulty } from '@prisma/client';
+import { ChevronDown, ChevronRight, Play, Plus, SquarePen } from 'lucide-react';
 
 import LanguageFlag from '@/components/language-flag';
 import { Badge } from '@/components/ui/badge';
